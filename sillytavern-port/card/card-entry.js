@@ -1,7 +1,7 @@
 const RUNTIME_RELEASE = Object.freeze({
   owner: 'anhyeuem1f2-glitch',
   repository: 'Black-Souls',
-  ref: String(window.BLACK_SOULS_RUNTIME_REF_OVERRIDE || 'main').trim(),
+  ref: String(window.BLACK_SOULS_RUNTIME_REF_OVERRIDE || 'dc98906802561de7bd9ebde3dfdae7bd6f339cb6').trim(),
   path: 'sillytavern-port/runtime/',
 });
 

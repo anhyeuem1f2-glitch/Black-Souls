@@ -29,10 +29,10 @@ Import `card/Black_Souls_ST.json`, then approve/enable its character script when
 
 The development loader keeps the repository identity, runtime path, and release ref in the single `RUNTIME_RELEASE` configuration in `card/card-entry.js`. It preflights the complete ES-module tree from these bases in order:
 
-1. `https://cdn.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@main/sillytavern-port/runtime/`
-2. `https://testingcf.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@main/sillytavern-port/runtime/`
-3. `https://raw.githubusercontent.com/anhyeuem1f2-glitch/Black-Souls/main/sillytavern-port/runtime/` (last-resort diagnostics; strict browser MIME checks may reject it)
+1. `https://cdn.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@dc98906802561de7bd9ebde3dfdae7bd6f339cb6/sillytavern-port/runtime/`
+2. `https://testingcf.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@dc98906802561de7bd9ebde3dfdae7bd6f339cb6/sillytavern-port/runtime/`
+3. `https://raw.githubusercontent.com/anhyeuem1f2-glitch/Black-Souls/dc98906802561de7bd9ebde3dfdae7bd6f339cb6/sillytavern-port/runtime/` (last-resort diagnostics; strict browser MIME checks may reject it)
 
-Relative imports remain normal URL-based ES-module imports, so descendants resolve against the source that supplied `bootstrap.js`. Change only `RUNTIME_RELEASE.ref` from `main` to a tag or commit SHA for a stable card. A developer bootstrap override remains available under the failure screen's collapsed debug section or through `window.BLACK_SOULS_RUNTIME_OVERRIDE`.
+Relative imports remain normal URL-based ES-module imports, so descendants resolve against the source that supplied `bootstrap.js`. The importable card is pinned to the immutable graphics-fix commit above to avoid stale `@main` CDN modules. Change only `RUNTIME_RELEASE.ref` for a later release. A developer bootstrap override remains available under the failure screen's collapsed debug section or through `window.BLACK_SOULS_RUNTIME_OVERRIDE`.
 
 Original LFS assets are not decoded from jsDelivr pointer bodies. The runtime manifest centralizes the repository owner/name/ref, and the host Diagnostics panel shows which asset delivery source succeeded.

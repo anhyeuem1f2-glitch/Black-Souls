@@ -22,6 +22,8 @@ The direct runtime loaded in the Codex in-app browser at 640×480. New Game load
 
 Runtime Diagnostics reported successful assets from both `runtime-bundle` and `github-media`, zero failed loads, zero LFS pointer bodies reaching a decoder, BGM `タイトル、アリス` playing, `Fire1` SE playing, active fog, and all eight non-empty Map 97 tileset sheets. IndexedDB returned `Saved slot 1.`. The opening command 213 balloon path is implemented with the RTP balloon sheet; command 212 uses the normalized database animation and original animation sheet.
 
+After push, the generated card loader was run without a local bootstrap override. Its immutable jsDelivr source loaded runtime `0.2.0-dev` from commit `dc98906802561de7bd9ebde3dfdae7bd6f339cb6`, mounted successfully, and reached Map 97 with 17/17 requested boot assets loaded, BGM/SE playing, and no unsupported command recorded. This pin is required because a direct `@main` smoke test demonstrated stale jsDelivr files (`0.1.0-dev`).
+
 The authenticated `https://st.proxyvn.top` instance was not available in this workspace. The generated card uses the same URL-based module tree and browser asset endpoints, but final native import confirmation on that deployment remains a user-side acceptance step.
 
 ## Remote loader diagnostics

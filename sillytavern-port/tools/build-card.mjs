@@ -17,7 +17,7 @@ const card = {
     scenario: '',
     first_mes: '',
     mes_example: '',
-    creator_notes: 'Requires TavernHelper / JS-Slash-Runner 4.8.19 or compatible. Enable the included character script when SillyTavern asks. Runtime loading checks jsDelivr primary, jsDelivr testing fallback, then GitHub Raw diagnostics. Game assets use an LFS-aware resolver with a browser-ready RTP subset; use Diagnostics in the game host for source and decoder status. Press Escape to close the game surface; use the TavernHelper button to reopen it.',
+    creator_notes: 'Requires TavernHelper / JS-Slash-Runner 4.8.19 or compatible. Enable the included character script when SillyTavern asks. Runtime v0.2.0-dev is pinned to commit dc98906802561de7bd9ebde3dfdae7bd6f339cb6 and checks jsDelivr primary, jsDelivr testing fallback, then GitHub Raw diagnostics. Game assets use an LFS-aware resolver with a browser-ready RTP subset; use Diagnostics in the game host for source and decoder status. Press Escape to close the game surface; use the TavernHelper button to reopen it.',
     system_prompt: '',
     post_history_instructions: '',
     alternate_greetings: [],
