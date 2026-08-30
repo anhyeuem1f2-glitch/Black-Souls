@@ -1,0 +1,19 @@
+{
+  "schema": "black-souls-port-audit-v1",
+  "maps": 150,
+  "commonEvents": 248,
+  "eventCommandTypes": 80,
+  "eventCommands": 70425,
+  "embeddedRubySnippets": 32,
+  "embeddedRubyOccurrences": 38,
+  "scripts": 167,
+  "customScripts": 57,
+  "customScriptBytes": 667312,
+  "customScriptLines": 16411,
+  "win32ApiReferences": 0,
+  "start": {
+    "mapId": 7,
+    "x": 7,
+    "y": 6
+  }
+}

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLACK SOULS runtime smoke test</title></head>
+<body>
+<script type="module">
+  import { mount } from './runtime/bootstrap.js';
+  mount({ target: document.body }).catch((error) => {
+    document.body.textContent = error.stack || error.message;
+    document.body.style.cssText = 'white-space:pre-wrap;background:#111;color:#f99;padding:20px';
+  });
+</script>
+</body>
+</html>

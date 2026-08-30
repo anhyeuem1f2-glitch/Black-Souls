@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>BLACK SOULS card bootstrap smoke test</title></head>
+<body><script type="module">
+  window.BLACK_SOULS_RUNTIME_OVERRIDE = new URL('./runtime/bootstrap.js', location.href).href;
+  window.eventOn = () => {};
+  window.getButtonEvent = (name) => name;
+  await import('./card/card-entry.js');
+</script></body></html>

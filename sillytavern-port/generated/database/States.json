@@ -1,0 +1,2722 @@
+[
+  null,
+  {
+    "$class": "RPG::State",
+    "message2": " đã bị giết.",
+    "name": "戦闘不能",
+    "priority": 100,
+    "icon_index": 17,
+    "message1": " ngã xuống.",
+    "message4": " đã trở lại!",
+    "restriction": 4,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "ステート１番はＨＰが０になったときに自動的に付加されます。",
+    "id": 1,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 9,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đã bị dính độc!",
+    "name": "毒",
+    "priority": 65,
+    "icon_index": 18,
+    "message1": " đã bị dính độc!",
+    "message4": " đã được giải độc!",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 2,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đã bị mù",
+    "name": "暗闇",
+    "priority": 70,
+    "icon_index": 19,
+    "message1": " đã bị mù!",
+    "message4": " đã thấy được trở lại!",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 3,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đã bị câm lặng!",
+    "name": "沈黙",
+    "priority": 75,
+    "icon_index": 20,
+    "message1": " đã bị câm lặng!",
+    "message4": " phá vỡ sự câm lặng!",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 4,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 42,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 27,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " bị làm cho mất trí!",
+    "name": "混乱",
+    "priority": 80,
+    "icon_index": 21,
+    "message1": " trở nên mất trí!",
+    "message4": " đã bình tĩnh lại!",
+    "restriction": 2,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 5,
+    "features": [],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 4,
+    "chance_by_damage": 50,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": true,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đã ngủ say!",
+    "name": "睡眠",
+    "priority": 85,
+    "icon_index": 22,
+    "message1": " đã ngủ say!",
+    "message4": " tỉnh dậy!",
+    "restriction": 4,
+    "release_by_damage": true,
+    "message3": " đang ngủ....",
+    "note": "",
+    "id": 6,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": -1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": true,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đã bị tê liệt!",
+    "name": "麻痺",
+    "priority": 90,
+    "icon_index": 23,
+    "message1": " không thể di chuyển do tê liệt!",
+    "message4": " thoát khỏi trạng thái tê liệt!",
+    "restriction": 4,
+    "release_by_damage": false,
+    "message3": " không thể cử động!",
+    "note": "",
+    "id": 7,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": -1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 4,
+    "max_turns": 6,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " mất thăng bằng!",
+    "name": "スタン",
+    "priority": 60,
+    "icon_index": 24,
+    "message1": " mất thăng bằng!",
+    "message4": " phục hồi lại thăng bằng!",
+    "restriction": 4,
+    "release_by_damage": false,
+    "message3": " không thể đứng nổi……",
+    "note": "",
+    "id": 8,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": -1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 3,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Defend",
+    "priority": 50,
+    "icon_index": 506,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 9,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "不死身",
+    "priority": 0,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 10,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "かばう",
+    "priority": 0,
+    "icon_index": 121,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 11,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 2,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "挑発",
+    "priority": 50,
+    "icon_index": 25,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 12,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 0,
+        "value": 10
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "隠れる",
+    "priority": 50,
+    "icon_index": 121,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 13,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "HP再生",
+    "priority": 50,
+    "icon_index": 26,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 14,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "MP再生",
+    "priority": 50,
+    "icon_index": 26,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 15,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 4,
+    "max_turns": 4,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Evade",
+    "priority": 50,
+    "icon_index": 28,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 16,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 12,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "鉄壁の守り",
+    "priority": 50,
+    "icon_index": 29,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 17,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "反撃",
+    "priority": 90,
+    "icon_index": 27,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 18,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 6,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 1.5
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "魔法回避",
+    "priority": 50,
+    "icon_index": 536,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 19,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "魔法反射",
+    "priority": 50,
+    "icon_index": 31,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 20,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 5,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " dâng trào sức mạnh của lửa.",
+    "name": "炎の力",
+    "priority": 50,
+    "icon_index": 104,
+    "message1": " dâng trào sức mạnh của lửa.",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 21,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 31,
+        "data_id": 3,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 1.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 29,
+        "value": 0.5
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " dâng trào sức mạnh của băng.",
+    "name": "氷の力",
+    "priority": 50,
+    "icon_index": 105,
+    "message1": " dâng trào sức mạnh của băng.",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 22,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 31,
+        "data_id": 4,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 1.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 31,
+        "value": 0.5
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " dâng trào sức mạnh của sấm sét.",
+    "name": "雷の力",
+    "priority": 50,
+    "icon_index": 106,
+    "message1": " dâng trào sức mạnh của sấm sét.",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 23,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 31,
+        "data_id": 5,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 1.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 37,
+        "value": 0.5
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "異常防止",
+    "priority": 50,
+    "icon_index": 29,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 24,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 55,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 31,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 26,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 29,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 37,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 54,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 55,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 56,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 63,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "会心率上昇１００",
+    "priority": 50,
+    "icon_index": 14,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 25,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đang chảy máu!",
+    "name": "出血",
+    "priority": 65,
+    "icon_index": 573,
+    "message1": " đang chảy máu!",
+    "message4": " ngừng chảy máu.",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 26,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "天使の加護",
+    "priority": 50,
+    "icon_index": 328,
+    "message1": " được bảo vệ bởi một thiên thần!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "<自動蘇生:500,42,100>\r\n<自動蘇生破損:100>",
+    "id": 27,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "胃液",
+    "priority": 65,
+    "icon_index": 18,
+    "message1": " bị bao phủ trong dịch vị!",
+    "message4": "",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": " đang tan chảy trong dịch vị!",
+    "note": "",
+    "id": 28,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " đang cháy!",
+    "name": "燃焼",
+    "priority": 65,
+    "icon_index": 96,
+    "message1": " đang cháy!",
+    "message4": " đã dập tắt ngọn lửa.",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 29,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "召喚中",
+    "priority": 0,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 30,
+    "features": [],
+    "auto_removal_timing": 2,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " bị đóng băng!",
+    "name": "氷結",
+    "priority": 60,
+    "icon_index": 97,
+    "message1": " bị đóng băng!",
+    "message4": " phá vỡ lớp băng!",
+    "restriction": 4,
+    "release_by_damage": false,
+    "message3": " đang đóng băng.",
+    "note": "",
+    "id": 31,
+    "features": [],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "力貯め",
+    "priority": 0,
+    "icon_index": 30,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 32,
+    "features": [],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "会心率上昇",
+    "priority": 50,
+    "icon_index": 30,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 33,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "HP再生rasubosu",
+    "priority": 0,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 34,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 4,
+    "max_turns": 4,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " để cơn phẫn nộ kiểm soát!",
+    "name": "暴走",
+    "priority": 50,
+    "icon_index": 25,
+    "message1": " để cơn phẫn nộ kiểm soát!",
+    "message4": " đã thấm mệt.",
+    "restriction": 1,
+    "message3": " đang phẫn nộ!",
+    "note": "",
+    "id": 35,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "回避率上昇",
+    "priority": 50,
+    "icon_index": 474,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 36,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " không thể di chuyển tay!",
+    "name": "手封",
+    "priority": 75,
+    "icon_index": 481,
+    "message1": " không thể di chuyển tay!",
+    "message4": " đã có thể di chuyển tay.",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 37,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 44,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " để cơn phẫn nộ kiểm soát!",
+    "name": "暴走２",
+    "priority": 50,
+    "icon_index": 25,
+    "message1": " để cơn phẫn nộ kiểm soát!",
+    "message4": " đã thấm mệt.",
+    "restriction": 1,
+    "message3": " đang phẫn nộ!",
+    "note": "",
+    "id": 38,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Acrobatics",
+    "priority": 50,
+    "icon_index": 28,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 39,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 12,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 4,
+    "max_turns": 4,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "魔法反射",
+    "priority": 50,
+    "icon_index": 31,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 40,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 5,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Knight's Pride",
+    "priority": 50,
+    "icon_index": 555,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 41,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 0,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " bao trùm trong cơn giận!",
+    "name": "Fury",
+    "priority": 50,
+    "icon_index": 571,
+    "message1": " bao trùm trong cơn giận!",
+    "message4": " đã thấm mệt.",
+    "restriction": 0,
+    "message3": " đang tức giận!",
+    "note": "",
+    "id": 42,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 3,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 5,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Reflect Magic",
+    "priority": 50,
+    "icon_index": 604,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 43,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 5,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Reflect Attacks",
+    "priority": 50,
+    "icon_index": 605,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 44,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 6,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 5,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " như đang tan chảy!",
+    "name": "凍解",
+    "priority": 90,
+    "icon_index": 107,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": " đang tan chảy!",
+    "note": "",
+    "id": 45,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 4,
+    "max_turns": 6,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "守られている",
+    "priority": 50,
+    "icon_index": 29,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 46,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 7,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "会心率上昇2",
+    "priority": 50,
+    "icon_index": 553,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 47,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "ソウル二倍",
+    "priority": 50,
+    "icon_index": 126,
+    "message1": " cầu xin Linh Hồn em ấy!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 48,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 64,
+        "data_id": 4,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "ドロップ二倍",
+    "priority": 50,
+    "icon_index": 125,
+    "message1": " cầu xin số mệnh em ấy!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 49,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 64,
+        "data_id": 5,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "ドロシー",
+    "priority": 50,
+    "icon_index": 619,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 50,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 4,
+        "value": 4
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "アリスの加護",
+    "priority": 90,
+    "icon_index": 448,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 51,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 8,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 0,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "内なる大力",
+    "priority": 50,
+    "icon_index": 136,
+    "message1": " đang tràn trề năng lượng ma thuật!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 52,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 4,
+        "value": 3
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "聖騎士の御旗",
+    "priority": 50,
+    "icon_index": 509,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 53,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 3,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 5,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " trở nên mờ nhạt dần!",
+    "name": "脆弱",
+    "priority": 70,
+    "icon_index": 103,
+    "message1": " trở nên mờ nhạt dần!",
+    "message4": " trở lại bình thường.",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 54,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 7,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " bị bao bọc bởi sương mù đen!",
+    "name": "虚弱",
+    "priority": 70,
+    "icon_index": 120,
+    "message1": " bị bao bọc bởi sương mù đen!",
+    "message4": " chạy thoát khỏi màn sương!",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "<HP回復無効:100>",
+    "id": 55,
+    "features": [],
+    "auto_removal_timing": 1,
+    "min_turns": 8,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": " hoảng sợ!",
+    "name": "恐怖",
+    "priority": 70,
+    "icon_index": 590,
+    "message1": " hoảng sợ!",
+    "message4": " ngừng run rẩy.",
+    "restriction": 0,
+    "release_by_damage": false,
+    "message3": "",
+    "note": "",
+    "id": 56,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": null
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 5,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "風神",
+    "priority": 50,
+    "icon_index": 101,
+    "message1": " được che chắn bởi gió.",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 57,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 58,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "食いしばり",
+    "priority": 90,
+    "icon_index": 139,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 59,
+    "features": [],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "Evade",
+    "priority": 50,
+    "icon_index": 28,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 60,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 12,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": 0
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 2,
+    "max_turns": 2,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 61,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "加速",
+    "priority": 50,
+    "icon_index": 46,
+    "message1": " đang tăng tốc!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 62,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 3,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "減速",
+    "priority": 50,
+    "icon_index": 62,
+    "message1": " đang chậm lại!",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 63,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 0.5
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 3,
+    "max_turns": 3,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": true,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 64,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "会心回避",
+    "priority": 50,
+    "icon_index": 110,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 65,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": 1
+      }
+    ],
+    "auto_removal_timing": 1,
+    "min_turns": 10,
+    "max_turns": 10,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": true,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 66,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 67,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 68,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 69,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  },
+  {
+    "$class": "RPG::State",
+    "message2": "",
+    "name": "",
+    "priority": 50,
+    "icon_index": 0,
+    "message1": "",
+    "message4": "",
+    "restriction": 0,
+    "message3": "",
+    "note": "",
+    "id": 70,
+    "features": [],
+    "auto_removal_timing": 0,
+    "min_turns": 1,
+    "max_turns": 1,
+    "chance_by_damage": 100,
+    "steps_to_remove": 100,
+    "remove_by_walking": false,
+    "remove_at_battle_end": false,
+    "remove_by_damage": false,
+    "remove_by_restriction": false,
+    "description": ""
+  }
+]

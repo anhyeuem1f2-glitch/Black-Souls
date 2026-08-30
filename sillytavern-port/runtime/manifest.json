@@ -1,0 +1,29 @@
+{
+  "schema": "black-souls-st-runtime-manifest-v1",
+  "version": "0.1.0-dev",
+  "game": "BLACK SOULS",
+  "mode": "game-only-no-ai",
+  "runtime": {
+    "entry": "./bootstrap.js",
+    "api": "window.BlackSoulsRuntime.mount"
+  },
+  "engine": {
+    "source": "RPG Maker VX Ace / RGSS3",
+    "target": "browser-canvas",
+    "logicalWidth": 640,
+    "logicalHeight": 480,
+    "tileSize": 32
+  },
+  "data": {
+    "schema": "black-souls-normalized-data-v1",
+    "base": "../generated/"
+  },
+  "assets": {
+    "base": "../../",
+    "policy": "lazy"
+  },
+  "save": {
+    "schema": "black-souls-st-save-v1",
+    "storage": "IndexedDB"
+  }
+}

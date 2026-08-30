@@ -1,0 +1,4756 @@
+[
+  null,
+  {
+    "$class": "RPG::Armor",
+    "description": "通気性の高い布の服。",
+    "name": "普段着",
+    "icon_index": 168,
+    "price": 100,
+    "note": "",
+    "id": 1,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "なめし皮で作られたベスト。",
+    "name": "レザーベスト",
+    "icon_index": 168,
+    "price": 300,
+    "note": "",
+    "id": 2,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "過酷な旅にも耐えられる丈夫な服。",
+    "name": "冒険者の服",
+    "icon_index": 168,
+    "price": 2000,
+    "note": "",
+    "id": 3,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "にかわで固めた硬皮のベスト。",
+    "name": "ハードレザー",
+    "icon_index": 168,
+    "price": 5000,
+    "note": "",
+    "id": 4,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      15,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼板で補強したなめし皮製の服。",
+    "name": "ブリガンダイン",
+    "icon_index": 168,
+    "price": 8000,
+    "note": "",
+    "id": 5,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      20,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "額を守る布製のハチマキ。",
+    "name": "バンダナ",
+    "icon_index": 162,
+    "price": 100,
+    "note": "",
+    "id": 6,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "額を守る皮製のハチマキ。",
+    "name": "レザーバンダナ",
+    "icon_index": 162,
+    "price": 500,
+    "note": "",
+    "id": 7,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "毛皮で作られた帽子。",
+    "name": "毛皮の帽子",
+    "icon_index": 162,
+    "price": 1500,
+    "note": "",
+    "id": 8,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "重ねて巻きつけて頭を守る厚手の布。",
+    "name": "ターバン",
+    "icon_index": 162,
+    "price": 4000,
+    "note": "",
+    "id": 9,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "極楽鳥の羽がついたオシャレな帽子。",
+    "name": "羽根付き帽子",
+    "icon_index": 162,
+    "price": 6500,
+    "note": "",
+    "id": 10,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      14,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "木綿で作られた厚手のローブ。",
+    "name": "木綿のローブ",
+    "icon_index": 171,
+    "price": 100,
+    "note": "",
+    "id": 11,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      4,
+      2,
+      2,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "絹で作られた上質なマント。",
+    "name": "絹のマント",
+    "icon_index": 171,
+    "price": 500,
+    "note": "",
+    "id": 12,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      9,
+      3,
+      4,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "裏地にルーン文字が刻まれたローブ。",
+    "name": "術士のローブ",
+    "icon_index": 171,
+    "price": 3000,
+    "note": "",
+    "id": 13,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      13,
+      6,
+      7,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "古の老賢者が身につけていたローブ。",
+    "name": "ハーミットローブ",
+    "icon_index": 171,
+    "price": 8000,
+    "note": "",
+    "id": 14,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      18,
+      11,
+      12,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "精霊王の力が宿る究極のマント。",
+    "name": "エレメンタルマント",
+    "icon_index": 171,
+    "price": 13000,
+    "note": "",
+    "id": 15,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      25,
+      17,
+      18,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "青銅で作られた髪飾り。",
+    "name": "銅の髪飾り",
+    "icon_index": 166,
+    "price": 100,
+    "note": "",
+    "id": 16,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      2,
+      2,
+      1,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鉄で作られたリング状の額飾り。",
+    "name": "サークレット",
+    "icon_index": 166,
+    "price": 400,
+    "note": "",
+    "id": 17,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      6,
+      4,
+      3,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "身につけた者の魔力を高める髪飾り。",
+    "name": "銀の髪飾り",
+    "icon_index": 166,
+    "price": 2500,
+    "note": "",
+    "id": 18,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      10,
+      5,
+      4,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた額飾り。",
+    "name": "ミスリルサークレット",
+    "icon_index": 166,
+    "price": 6000,
+    "note": "",
+    "id": 19,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      15,
+      7,
+      6,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "古代魔法文明の技術で作られた額飾り。",
+    "name": "賢者の額冠",
+    "icon_index": 166,
+    "price": 10000,
+    "note": "",
+    "id": 20,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      18,
+      12,
+      11,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 2
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "なめし皮を重ねて組んだ鎧。\n",
+    "name": "レザーアーマー",
+    "icon_index": 169,
+    "price": 100,
+    "note": "",
+    "id": 21,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "青銅で作られた粗末な胸当て。",
+    "name": "ブロンズブレスト",
+    "icon_index": 169,
+    "price": 400,
+    "note": "",
+    "id": 22,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      12,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼板から打ち出した鉄の胸当て。",
+    "name": "アイアンブレスト",
+    "icon_index": 169,
+    "price": 2700,
+    "note": "",
+    "id": 23,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      18,
+      0,
+      0,
+      -2,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた胸当て。",
+    "name": "ミスリルブレスト",
+    "icon_index": 169,
+    "price": 7000,
+    "note": "",
+    "id": 24,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      24,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "竜の鱗から作られた胸当て。",
+    "name": "ドラゴンスケイル",
+    "icon_index": 169,
+    "price": 12000,
+    "note": "",
+    "id": 25,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      30,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "なめし皮で作られた帽子。",
+    "name": "レザーキャップ",
+    "icon_index": 163,
+    "price": 100,
+    "note": "",
+    "id": 26,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "青銅で補強された帽子。",
+    "name": "ブロンズキャップ",
+    "icon_index": 163,
+    "price": 350,
+    "note": "",
+    "id": 27,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      7,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼板を加工して作った帽子。",
+    "name": "サレット",
+    "icon_index": 163,
+    "price": 2400,
+    "note": "",
+    "id": 28,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      12,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "ミスリル銀糸で編まれた帽子。",
+    "name": "ミスリルキャップ",
+    "icon_index": 163,
+    "price": 5500,
+    "note": "",
+    "id": 29,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      16,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "竜の皮膚から作られた帽子。",
+    "name": "ドラゴンスキン",
+    "icon_index": 163,
+    "price": 9500,
+    "note": "",
+    "id": 30,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      22,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 3
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鉄の鎖を組み上げて作った鎧。",
+    "name": "チェインメイル",
+    "icon_index": 170,
+    "price": 100,
+    "note": "",
+    "id": 31,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -1
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      8,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼鉄製の鎧。",
+    "name": "アイアンメイル",
+    "icon_index": 170,
+    "price": 800,
+    "note": "",
+    "id": 32,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      16,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "騎士が身につける板金鎧。",
+    "name": "プレートメイル",
+    "icon_index": 170,
+    "price": 3600,
+    "note": "",
+    "id": 33,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -3
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      24,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた鎧。",
+    "name": "ミスリルメイル",
+    "icon_index": 170,
+    "price": 8000,
+    "note": "",
+    "id": 34,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      32,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "竜の鱗から作られた鎧。",
+    "name": "竜鱗の鎧",
+    "icon_index": 170,
+    "price": 15000,
+    "note": "",
+    "id": 35,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      40,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "頭部を覆う鉄鎖で編まれたフード。",
+    "name": "チェインコイフ",
+    "icon_index": 164,
+    "price": 100,
+    "note": "",
+    "id": 36,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -1
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼鉄製の兜。",
+    "name": "アイアンヘルム",
+    "icon_index": 164,
+    "price": 600,
+    "note": "",
+    "id": 37,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      12,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "騎士が身につける装飾された兜。",
+    "name": "ナイトヘルム",
+    "icon_index": 164,
+    "price": 3000,
+    "note": "",
+    "id": 38,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -3
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      18,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた兜。",
+    "name": "ミスリルヘルム",
+    "icon_index": 164,
+    "price": 7000,
+    "note": "",
+    "id": 39,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      24,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "竜の鱗から作られた兜。",
+    "name": "竜鱗の兜",
+    "icon_index": 164,
+    "price": 12000,
+    "note": "",
+    "id": 40,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      30,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 2,
+    "atype_id": 4
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "攻撃を受け流すための小型盾。",
+    "name": "バックラー",
+    "icon_index": 160,
+    "price": 100,
+    "note": "",
+    "id": 41,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 5
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鉄の枠で補強した木製の円盾。",
+    "name": "ラウンドシールド",
+    "icon_index": 160,
+    "price": 300,
+    "note": "",
+    "id": 42,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 5
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "表面に攻撃用のトゲがついた円盾。",
+    "name": "スパイクシールド",
+    "icon_index": 160,
+    "price": 1800,
+    "note": "",
+    "id": 43,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      3,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 5
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた小型盾。",
+    "name": "ミスリルバックラー",
+    "icon_index": 160,
+    "price": 4500,
+    "note": "",
+    "id": 44,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 5
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "竜の鱗から作られた小型盾。",
+    "name": "ドラゴンバックラー",
+    "icon_index": 160,
+    "price": 7000,
+    "note": "",
+    "id": 45,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0.125
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      15,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 5
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "堅木を重ね合わせて作った盾。",
+    "name": "ウッドシールド",
+    "icon_index": 161,
+    "price": 100,
+    "note": "",
+    "id": 46,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -1
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 6
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "鋼鉄製の盾。",
+    "name": "アイアンシールド",
+    "icon_index": 161,
+    "price": 700,
+    "note": "",
+    "id": 47,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 6
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "グリフォンの紋章が刻まれた鋼の盾。",
+    "name": "ナイトシールド",
+    "icon_index": 161,
+    "price": 3400,
+    "note": "",
+    "id": 48,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": -3
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      12,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 6
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "魔法の金属ミスリルで作られた盾。",
+    "name": "ミスリルシールド",
+    "icon_index": 161,
+    "price": 7500,
+    "note": "",
+    "id": 49,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      18,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 6
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 50,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 51,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 52,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 53,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 54,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 55,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 56,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 57,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 58,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Áo choàng của xác sống, với vải đen.\r\n\nNếu không có nó bạn sẽ trở thành một đống bụi đen và biến mất.",
+    "name": "Áo Choàng Đen",
+    "icon_index": 456,
+    "price": 100,
+    "note": "",
+    "id": 59,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 60,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 61,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chiếc khăn đỏ quý giá được tặng bởi bà ngoại.",
+    "name": "Khăn Đỏ",
+    "icon_index": 455,
+    "price": 100,
+    "note": "",
+    "id": 62,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 33,
+        "data_id": 0,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 3,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 63,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 64,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 65,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 66,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 67,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 68,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 69,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 70,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 71,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 72,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 73,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 74,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 75,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 76,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chiếc nhẫn hấp thụ sức sống của người đeo \r\nngay khi được trang bị.",
+    "name": "Nhẫn Sinh Mệnh",
+    "icon_index": 513,
+    "price": 2,
+    "note": "場所：聖森",
+    "id": 77,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      -500,
+      0,
+      -500,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 78,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng Máu tối đa.",
+    "name": "Nhẫn Sự Sống",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "場所：プロローグ、淫腐街",
+    "id": 79,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi hiệu quả của Phòng Thủ.",
+    "name": "Nhẫn Sức Bền",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "捨てられ森",
+    "id": 80,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 1,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự động hồi Máu+5%.",
+    "name": "Nhẫn Mắt Quỷ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "下水道",
+    "id": 81,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Giảm Sát Thương Vật Lý+30%.",
+    "name": "Nhẫn Sắt",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ゴーテル",
+    "id": 82,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương lửa giảm thiểu+50%.",
+    "name": "Nhẫn Đá Lửa",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ヤーコプ",
+    "id": 83,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương điện giảm thiểu+50%.",
+    "name": "Nhẫn Đá Sấm Sét",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ヘルサ",
+    "id": 84,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương băng giảm thiểu+50%.",
+    "name": "Nhẫn Đá Băng",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "白雪の庭",
+    "id": 85,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng kháng phép.",
+    "name": "Nhẫn Đá Phép Thuật",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "白雪城\r\n浜辺",
+    "id": 86,
+    "features": [],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      50,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi Linh Hồn nhận được từ kẻ địch.",
+    "name": "Nhẫn Bạc Avarice",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "聖森",
+    "id": 87,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 64,
+        "data_id": 4,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi số lượng vật phẩm rơi ra.",
+    "name": "Nhẫn Vàng Avarice",
+    "icon_index": 512,
+    "price": 1500,
+    "note": "聖森",
+    "id": 88,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 64,
+        "data_id": 5,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng độc+100%.\n Có thể đi xuyên qua vùng độc.",
+    "name": "Nhẫn Độc",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "アイバーン",
+    "id": 89,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 2,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự động hồi Máu+3%. Kháng chảy máu+100%.",
+    "name": "Nhẫn Hút Máu",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ベヒモス牧場",
+    "id": 90,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 26,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng sức tấn công.",
+    "name": "Nhẫn Sắc",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろちょうだい\r\nエリクシール",
+    "id": 91,
+    "features": [],
+    "params": [
+      0,
+      0,
+      50,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Không nhận thêm sát thương từ đòn chí mạng.\n \r\nKháng đòn chết đột tử.",
+    "name": "Nhẫn Bảo Vệ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "アトランティカ",
+    "id": 92,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 3,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỉ lệ chí mạng+20%.",
+    "name": "Nhẫn Ong Vò Vẽ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ヘルサ砂漠",
+    "id": 93,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng phòng thủ.",
+    "name": "Nhẫn Tường Thành",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "骸骨迷宮\r\n白雪",
+    "id": 94,
+    "features": [],
+    "params": [
+      0,
+      0,
+      0,
+      50,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự động hồi Mana+5%.",
+    "name": "Nhẫn Thánh Thần",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ゴーテルの塔",
+    "id": 95,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chất lỏng kỳ lạ. Tăng Máu.",
+    "name": "Nhầy Nhụa",
+    "icon_index": 99,
+    "price": 1500,
+    "note": "ぺろぺろちょうだい",
+    "id": 96,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      1000,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chất lỏng kỳ lạ. Tăng Mana.",
+    "name": "Nhớp Nháp",
+    "icon_index": 99,
+    "price": 1500,
+    "note": "ぺろぺろちょうだい",
+    "id": 97,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      200,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng tốc độ.\n Tỉ lệ né đòn đánh và phép+10%.",
+    "name": "Nhẫn Thần Gió",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "骸骨迷宮\r\nゴーテル",
+    "id": 98,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      50,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng sức mạnh phép thuật.",
+    "name": "Nhẫn Phù Thuỷ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろちょうだい\r\n穢れ沼",
+    "id": 99,
+    "features": [],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      50,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ bị chọn làm mục tiêu+300%.",
+    "name": "Nhẫn Bạo Chúa",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "死んだ回数30",
+    "id": 100,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 0,
+        "value": 3
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng mất trí+100%.",
+    "name": "Nhẫn Kiên Định",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "淫腐町",
+    "id": 101,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 5,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ làm mù+50%. Kháng mù+100%.",
+    "name": "Nhẫn Chạng Vạng",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "歌う骨",
+    "id": 102,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 3,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương bóng tối giảm thiểu+50%.",
+    "name": "Nhẫn Hải Đăng",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "腐海",
+    "id": 103,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng tất cả chỉ số. Tự động hồi Máu-20%.",
+    "name": "Nhẫn Thiết Nữ Đồng Trinh",
+    "icon_index": 513,
+    "price": 0,
+    "note": "捨てられの森　エリザベートイベント",
+    "id": 104,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      }
+    ],
+    "params": [
+      1000,
+      100,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ trúng độc, câm lặng, mất trí, mù,\n cấm đánh+50%.",
+    "name": "Chúc Phúc của Công Chúa Ếch",
+    "icon_index": 176,
+    "price": 0,
+    "note": "",
+    "id": 105,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 2,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 4,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 5,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 3,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 37,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -100
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự động hồi Máu+50%. Tự động hồi Mana+50%.",
+    "name": "Chúc Phúc của Nàng Tiên Cá",
+    "icon_index": 176,
+    "price": 0,
+    "note": "",
+    "id": 106,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 8,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      -1000,
+      -100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương vật lý và ma thuật giảm thiểu+50%.\n \r\nSát thương nguyên tố giảm thiểu+30%.",
+    "name": "Chúc Phúc của Bạch Tuyết",
+    "icon_index": 176,
+    "price": 0,
+    "note": "",
+    "id": 107,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 7,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 1,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 12,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      -100,
+      0,
+      -100,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Thêm một hành động mỗi lượt.\r\nTỉ lệ né đòn tấn công+90%.",
+    "name": "Chúc Phúc của Rapuzel",
+    "icon_index": 176,
+    "price": 0,
+    "note": "",
+    "id": 108,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -100,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng thiêu đốt, đóng băng, cấm đánh+50%.",
+    "name": "Nhẫn Đen",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "暗黒の鍾乳洞",
+    "id": 109,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 29,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 31,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 37,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi sức mạnh phép thuật và Mana tiêu hao.",
+    "name": "Nhẫn Vương Miện Hoàng Hôn",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろ",
+    "id": 110,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 4,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 4,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi hiệu quả hồi phục.",
+    "name": "Nhẫn Kỳ Diệu",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "暗黒の鍾乳洞",
+    "id": 111,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 2,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi sát thương nhận phải.",
+    "name": "Nhẫn Tai Hoạ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "カラミール",
+    "id": 112,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 6,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 7,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      200,
+      0,
+      200,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng lượng lớn tất cả chỉ số, Mana chuyển thành 0.",
+    "name": "Chúc Phúc của Baphomet",
+    "icon_index": 176,
+    "price": 0,
+    "note": "バフォ",
+    "id": 113,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      5000,
+      0,
+      500,
+      500,
+      500,
+      500,
+      500,
+      500
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương tăng lên x1.5. \r\n\nTỉ lệ né đòn tấn công và phép thuật-50%.",
+    "name": "Nhẫn Thần Chết",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "暗黒の鍾乳洞",
+    "id": 114,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 1.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": -0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": -0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      150,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng mọi hiệu ứng xấu (không phải tất cả).",
+    "name": "Nhẫn Vô Địch",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろ",
+    "id": 115,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 0,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 12,
+        "data_id": 7,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng tê liệt+100%.\n \r\nTỉ lệ né đòn đánh và phép thuật+10%.",
+    "name": "Nhẫn Ong Mật",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "旧淫腐街",
+    "id": 116,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ ru ngủ+50%.\n Tỷ lệ kháng ru ngủ+100%.",
+    "name": "Nhẫn Táo",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "アトランティカ",
+    "id": 117,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 6,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ câm lặng+50%.\n Tỷ lệ kháng câm lặng+100%.",
+    "name": "Nhẫn Diệt Phù Thuỷ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ピラミッド頂上",
+    "id": 118,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 32,
+        "data_id": 4,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Đòn tấn công+1.",
+    "name": "Nhẫn Áo Choàng Đỏ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "愚かな王子",
+    "id": 119,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 34,
+        "data_id": 0,
+        "value": 1
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chính xác+30%.",
+    "name": "Nhẫn Xạ Thủ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "淫腐街",
+    "id": 120,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự động hồi Máu+10%, tự động hồi Mana+10%.",
+    "name": "Nhẫn Vua Độc Ác",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "暗黒",
+    "id": 121,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng tốc độ.",
+    "name": "Nhẫn Quạ Trắng",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "旧淫腐街",
+    "id": 122,
+    "features": [],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      100,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Chiếc nhẫn đặc biệt được chế tạo từ vùng đất phương Đông. \r\nChuyển Evade thành Acrobatics.",
+    "name": "Nhẫn Hạt Gỗ Sẫm Màu",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろ",
+    "id": 123,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 43,
+        "data_id": 87,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 44,
+        "data_id": 12,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng gấp đôi hiệu quả của vật phẩm phục hồi.",
+    "name": "Nhẫn Toto",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "捨てられ",
+    "id": 124,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 3,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tăng may mắn.",
+    "name": "Nhẫn Cỏ 4 Lá",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろ\r\n水着イベント全て終わる",
+    "id": 125,
+    "features": [],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      300
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tự đánh.",
+    "name": "Nhẫn Con Rối",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "サバトの森庭",
+    "id": 126,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 0,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Nhận sát thương thay cho đồng minh ít máu.",
+    "name": "Nhẫn Sức Mạnh",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "サバトの森庭",
+    "id": 127,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 2,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng hiệu ứng+100%.",
+    "name": "Chúc Phúc của Lọ Lem",
+    "icon_index": 176,
+    "price": 0,
+    "note": "",
+    "id": 128,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 5,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 6,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 7,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 26,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 29,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 31,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 37,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 54,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 55,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 56,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 13,
+        "data_id": 63,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      -100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Sát thương ánh sáng giảm thiểu+50%.",
+    "name": "Nhẫn Thiên Đường",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "サバトの森庭",
+    "id": 129,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Mana tiêu hao*3/4.",
+    "name": "Nhẫn Phù Thuỷ Tốt",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "サバトの森庭",
+    "id": 130,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 4,
+        "value": 0.75
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ né đòn đánh và phép thuật+20%.\n \r\nTăng gấp đôi tốc độ.",
+    "name": "Nhẫn Leaf",
+    "icon_index": 512,
+    "price": 20000,
+    "note": "ロストエンパイアリィフ\r\nこれを持っていると個別ＥＤがＢＡＤＥＮＤになる。\r\n",
+    "id": 131,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 6,
+        "value": 2
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ chí mạng+100%.\n \r\nGiảm một nửa phòng thủ và kháng phép.",
+    "name": "Nhẫn Chiến Binh Liều Lĩnh",
+    "icon_index": 513,
+    "price": 5000,
+    "note": "心折れた勇者",
+    "id": 132,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": 1
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 3,
+        "value": 0.5
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 5,
+        "value": 0.5
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      -300,
+      0,
+      -300,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "10% tỷ lệ thêm 1 hành động.",
+    "name": "Nhẫn Harlot",
+    "icon_index": 513,
+    "price": 5000,
+    "note": "マリアンナ",
+    "id": 133,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Kháng hiệu ứng+20%.",
+    "name": "Nhẫn Khải Huyền",
+    "icon_index": 513,
+    "price": 5000,
+    "note": "バフォ",
+    "id": 134,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 3,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 2,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 4,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 5,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 6,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 7,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 8,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 9,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 10,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 11,
+        "value": null
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 11,
+        "data_id": 12,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ chí mạng+40%.",
+    "name": "Nhẫn Khó Tin",
+    "icon_index": 513,
+    "price": 5000,
+    "note": "バフォ",
+    "id": 135,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 2,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Tỷ lệ phản đòn+10%.\n Kháng làm choáng+100%.",
+    "name": "Nhẫn Nhà Vô Địch",
+    "icon_index": 513,
+    "price": 5000,
+    "note": "ベヒモス牧場",
+    "id": 136,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 14,
+        "data_id": 8,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 6,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Thêm 1 hành động mỗi lượt.",
+    "name": "Nhẫn Thỏ Phản Bội",
+    "icon_index": 512,
+    "price": 0,
+    "note": "祈り主",
+    "id": 137,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 61,
+        "data_id": 0,
+        "value": 1
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "Gấp đôi sức tấn công. Chính xác-20%.",
+    "name": "Nhẫn Xích Vỡ",
+    "icon_index": 513,
+    "price": 1500,
+    "note": "ぺろぺろちょうだい\r\n",
+    "id": 138,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 21,
+        "data_id": 2,
+        "value": 2
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 0,
+        "value": null
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 4,
+    "atype_id": 1
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 139,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 140,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 141,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 142,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  },
+  {
+    "$class": "RPG::Armor",
+    "description": "",
+    "name": "",
+    "icon_index": 0,
+    "price": 0,
+    "note": "",
+    "id": 143,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 22,
+        "data_id": 1,
+        "value": 0
+      }
+    ],
+    "params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "etype_id": 1,
+    "atype_id": 0
+  }
+]

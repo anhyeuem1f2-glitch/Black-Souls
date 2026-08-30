@@ -1,0 +1,1018 @@
+[
+  null,
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 7,
+    "character_index": 5,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 13,
+    "character_name": "!Flame",
+    "id": 1,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<戦闘終了後ステート解除:1>",
+    "equips": [
+      199,
+      0,
+      0,
+      59,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 7,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "$主人公",
+    "id": 2,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>\r\n<戦闘終了後ステート解除:1>",
+    "equips": [
+      101,
+      0,
+      0,
+      59,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 7,
+    "character_index": 2,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 2,
+    "character_name": "Evil",
+    "id": 3,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>\r\n<戦闘終了後ステート解除:1>",
+    "equips": [
+      112,
+      0,
+      0,
+      59,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 7,
+    "character_index": 5,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 3,
+    "character_name": "Evil",
+    "id": 4,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 23,
+        "data_id": 8,
+        "value": null
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>\r\n<戦闘終了後ステート解除:1>",
+    "equips": [
+      167,
+      0,
+      0,
+      59,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "れべる上限",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 99,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "20150616223115b44",
+    "id": 5,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Poro",
+    "face_index": 1,
+    "character_index": 1,
+    "initial_level": 99,
+    "face_name": "poro",
+    "class_id": 25,
+    "character_name": "",
+    "id": 6,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 0,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 62,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 51,
+        "data_id": 2,
+        "value": 0
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      7,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Được triệu hồi bởi Khăn Đỏ. Tự động đánh.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 7,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 8,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Strength",
+    "face_index": 3,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "People4",
+    "class_id": 13,
+    "character_name": "$主人公",
+    "id": 9,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 1,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 54,
+        "data_id": 2,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      }
+    ],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      62,
+      92
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 10,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Alice",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "alice",
+    "class_id": 1,
+    "character_name": "$c_54b",
+    "id": 11,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,10000>\r\n<限界変動:1,1000>\r\n<限界変動:2,1000>\r\n<限界変動:3,1000>\r\n<限界変動:4,1000>\r\n<限界変動:5,1000>\r\n<限界変動:6,1000>\r\n<限界変動:7,1000>",
+    "equips": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Jeanne",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "jnnu",
+    "class_id": 18,
+    "character_name": "jnu",
+    "id": 12,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      20,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Giỏi bảo vệ đồng đội. Có thể sử dụng Parry.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Leaf",
+    "face_index": 0,
+    "character_index": 3,
+    "initial_level": 1,
+    "face_name": "ri-hu",
+    "class_id": 15,
+    "character_name": "妖精小",
+    "id": 13,
+    "features": [
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 0,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 4,
+        "value": 0
+      },
+      {
+        "$class": "RPG::BaseItem::Feature",
+        "code": 53,
+        "data_id": 3,
+        "value": 0
+      }
+    ],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Tiên.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 14,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Miranda",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "miranda",
+    "class_id": 21,
+    "character_name": "$ミランダ",
+    "id": 15,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      94,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Một trong Hắc Hội.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Catherine",
+    "face_index": 0,
+    "character_index": 5,
+    "initial_level": 1,
+    "face_name": "kata",
+    "class_id": 20,
+    "character_name": "Actor5",
+    "id": 16,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Dùng phước lành. Giỏi trong việc hồi phục.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Goose",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "gu-su",
+    "class_id": 19,
+    "character_name": "$グース",
+    "id": 17,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      7,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Con chim giàu có. Nhân đôi phần thưởng chiến thắng nếu được triệu hồi.\n Có thể dùng evade.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Victoria",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "biku",
+    "class_id": 17,
+    "character_name": "$メイド",
+    "id": 18,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Hầu gái. Có thể dùng Item bằng MP.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Dorothy",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "doro",
+    "class_id": 16,
+    "character_name": "$ドロシー",
+    "id": 19,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      167,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Chủ lực phép thuật. Đa giới tính, hiện tại là phụ nữ.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Khăn Đỏ",
+    "face_index": 0,
+    "character_index": 1,
+    "initial_level": 1,
+    "face_name": "aka",
+    "class_id": 24,
+    "character_name": "紅",
+    "id": 20,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      92,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Đa zi năng. Có thể triệu hồi Poro.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Elma",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "eruma",
+    "class_id": 22,
+    "character_name": "$マッチ売り",
+    "id": 21,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Khống chế. Giỏi trong việc dùng thuốc.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Công Chúa Ếch",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "kaeru",
+    "class_id": 1,
+    "character_name": "$カエル姫",
+    "id": 22,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Rapunzel",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "lap",
+    "class_id": 1,
+    "character_name": "ラプンツェル",
+    "id": 23,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Bạch Tuyết",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "sira",
+    "class_id": 1,
+    "character_name": "$白雪姫",
+    "id": 24,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Nàng Tiên Cá",
+    "face_index": 0,
+    "character_index": 1,
+    "initial_level": 1,
+    "face_name": "nin",
+    "class_id": 1,
+    "character_name": "Spiritual",
+    "id": 25,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Lọ Lem",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "sin",
+    "class_id": 1,
+    "character_name": "$シンデレラ",
+    "id": 26,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "La Belle",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "beru",
+    "class_id": 1,
+    "character_name": "ベル",
+    "id": 27,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Elisabeth",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "eriza",
+    "class_id": 23,
+    "character_name": "$ごすろり",
+    "id": 28,
+    "features": [],
+    "note": "<レベル限界増加:900>\r\n<限界変動:0,99999>\r\n<限界変動:1,9999>\r\n<限界変動:2,9999>\r\n<限界変動:3,9999>\r\n<限界変動:4,9999>\r\n<限界変動:5,9999>\r\n<限界変動:6,9999>\r\n<限界変動:7,9999>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "Hút máu.",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 29,
+    "features": [],
+    "note": "リィフ答え",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Baphomet",
+    "face_index": 0,
+    "character_index": 2,
+    "initial_level": 1,
+    "face_name": "ba",
+    "class_id": 1,
+    "character_name": "baho",
+    "id": 30,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Hansel",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "hen",
+    "class_id": 1,
+    "character_name": "$へんぜる",
+    "id": 31,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Gretel",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "gure",
+    "class_id": 1,
+    "character_name": "$ぐれーてる",
+    "id": 32,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "Marianna",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "maria",
+    "class_id": 1,
+    "character_name": "$娼婦",
+    "id": 33,
+    "features": [],
+    "note": "<レベル限界増加:101>\r\n<限界変動:0,15000>\r\n<限界変動:1,3000>\r\n<限界変動:2,2000>\r\n<限界変動:3,2000>\r\n<限界変動:4,2000>\r\n<限界変動:5,2000>\r\n<限界変動:6,2000>\r\n<限界変動:7,2000>",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 34,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  },
+  {
+    "$class": "RPG::Actor",
+    "name": "",
+    "face_index": 0,
+    "character_index": 0,
+    "initial_level": 1,
+    "face_name": "",
+    "class_id": 1,
+    "character_name": "",
+    "id": 35,
+    "features": [],
+    "note": "",
+    "equips": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nickname": "",
+    "description": "",
+    "max_level": 99,
+    "icon_index": 0
+  }
+]

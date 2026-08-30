@@ -1,0 +1,1341 @@
+{
+  "schema": "black-souls-rgss3-scripts-v1",
+  "scripts": [
+    {
+      "index": 0,
+      "id": "97506006",
+      "title": "Vocab",
+      "filename": "000-Vocab.rb",
+      "bytes": 5728,
+      "lines": 146
+    },
+    {
+      "index": 1,
+      "id": "50901920",
+      "title": "Sound",
+      "filename": "001-Sound.rb",
+      "bytes": 2488,
+      "lines": 136
+    },
+    {
+      "index": 2,
+      "id": "57856563",
+      "title": "Cache",
+      "filename": "002-Cache.rb",
+      "bytes": 6274,
+      "lines": 135
+    },
+    {
+      "index": 3,
+      "id": "65903110",
+      "title": "DataManager",
+      "filename": "003-DataManager.rb",
+      "bytes": 12363,
+      "lines": 268
+    },
+    {
+      "index": 4,
+      "id": "74787538",
+      "title": "SceneManager",
+      "filename": "004-SceneManager.rb",
+      "bytes": 4216,
+      "lines": 94
+    },
+    {
+      "index": 5,
+      "id": "49286102",
+      "title": "BattleManager",
+      "filename": "005-BattleManager.rb",
+      "bytes": 16039,
+      "lines": 393
+    },
+    {
+      "index": 6,
+      "id": "28037886",
+      "title": "Game_Temp",
+      "filename": "006-Game_Temp.rb",
+      "bytes": 2239,
+      "lines": 46
+    },
+    {
+      "index": 7,
+      "id": "7942831",
+      "title": "Game_System",
+      "filename": "007-Game_System.rb",
+      "bytes": 5314,
+      "lines": 123
+    },
+    {
+      "index": 8,
+      "id": "61166382",
+      "title": "Game_Timer",
+      "filename": "008-Game_Timer.rb",
+      "bytes": 2139,
+      "lines": 57
+    },
+    {
+      "index": 9,
+      "id": "72079642",
+      "title": "Game_Message",
+      "filename": "009-Game_Message.rb",
+      "bytes": 4599,
+      "lines": 102
+    },
+    {
+      "index": 10,
+      "id": "65768432",
+      "title": "Game_Switches",
+      "filename": "010-Game_Switches.rb",
+      "bytes": 1528,
+      "lines": 36
+    },
+    {
+      "index": 11,
+      "id": "77770996",
+      "title": "Game_Variables",
+      "filename": "011-Game_Variables.rb",
+      "bytes": 1470,
+      "lines": 35
+    },
+    {
+      "index": 12,
+      "id": "93212223",
+      "title": "Game_SelfSwitches",
+      "filename": "012-Game_SelfSwitches.rb",
+      "bytes": 1551,
+      "lines": 36
+    },
+    {
+      "index": 13,
+      "id": "52755737",
+      "title": "Game_Screen",
+      "filename": "013-Game_Screen.rb",
+      "bytes": 9539,
+      "lines": 234
+    },
+    {
+      "index": 14,
+      "id": "79550171",
+      "title": "Game_Picture",
+      "filename": "014-Game_Picture.rb",
+      "bytes": 6428,
+      "lines": 161
+    },
+    {
+      "index": 15,
+      "id": "78996854",
+      "title": "Game_Pictures",
+      "filename": "015-Game_Pictures.rb",
+      "bytes": 1281,
+      "lines": 28
+    },
+    {
+      "index": 16,
+      "id": "92984270",
+      "title": "Game_BaseItem",
+      "filename": "016-Game_BaseItem.rb",
+      "bytes": 2341,
+      "lines": 51
+    },
+    {
+      "index": 17,
+      "id": "58756445",
+      "title": "Game_Action",
+      "filename": "017-Game_Action.rb",
+      "bytes": 9893,
+      "lines": 262
+    },
+    {
+      "index": 18,
+      "id": "34130116",
+      "title": "Game_ActionResult",
+      "filename": "018-Game_ActionResult.rb",
+      "bytes": 7206,
+      "lines": 160
+    },
+    {
+      "index": 19,
+      "id": "27436183",
+      "title": "Game_BattlerBase",
+      "filename": "019-Game_BattlerBase.rb",
+      "bytes": 34030,
+      "lines": 731
+    },
+    {
+      "index": 20,
+      "id": "52884295",
+      "title": "Game_Battler",
+      "filename": "020-Game_Battler.rb",
+      "bytes": 36469,
+      "lines": 823
+    },
+    {
+      "index": 21,
+      "id": "93706232",
+      "title": "Game_Actor",
+      "filename": "021-Game_Actor.rb",
+      "bytes": 30048,
+      "lines": 693
+    },
+    {
+      "index": 22,
+      "id": "19485474",
+      "title": "Game_Enemy",
+      "filename": "022-Game_Enemy.rb",
+      "bytes": 10994,
+      "lines": 265
+    },
+    {
+      "index": 23,
+      "id": "37972201",
+      "title": "Game_Actors",
+      "filename": "023-Game_Actors.rb",
+      "bytes": 969,
+      "lines": 23
+    },
+    {
+      "index": 24,
+      "id": "13350569",
+      "title": "Game_Unit",
+      "filename": "024-Game_Unit.rb",
+      "bytes": 5958,
+      "lines": 132
+    },
+    {
+      "index": 25,
+      "id": "20162964",
+      "title": "Game_Party",
+      "filename": "025-Game_Party.rb",
+      "bytes": 19185,
+      "lines": 417
+    },
+    {
+      "index": 26,
+      "id": "96014404",
+      "title": "Game_Troop",
+      "filename": "026-Game_Troop.rb",
+      "bytes": 8793,
+      "lines": 206
+    },
+    {
+      "index": 27,
+      "id": "45114136",
+      "title": "Game_Map",
+      "filename": "027-Game_Map.rb",
+      "bytes": 30051,
+      "lines": 699
+    },
+    {
+      "index": 28,
+      "id": "37136841",
+      "title": "Game_CommonEvent",
+      "filename": "028-Game_CommonEvent.rb",
+      "bytes": 1724,
+      "lines": 42
+    },
+    {
+      "index": 29,
+      "id": "73673298",
+      "title": "Game_CharacterBase",
+      "filename": "029-Game_CharacterBase.rb",
+      "bytes": 19304,
+      "lines": 444
+    },
+    {
+      "index": 30,
+      "id": "85238647",
+      "title": "Game_Character",
+      "filename": "030-Game_Character.rb",
+      "bytes": 17687,
+      "lines": 396
+    },
+    {
+      "index": 31,
+      "id": "47174434",
+      "title": "Game_Player",
+      "filename": "031-Game_Player.rb",
+      "bytes": 20258,
+      "lines": 487
+    },
+    {
+      "index": 32,
+      "id": "6543332",
+      "title": "Game_Follower",
+      "filename": "032-Game_Follower.rb",
+      "bytes": 3254,
+      "lines": 74
+    },
+    {
+      "index": 33,
+      "id": "90583244",
+      "title": "Game_Followers",
+      "filename": "033-Game_Followers.rb",
+      "bytes": 4766,
+      "lines": 112
+    },
+    {
+      "index": 34,
+      "id": "53400510",
+      "title": "Game_Vehicle",
+      "filename": "034-Game_Vehicle.rb",
+      "bytes": 7686,
+      "lines": 194
+    },
+    {
+      "index": 35,
+      "id": "36896300",
+      "title": "Game_Event",
+      "filename": "035-Game_Event.rb",
+      "bytes": 12579,
+      "lines": 308
+    },
+    {
+      "index": 36,
+      "id": "89128017",
+      "title": "Game_Interpreter",
+      "filename": "036-Game_Interpreter.rb",
+      "bytes": 56496,
+      "lines": 1412
+    },
+    {
+      "index": 37,
+      "id": "49788108",
+      "title": "Sprite_Base",
+      "filename": "037-Sprite_Base.rb",
+      "bytes": 8885,
+      "lines": 233
+    },
+    {
+      "index": 38,
+      "id": "76586914",
+      "title": "Sprite_Character",
+      "filename": "038-Sprite_Character.rb",
+      "bytes": 8463,
+      "lines": 213
+    },
+    {
+      "index": 39,
+      "id": "35537720",
+      "title": "Sprite_Battler",
+      "filename": "039-Sprite_Battler.rb",
+      "bytes": 8730,
+      "lines": 232
+    },
+    {
+      "index": 40,
+      "id": "18621826",
+      "title": "Sprite_Picture",
+      "filename": "040-Sprite_Picture.rb",
+      "bytes": 2954,
+      "lines": 79
+    },
+    {
+      "index": 41,
+      "id": "85012817",
+      "title": "Sprite_Timer",
+      "filename": "041-Sprite_Timer.rb",
+      "bytes": 3031,
+      "lines": 78
+    },
+    {
+      "index": 42,
+      "id": "43720641",
+      "title": "Spriteset_Weather",
+      "filename": "042-Spriteset_Weather.rb",
+      "bytes": 7600,
+      "lines": 185
+    },
+    {
+      "index": 43,
+      "id": "2353947",
+      "title": "Spriteset_Map",
+      "filename": "043-Spriteset_Map.rb",
+      "bytes": 11183,
+      "lines": 274
+    },
+    {
+      "index": 44,
+      "id": "92516995",
+      "title": "Spriteset_Battle",
+      "filename": "044-Spriteset_Battle.rb",
+      "bytes": 16280,
+      "lines": 389
+    },
+    {
+      "index": 45,
+      "id": "30856323",
+      "title": "Window_Base",
+      "filename": "045-Window_Base.rb",
+      "bytes": 25798,
+      "lines": 570
+    },
+    {
+      "index": 46,
+      "id": "61843872",
+      "title": "Window_Selectable",
+      "filename": "046-Window_Selectable.rb",
+      "bytes": 18577,
+      "lines": 443
+    },
+    {
+      "index": 47,
+      "id": "59714244",
+      "title": "Window_Command",
+      "filename": "047-Window_Command.rb",
+      "bytes": 6504,
+      "lines": 153
+    },
+    {
+      "index": 48,
+      "id": "93724021",
+      "title": "Window_HorzCommand",
+      "filename": "048-Window_HorzCommand.rb",
+      "bytes": 4564,
+      "lines": 107
+    },
+    {
+      "index": 49,
+      "id": "77997554",
+      "title": "Window_Help",
+      "filename": "049-Window_Help.rb",
+      "bytes": 1777,
+      "lines": 44
+    },
+    {
+      "index": 50,
+      "id": "97998046",
+      "title": "Window_Gold",
+      "filename": "050-Window_Gold.rb",
+      "bytes": 1885,
+      "lines": 48
+    },
+    {
+      "index": 51,
+      "id": "26810180",
+      "title": "Window_MenuCommand",
+      "filename": "051-Window_MenuCommand.rb",
+      "bytes": 4813,
+      "lines": 107
+    },
+    {
+      "index": 52,
+      "id": "22982280",
+      "title": "Window_MenuStatus",
+      "filename": "052-Window_MenuStatus.rb",
+      "bytes": 3817,
+      "lines": 86
+    },
+    {
+      "index": 53,
+      "id": "19290161",
+      "title": "Window_MenuActor",
+      "filename": "053-Window_MenuActor.rb",
+      "bytes": 1758,
+      "lines": 43
+    },
+    {
+      "index": 54,
+      "id": "28024575",
+      "title": "Window_ItemCategory",
+      "filename": "054-Window_ItemCategory.rb",
+      "bytes": 2358,
+      "lines": 55
+    },
+    {
+      "index": 55,
+      "id": "82366943",
+      "title": "Window_ItemList",
+      "filename": "055-Window_ItemList.rb",
+      "bytes": 4664,
+      "lines": 118
+    },
+    {
+      "index": 56,
+      "id": "52376513",
+      "title": "Window_SkillCommand",
+      "filename": "056-Window_SkillCommand.rb",
+      "bytes": 3019,
+      "lines": 76
+    },
+    {
+      "index": 57,
+      "id": "97927834",
+      "title": "Window_SkillStatus",
+      "filename": "057-Window_SkillStatus.rb",
+      "bytes": 1591,
+      "lines": 39
+    },
+    {
+      "index": 58,
+      "id": "71409531",
+      "title": "Window_SkillList",
+      "filename": "058-Window_SkillList.rb",
+      "bytes": 4953,
+      "lines": 122
+    },
+    {
+      "index": 59,
+      "id": "26427732",
+      "title": "Window_EquipStatus",
+      "filename": "059-Window_EquipStatus.rb",
+      "bytes": 4245,
+      "lines": 98
+    },
+    {
+      "index": 60,
+      "id": "51369648",
+      "title": "Window_EquipCommand",
+      "filename": "060-Window_EquipCommand.rb",
+      "bytes": 1539,
+      "lines": 36
+    },
+    {
+      "index": 61,
+      "id": "37017876",
+      "title": "Window_EquipSlot",
+      "filename": "061-Window_EquipSlot.rb",
+      "bytes": 4907,
+      "lines": 111
+    },
+    {
+      "index": 62,
+      "id": "10388623",
+      "title": "Window_EquipItem",
+      "filename": "062-Window_EquipItem.rb",
+      "bytes": 3309,
+      "lines": 78
+    },
+    {
+      "index": 63,
+      "id": "42657471",
+      "title": "Window_Status",
+      "filename": "063-Window_Status.rb",
+      "bytes": 5345,
+      "lines": 126
+    },
+    {
+      "index": 64,
+      "id": "81494140",
+      "title": "Window_SaveFile",
+      "filename": "064-Window_SaveFile.rb",
+      "bytes": 3017,
+      "lines": 70
+    },
+    {
+      "index": 65,
+      "id": "53795570",
+      "title": "Window_ShopCommand",
+      "filename": "065-Window_ShopCommand.rb",
+      "bytes": 1583,
+      "lines": 37
+    },
+    {
+      "index": 66,
+      "id": "98941040",
+      "title": "Window_ShopBuy",
+      "filename": "066-Window_ShopBuy.rb",
+      "bytes": 4682,
+      "lines": 116
+    },
+    {
+      "index": 67,
+      "id": "52413940",
+      "title": "Window_ShopSell",
+      "filename": "067-Window_ShopSell.rb",
+      "bytes": 1247,
+      "lines": 27
+    },
+    {
+      "index": 68,
+      "id": "50042725",
+      "title": "Window_ShopNumber",
+      "filename": "068-Window_ShopNumber.rb",
+      "bytes": 5649,
+      "lines": 137
+    },
+    {
+      "index": 69,
+      "id": "42938232",
+      "title": "Window_ShopStatus",
+      "filename": "069-Window_ShopStatus.rb",
+      "bytes": 5521,
+      "lines": 123
+    },
+    {
+      "index": 70,
+      "id": "77163696",
+      "title": "Window_NameEdit",
+      "filename": "070-Window_NameEdit.rb",
+      "bytes": 5177,
+      "lines": 130
+    },
+    {
+      "index": 71,
+      "id": "74963379",
+      "title": "Window_NameInput",
+      "filename": "071-Window_NameInput.rb",
+      "bytes": 11139,
+      "lines": 254
+    },
+    {
+      "index": 72,
+      "id": "85398161",
+      "title": "Window_ChoiceList",
+      "filename": "072-Window_ChoiceList.rb",
+      "bytes": 3716,
+      "lines": 89
+    },
+    {
+      "index": 73,
+      "id": "12512207",
+      "title": "Window_NumberInput",
+      "filename": "073-Window_NumberInput.rb",
+      "bytes": 5853,
+      "lines": 149
+    },
+    {
+      "index": 74,
+      "id": "18326663",
+      "title": "Window_KeyItem",
+      "filename": "074-Window_KeyItem.rb",
+      "bytes": 2151,
+      "lines": 56
+    },
+    {
+      "index": 75,
+      "id": "11825317",
+      "title": "Window_Message",
+      "filename": "075-Window_Message.rb",
+      "bytes": 15649,
+      "lines": 397
+    },
+    {
+      "index": 76,
+      "id": "47988139",
+      "title": "Window_ScrollText",
+      "filename": "076-Window_ScrollText.rb",
+      "bytes": 3680,
+      "lines": 91
+    },
+    {
+      "index": 77,
+      "id": "98239824",
+      "title": "Window_MapName",
+      "filename": "077-Window_MapName.rb",
+      "bytes": 3675,
+      "lines": 97
+    },
+    {
+      "index": 78,
+      "id": "83594603",
+      "title": "Window_BattleLog",
+      "filename": "078-Window_BattleLog.rb",
+      "bytes": 17241,
+      "lines": 426
+    },
+    {
+      "index": 79,
+      "id": "63909912",
+      "title": "Window_PartyCommand",
+      "filename": "079-Window_PartyCommand.rb",
+      "bytes": 1803,
+      "lines": 47
+    },
+    {
+      "index": 80,
+      "id": "42946512",
+      "title": "Window_ActorCommand",
+      "filename": "080-Window_ActorCommand.rb",
+      "bytes": 3148,
+      "lines": 79
+    },
+    {
+      "index": 81,
+      "id": "73168615",
+      "title": "Window_BattleStatus",
+      "filename": "081-Window_BattleStatus.rb",
+      "bytes": 4813,
+      "lines": 111
+    },
+    {
+      "index": 82,
+      "id": "78381347",
+      "title": "Window_BattleActor",
+      "filename": "082-Window_BattleActor.rb",
+      "bytes": 1531,
+      "lines": 39
+    },
+    {
+      "index": 83,
+      "id": "12073647",
+      "title": "Window_BattleEnemy",
+      "filename": "083-Window_BattleEnemy.rb",
+      "bytes": 2857,
+      "lines": 70
+    },
+    {
+      "index": 84,
+      "id": "63254761",
+      "title": "Window_BattleSkill",
+      "filename": "084-Window_BattleSkill.rb",
+      "bytes": 1407,
+      "lines": 35
+    },
+    {
+      "index": 85,
+      "id": "11915506",
+      "title": "Window_BattleItem",
+      "filename": "085-Window_BattleItem.rb",
+      "bytes": 1683,
+      "lines": 41
+    },
+    {
+      "index": 86,
+      "id": "72874363",
+      "title": "Window_TitleCommand",
+      "filename": "086-Window_TitleCommand.rb",
+      "bytes": 1998,
+      "lines": 46
+    },
+    {
+      "index": 87,
+      "id": "55562791",
+      "title": "Window_GameEnd",
+      "filename": "087-Window_GameEnd.rb",
+      "bytes": 1633,
+      "lines": 39
+    },
+    {
+      "index": 88,
+      "id": "70270804",
+      "title": "Window_DebugLeft",
+      "filename": "088-Window_DebugLeft.rb",
+      "bytes": 4430,
+      "lines": 105
+    },
+    {
+      "index": 89,
+      "id": "74315432",
+      "title": "Window_DebugRight",
+      "filename": "089-Window_DebugRight.rb",
+      "bytes": 4614,
+      "lines": 120
+    },
+    {
+      "index": 90,
+      "id": "87906638",
+      "title": "Scene_Base",
+      "filename": "090-Scene_Base.rb",
+      "bytes": 5265,
+      "lines": 133
+    },
+    {
+      "index": 91,
+      "id": "48831177",
+      "title": "Scene_Title",
+      "filename": "091-Scene_Title.rb",
+      "bytes": 5630,
+      "lines": 138
+    },
+    {
+      "index": 92,
+      "id": "29223633",
+      "title": "Scene_Map",
+      "filename": "092-Scene_Map.rb",
+      "bytes": 11367,
+      "lines": 276
+    },
+    {
+      "index": 93,
+      "id": "69613366",
+      "title": "Scene_MenuBase",
+      "filename": "093-Scene_MenuBase.rb",
+      "bytes": 2614,
+      "lines": 64
+    },
+    {
+      "index": 94,
+      "id": "95355584",
+      "title": "Scene_Menu",
+      "filename": "094-Scene_Menu.rb",
+      "bytes": 5585,
+      "lines": 128
+    },
+    {
+      "index": 95,
+      "id": "3251418",
+      "title": "Scene_ItemBase",
+      "filename": "095-Scene_ItemBase.rb",
+      "bytes": 6100,
+      "lines": 148
+    },
+    {
+      "index": 96,
+      "id": "91243017",
+      "title": "Scene_Item",
+      "filename": "096-Scene_Item.rb",
+      "bytes": 3222,
+      "lines": 76
+    },
+    {
+      "index": 97,
+      "id": "97256469",
+      "title": "Scene_Skill",
+      "filename": "097-Scene_Skill.rb",
+      "bytes": 4570,
+      "lines": 109
+    },
+    {
+      "index": 98,
+      "id": "82235717",
+      "title": "Scene_Equip",
+      "filename": "098-Scene_Equip.rb",
+      "bytes": 6062,
+      "lines": 145
+    },
+    {
+      "index": 99,
+      "id": "95739746",
+      "title": "Scene_Status",
+      "filename": "099-Scene_Status.rb",
+      "bytes": 1113,
+      "lines": 26
+    },
+    {
+      "index": 100,
+      "id": "29297389",
+      "title": "Scene_File",
+      "filename": "100-Scene_File.rb",
+      "bytes": 8907,
+      "lines": 204
+    },
+    {
+      "index": 101,
+      "id": "12391628",
+      "title": "Scene_Save",
+      "filename": "101-Scene_Save.rb",
+      "bytes": 1544,
+      "lines": 39
+    },
+    {
+      "index": 102,
+      "id": "71942138",
+      "title": "Scene_Load",
+      "filename": "102-Scene_Load.rb",
+      "bytes": 1611,
+      "lines": 41
+    },
+    {
+      "index": 103,
+      "id": "79702758",
+      "title": "Scene_End",
+      "filename": "103-Scene_End.rb",
+      "bytes": 2540,
+      "lines": 62
+    },
+    {
+      "index": 104,
+      "id": "40350342",
+      "title": "Scene_Shop",
+      "filename": "104-Scene_Shop.rb",
+      "bytes": 12211,
+      "lines": 300
+    },
+    {
+      "index": 105,
+      "id": "45690918",
+      "title": "Scene_Name",
+      "filename": "105-Scene_Name.rb",
+      "bytes": 1321,
+      "lines": 33
+    },
+    {
+      "index": 106,
+      "id": "44960761",
+      "title": "Scene_Debug",
+      "filename": "106-Scene_Debug.rb",
+      "bytes": 3501,
+      "lines": 88
+    },
+    {
+      "index": 107,
+      "id": "24767163",
+      "title": "Scene_Battle",
+      "filename": "107-Scene_Battle.rb",
+      "bytes": 28653,
+      "lines": 692
+    },
+    {
+      "index": 108,
+      "id": "19266",
+      "title": "Scene_Gameover",
+      "filename": "108-Scene_Gameover.rb",
+      "bytes": 3382,
+      "lines": 86
+    },
+    {
+      "index": 109,
+      "id": "70894717",
+      "title": "入手インフォ",
+      "filename": "109-入手インフォ.rb",
+      "bytes": 25465,
+      "lines": 604
+    },
+    {
+      "index": 110,
+      "id": "86412505",
+      "title": "セルフスイッチ操作",
+      "filename": "110-セルフスイッチ操作.rb",
+      "bytes": 5707,
+      "lines": 149
+    },
+    {
+      "index": 111,
+      "id": "24116733",
+      "title": "メニュー変数",
+      "filename": "111-メニュー変数.rb",
+      "bytes": 3209,
+      "lines": 90
+    },
+    {
+      "index": 112,
+      "id": "29063945",
+      "title": "特殊軽量化",
+      "filename": "112-特殊軽量化.rb",
+      "bytes": 1450,
+      "lines": 38
+    },
+    {
+      "index": 113,
+      "id": "1223266",
+      "title": "A1共通スクリプト",
+      "filename": "113-A1共通スクリプト.rb",
+      "bytes": 50161,
+      "lines": 1094
+    },
+    {
+      "index": 114,
+      "id": "55910166",
+      "title": "装備拡張",
+      "filename": "114-装備拡張.rb",
+      "bytes": 12914,
+      "lines": 287
+    },
+    {
+      "index": 115,
+      "id": "11057415",
+      "title": "アクター窓",
+      "filename": "115-アクター窓.rb",
+      "bytes": 2610,
+      "lines": 52
+    },
+    {
+      "index": 116,
+      "id": "63952023",
+      "title": "画面外自律移動",
+      "filename": "116-画面外自律移動.rb",
+      "bytes": 3510,
+      "lines": 80
+    },
+    {
+      "index": 117,
+      "id": "86098267",
+      "title": "ステータス限界突破",
+      "filename": "117-ステータス限界突破.rb",
+      "bytes": 8163,
+      "lines": 265
+    },
+    {
+      "index": 118,
+      "id": "41864968",
+      "title": "タイマー非表示",
+      "filename": "118-タイマー非表示.rb",
+      "bytes": 2520,
+      "lines": 68
+    },
+    {
+      "index": 119,
+      "id": "78338689",
+      "title": "８方向移動",
+      "filename": "119-8方向移動.rb",
+      "bytes": 5645,
+      "lines": 152
+    },
+    {
+      "index": 120,
+      "id": "85409895",
+      "title": "アイテム合成",
+      "filename": "120-アイテム合成.rb",
+      "bytes": 33951,
+      "lines": 889
+    },
+    {
+      "index": 121,
+      "id": "91530997",
+      "title": "バトルスピード調整",
+      "filename": "121-バトルスピード調整.rb",
+      "bytes": 9466,
+      "lines": 207
+    },
+    {
+      "index": 122,
+      "id": "73219906",
+      "title": "61 ※ＡＴＢ　メイン設定",
+      "filename": "122-61 ※ATB メイン設定.rb",
+      "bytes": 4429,
+      "lines": 125
+    },
+    {
+      "index": 123,
+      "id": "6282735",
+      "title": "71 Scene_Battle",
+      "filename": "123-71 Scene_Battle.rb",
+      "bytes": 12128,
+      "lines": 297
+    },
+    {
+      "index": 124,
+      "id": "41600319",
+      "title": "62 ステート　ターンフレーム",
+      "filename": "124-62 ステート ターンフレーム.rb",
+      "bytes": 14983,
+      "lines": 362
+    },
+    {
+      "index": 125,
+      "id": "86902382",
+      "title": "62 Game_Battler",
+      "filename": "125-62 Game_Battler.rb",
+      "bytes": 10486,
+      "lines": 276
+    },
+    {
+      "index": 126,
+      "id": "43973917",
+      "title": "71 Game_Battler フレーム更新",
+      "filename": "126-71 Game_Battler フレーム更新.rb",
+      "bytes": 3022,
+      "lines": 87
+    },
+    {
+      "index": 127,
+      "id": "25351420",
+      "title": "71 Game_Battler 詠唱",
+      "filename": "127-71 Game_Battler 詠唱.rb",
+      "bytes": 8050,
+      "lines": 200
+    },
+    {
+      "index": 128,
+      "id": "16836003",
+      "title": "71 ※ＡＰ増減ステート　設定",
+      "filename": "128-71 ※AP増減ステート 設定.rb",
+      "bytes": 9986,
+      "lines": 257
+    },
+    {
+      "index": 129,
+      "id": "86524617",
+      "title": "64 ※ＡＴＢ　ウインドウ設定",
+      "filename": "129-64 ※ATB ウインドウ設定.rb",
+      "bytes": 4529,
+      "lines": 93
+    },
+    {
+      "index": 130,
+      "id": "41252367",
+      "title": "50 ※ゲージ色設定　新",
+      "filename": "130-50 ※ゲージ色設定 新.rb",
+      "bytes": 4900,
+      "lines": 132
+    },
+    {
+      "index": 131,
+      "id": "18257113",
+      "title": "戦闘コマンドカスタム1.05",
+      "filename": "131-戦闘コマンドカスタム1.05.rb",
+      "bytes": 39926,
+      "lines": 952
+    },
+    {
+      "index": 132,
+      "id": "80989825",
+      "title": "70 ステータスウインドウ",
+      "filename": "132-70 ステータスウインドウ.rb",
+      "bytes": 11511,
+      "lines": 285
+    },
+    {
+      "index": 133,
+      "id": "48686746",
+      "title": "61 敵ＡＰゲージ描画",
+      "filename": "133-61 敵APゲージ描画.rb",
+      "bytes": 11834,
+      "lines": 298
+    },
+    {
+      "index": 134,
+      "id": "45507144",
+      "title": "敵のHP表示",
+      "filename": "134-敵のHP表示.rb",
+      "bytes": 23779,
+      "lines": 631
+    },
+    {
+      "index": 135,
+      "id": "42947332",
+      "title": "根性食いしばり",
+      "filename": "135-根性食いしばり.rb",
+      "bytes": 3137,
+      "lines": 74
+    },
+    {
+      "index": 136,
+      "id": "72114377",
+      "title": "敵の行動賢く",
+      "filename": "136-敵の行動賢く.rb",
+      "bytes": 29623,
+      "lines": 608
+    },
+    {
+      "index": 137,
+      "id": "94576680",
+      "title": "戦闘背景変更",
+      "filename": "137-戦闘背景変更.rb",
+      "bytes": 4122,
+      "lines": 87
+    },
+    {
+      "index": 138,
+      "id": "93458457",
+      "title": "EX WINDOW",
+      "filename": "138-EX WINDOW.rb",
+      "bytes": 11287,
+      "lines": 242
+    },
+    {
+      "index": 139,
+      "id": "6418543",
+      "title": "顔グラ戦闘",
+      "filename": "139-顔グラ戦闘.rb",
+      "bytes": 3752,
+      "lines": 88
+    },
+    {
+      "index": 140,
+      "id": "76627032",
+      "title": "VXAce_SP1",
+      "filename": "140-VXAce_SP1.rb",
+      "bytes": 7562,
+      "lines": 158
+    },
+    {
+      "index": 141,
+      "id": "36109987",
+      "title": "逃走確率",
+      "filename": "141-逃走確率.rb",
+      "bytes": 3371,
+      "lines": 91
+    },
+    {
+      "index": 142,
+      "id": "61422100",
+      "title": "遠景床",
+      "filename": "142-遠景床.rb",
+      "bytes": 2687,
+      "lines": 54
+    },
+    {
+      "index": 143,
+      "id": "96267101",
+      "title": "歩数リセット",
+      "filename": "143-歩数リセット.rb",
+      "bytes": 58,
+      "lines": 3
+    },
+    {
+      "index": 144,
+      "id": 69759559,
+      "title": "名前入力",
+      "filename": "144-名前入力.rb",
+      "bytes": 42509,
+      "lines": 1053
+    },
+    {
+      "index": 145,
+      "id": "75802262",
+      "title": "シンボル",
+      "filename": "145-シンボル.rb",
+      "bytes": 29739,
+      "lines": 680
+    },
+    {
+      "index": 146,
+      "id": "29015014",
+      "title": "自動蘇生",
+      "filename": "146-自動蘇生.rb",
+      "bytes": 17978,
+      "lines": 555
+    },
+    {
+      "index": 147,
+      "id": "61715537",
+      "title": "HP回復反転",
+      "filename": "147-HP回復反転.rb",
+      "bytes": 9853,
+      "lines": 281
+    },
+    {
+      "index": 148,
+      "id": "73974548",
+      "title": "リージョン通行",
+      "filename": "148-リージョン通行.rb",
+      "bytes": 14654,
+      "lines": 340
+    },
+    {
+      "index": 149,
+      "id": "63240525",
+      "title": "戦闘終了時戦闘不能解除",
+      "filename": "149-戦闘終了時戦闘不能解除.rb",
+      "bytes": 5924,
+      "lines": 195
+    },
+    {
+      "index": 150,
+      "id": "97125765",
+      "title": "誤選択防止",
+      "filename": "150-誤選択防止.rb",
+      "bytes": 4096,
+      "lines": 114
+    },
+    {
+      "index": 151,
+      "id": "22678217",
+      "title": "hulogu",
+      "filename": "151-hulogu.rb",
+      "bytes": 13418,
+      "lines": 339
+    },
+    {
+      "index": 152,
+      "id": "70813808",
+      "title": "バトラー表示拡張",
+      "filename": "152-バトラー表示拡張.rb",
+      "bytes": 4217,
+      "lines": 106
+    },
+    {
+      "index": 153,
+      "id": "27488509",
+      "title": "バトルミスト",
+      "filename": "153-バトルミスト.rb",
+      "bytes": 4272,
+      "lines": 110
+    },
+    {
+      "index": 154,
+      "id": "53975288",
+      "title": "クリティカル効果音",
+      "filename": "154-クリティカル効果音.rb",
+      "bytes": 1671,
+      "lines": 44
+    },
+    {
+      "index": 155,
+      "id": "1946794",
+      "title": "使用者効果",
+      "filename": "155-使用者効果.rb",
+      "bytes": 1597,
+      "lines": 43
+    },
+    {
+      "index": 156,
+      "id": "63619083",
+      "title": "ネームウィンドウ",
+      "filename": "156-ネームウィンドウ.rb",
+      "bytes": 29433,
+      "lines": 765
+    },
+    {
+      "index": 157,
+      "id": "98292567",
+      "title": "全体攻撃武器",
+      "filename": "157-全体攻撃武器.rb",
+      "bytes": 5452,
+      "lines": 144
+    },
+    {
+      "index": 158,
+      "id": "98932695",
+      "title": "マップ名ウィンドウ",
+      "filename": "158-マップ名ウィンドウ.rb",
+      "bytes": 3065,
+      "lines": 79
+    },
+    {
+      "index": 159,
+      "id": "87575000",
+      "title": "足音",
+      "filename": "159-足音.rb",
+      "bytes": 6507,
+      "lines": 129
+    },
+    {
+      "index": 160,
+      "id": "66061778",
+      "title": "レベル限界突破",
+      "filename": "160-レベル限界突破.rb",
+      "bytes": 12219,
+      "lines": 339
+    },
+    {
+      "index": 161,
+      "id": "2137562",
+      "title": "バトルシェイク",
+      "filename": "161-バトルシェイク.rb",
+      "bytes": 3921,
+      "lines": 106
+    },
+    {
+      "index": 162,
+      "id": "59508704",
+      "title": "周回敵の強さ",
+      "filename": "162-周回敵の強さ.rb",
+      "bytes": 6418,
+      "lines": 123
+    },
+    {
+      "index": 163,
+      "id": 13404161,
+      "title": "King Maker worldmap",
+      "filename": "163-King Maker worldmap.rb",
+      "bytes": 13751,
+      "lines": 515
+    },
+    {
+      "index": 164,
+      "id": 83620171,
+      "title": "King Maker walkthrough",
+      "filename": "164-King Maker walkthrough.rb",
+      "bytes": 43372,
+      "lines": 888
+    },
+    {
+      "index": 165,
+      "id": "76410401",
+      "title": "メッセージスキップ",
+      "filename": "165-メッセージスキップ.rb",
+      "bytes": 3313,
+      "lines": 88
+    },
+    {
+      "index": 166,
+      "id": "1953025",
+      "title": "Main",
+      "filename": "166-Main.rb",
+      "bytes": 383,
+      "lines": 8
+    }
+  ]
+}

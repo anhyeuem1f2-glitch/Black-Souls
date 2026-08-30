@@ -1,0 +1,831 @@
+{
+  "schema": "black-souls-normalized-data-v1",
+  "source": "RPG Maker VX Ace Ruby Marshal 4.8",
+  "files": [
+    {
+      "source": "Actors.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Actors.json"
+    },
+    {
+      "source": "Animations.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Animations.json"
+    },
+    {
+      "source": "Armors.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Armors.json"
+    },
+    {
+      "source": "Classes.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Classes.json"
+    },
+    {
+      "source": "CommonEvents.rvdata2",
+      "kind": "database",
+      "output": "generated/database/CommonEvents.json"
+    },
+    {
+      "source": "Enemies.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Enemies.json"
+    },
+    {
+      "source": "Items.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Items.json"
+    },
+    {
+      "source": "Map001.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/001.json"
+    },
+    {
+      "source": "Map002.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/002.json"
+    },
+    {
+      "source": "Map003.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/003.json"
+    },
+    {
+      "source": "Map004.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/004.json"
+    },
+    {
+      "source": "Map005.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/005.json"
+    },
+    {
+      "source": "Map006.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/006.json"
+    },
+    {
+      "source": "Map007.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/007.json"
+    },
+    {
+      "source": "Map008.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/008.json"
+    },
+    {
+      "source": "Map009.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/009.json"
+    },
+    {
+      "source": "Map010.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/010.json"
+    },
+    {
+      "source": "Map011.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/011.json"
+    },
+    {
+      "source": "Map012.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/012.json"
+    },
+    {
+      "source": "Map013.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/013.json"
+    },
+    {
+      "source": "Map014.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/014.json"
+    },
+    {
+      "source": "Map015.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/015.json"
+    },
+    {
+      "source": "Map016.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/016.json"
+    },
+    {
+      "source": "Map017.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/017.json"
+    },
+    {
+      "source": "Map018.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/018.json"
+    },
+    {
+      "source": "Map019.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/019.json"
+    },
+    {
+      "source": "Map020.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/020.json"
+    },
+    {
+      "source": "Map021.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/021.json"
+    },
+    {
+      "source": "Map022.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/022.json"
+    },
+    {
+      "source": "Map023.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/023.json"
+    },
+    {
+      "source": "Map024.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/024.json"
+    },
+    {
+      "source": "Map025.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/025.json"
+    },
+    {
+      "source": "Map026.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/026.json"
+    },
+    {
+      "source": "Map027.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/027.json"
+    },
+    {
+      "source": "Map028.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/028.json"
+    },
+    {
+      "source": "Map029.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/029.json"
+    },
+    {
+      "source": "Map030.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/030.json"
+    },
+    {
+      "source": "Map031.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/031.json"
+    },
+    {
+      "source": "Map032.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/032.json"
+    },
+    {
+      "source": "Map033.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/033.json"
+    },
+    {
+      "source": "Map034.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/034.json"
+    },
+    {
+      "source": "Map035.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/035.json"
+    },
+    {
+      "source": "Map036.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/036.json"
+    },
+    {
+      "source": "Map037.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/037.json"
+    },
+    {
+      "source": "Map038.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/038.json"
+    },
+    {
+      "source": "Map039.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/039.json"
+    },
+    {
+      "source": "Map040.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/040.json"
+    },
+    {
+      "source": "Map041.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/041.json"
+    },
+    {
+      "source": "Map042.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/042.json"
+    },
+    {
+      "source": "Map043.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/043.json"
+    },
+    {
+      "source": "Map044.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/044.json"
+    },
+    {
+      "source": "Map045.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/045.json"
+    },
+    {
+      "source": "Map046.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/046.json"
+    },
+    {
+      "source": "Map047.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/047.json"
+    },
+    {
+      "source": "Map048.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/048.json"
+    },
+    {
+      "source": "Map049.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/049.json"
+    },
+    {
+      "source": "Map050.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/050.json"
+    },
+    {
+      "source": "Map051.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/051.json"
+    },
+    {
+      "source": "Map052.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/052.json"
+    },
+    {
+      "source": "Map053.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/053.json"
+    },
+    {
+      "source": "Map054.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/054.json"
+    },
+    {
+      "source": "Map055.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/055.json"
+    },
+    {
+      "source": "Map056.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/056.json"
+    },
+    {
+      "source": "Map057.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/057.json"
+    },
+    {
+      "source": "Map058.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/058.json"
+    },
+    {
+      "source": "Map059.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/059.json"
+    },
+    {
+      "source": "Map060.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/060.json"
+    },
+    {
+      "source": "Map061.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/061.json"
+    },
+    {
+      "source": "Map062.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/062.json"
+    },
+    {
+      "source": "Map063.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/063.json"
+    },
+    {
+      "source": "Map064.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/064.json"
+    },
+    {
+      "source": "Map065.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/065.json"
+    },
+    {
+      "source": "Map066.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/066.json"
+    },
+    {
+      "source": "Map067.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/067.json"
+    },
+    {
+      "source": "Map068.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/068.json"
+    },
+    {
+      "source": "Map069.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/069.json"
+    },
+    {
+      "source": "Map070.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/070.json"
+    },
+    {
+      "source": "Map071.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/071.json"
+    },
+    {
+      "source": "Map072.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/072.json"
+    },
+    {
+      "source": "Map073.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/073.json"
+    },
+    {
+      "source": "Map074.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/074.json"
+    },
+    {
+      "source": "Map075.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/075.json"
+    },
+    {
+      "source": "Map076.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/076.json"
+    },
+    {
+      "source": "Map077.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/077.json"
+    },
+    {
+      "source": "Map078.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/078.json"
+    },
+    {
+      "source": "Map079.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/079.json"
+    },
+    {
+      "source": "Map080.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/080.json"
+    },
+    {
+      "source": "Map081.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/081.json"
+    },
+    {
+      "source": "Map082.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/082.json"
+    },
+    {
+      "source": "Map083.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/083.json"
+    },
+    {
+      "source": "Map084.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/084.json"
+    },
+    {
+      "source": "Map085.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/085.json"
+    },
+    {
+      "source": "Map086.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/086.json"
+    },
+    {
+      "source": "Map087.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/087.json"
+    },
+    {
+      "source": "Map088.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/088.json"
+    },
+    {
+      "source": "Map089.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/089.json"
+    },
+    {
+      "source": "Map090.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/090.json"
+    },
+    {
+      "source": "Map091.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/091.json"
+    },
+    {
+      "source": "Map092.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/092.json"
+    },
+    {
+      "source": "Map093.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/093.json"
+    },
+    {
+      "source": "Map094.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/094.json"
+    },
+    {
+      "source": "Map095.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/095.json"
+    },
+    {
+      "source": "Map096.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/096.json"
+    },
+    {
+      "source": "Map097.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/097.json"
+    },
+    {
+      "source": "Map098.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/098.json"
+    },
+    {
+      "source": "Map099.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/099.json"
+    },
+    {
+      "source": "Map100.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/100.json"
+    },
+    {
+      "source": "Map101.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/101.json"
+    },
+    {
+      "source": "Map102.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/102.json"
+    },
+    {
+      "source": "Map103.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/103.json"
+    },
+    {
+      "source": "Map104.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/104.json"
+    },
+    {
+      "source": "Map105.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/105.json"
+    },
+    {
+      "source": "Map106.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/106.json"
+    },
+    {
+      "source": "Map107.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/107.json"
+    },
+    {
+      "source": "Map108.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/108.json"
+    },
+    {
+      "source": "Map109.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/109.json"
+    },
+    {
+      "source": "Map110.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/110.json"
+    },
+    {
+      "source": "Map111.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/111.json"
+    },
+    {
+      "source": "Map112.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/112.json"
+    },
+    {
+      "source": "Map113.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/113.json"
+    },
+    {
+      "source": "Map114.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/114.json"
+    },
+    {
+      "source": "Map115.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/115.json"
+    },
+    {
+      "source": "Map116.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/116.json"
+    },
+    {
+      "source": "Map117.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/117.json"
+    },
+    {
+      "source": "Map118.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/118.json"
+    },
+    {
+      "source": "Map119.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/119.json"
+    },
+    {
+      "source": "Map120.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/120.json"
+    },
+    {
+      "source": "Map121.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/121.json"
+    },
+    {
+      "source": "Map122.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/122.json"
+    },
+    {
+      "source": "Map123.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/123.json"
+    },
+    {
+      "source": "Map124.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/124.json"
+    },
+    {
+      "source": "Map125.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/125.json"
+    },
+    {
+      "source": "Map126.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/126.json"
+    },
+    {
+      "source": "Map127.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/127.json"
+    },
+    {
+      "source": "Map128.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/128.json"
+    },
+    {
+      "source": "Map129.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/129.json"
+    },
+    {
+      "source": "Map130.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/130.json"
+    },
+    {
+      "source": "Map131.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/131.json"
+    },
+    {
+      "source": "Map132.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/132.json"
+    },
+    {
+      "source": "Map133.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/133.json"
+    },
+    {
+      "source": "Map134.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/134.json"
+    },
+    {
+      "source": "Map135.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/135.json"
+    },
+    {
+      "source": "Map136.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/136.json"
+    },
+    {
+      "source": "Map137.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/137.json"
+    },
+    {
+      "source": "Map138.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/138.json"
+    },
+    {
+      "source": "Map139.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/139.json"
+    },
+    {
+      "source": "Map140.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/140.json"
+    },
+    {
+      "source": "Map141.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/141.json"
+    },
+    {
+      "source": "Map142.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/142.json"
+    },
+    {
+      "source": "Map143.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/143.json"
+    },
+    {
+      "source": "Map144.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/144.json"
+    },
+    {
+      "source": "Map145.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/145.json"
+    },
+    {
+      "source": "Map146.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/146.json"
+    },
+    {
+      "source": "Map147.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/147.json"
+    },
+    {
+      "source": "Map148.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/148.json"
+    },
+    {
+      "source": "Map149.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/149.json"
+    },
+    {
+      "source": "Map150.rvdata2",
+      "kind": "map",
+      "output": "generated/maps/150.json"
+    },
+    {
+      "source": "MapInfos.rvdata2",
+      "kind": "database",
+      "output": "generated/database/MapInfos.json"
+    },
+    {
+      "source": "Scripts.rvdata2",
+      "kind": "scripts",
+      "records": 167
+    },
+    {
+      "source": "Skills.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Skills.json"
+    },
+    {
+      "source": "States.rvdata2",
+      "kind": "database",
+      "output": "generated/database/States.json"
+    },
+    {
+      "source": "System.rvdata2",
+      "kind": "database",
+      "output": "generated/database/System.json"
+    },
+    {
+      "source": "Tilesets.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Tilesets.json"
+    },
+    {
+      "source": "Troops.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Troops.json"
+    },
+    {
+      "source": "Weapons.rvdata2",
+      "kind": "database",
+      "output": "generated/database/Weapons.json"
+    }
+  ]
+}

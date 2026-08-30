@@ -1,0 +1,17 @@
+{
+  "name": "black-souls-sillytavern-port",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "extract": "node tools/extract.mjs",
+    "audit": "node tools/audit.mjs",
+    "build:assets": "node tools/build-assets.mjs",
+    "build:card": "node tools/build-card.mjs",
+    "build": "node tools/extract.mjs && node tools/audit.mjs && node tools/build-assets.mjs && node tools/build-card.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

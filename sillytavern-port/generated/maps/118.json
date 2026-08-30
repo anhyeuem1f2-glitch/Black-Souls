@@ -1,0 +1,3878 @@
+{
+  "$class": "RPG::Map",
+  "display_name": "Căn Lều Hoang",
+  "tileset_id": 3,
+  "width": 21,
+  "height": 21,
+  "scroll_type": 0,
+  "specify_battleback": false,
+  "battleback1_name": "Tent",
+  "battleback2_name": "Tent",
+  "autoplay_bgm": true,
+  "bgm": {
+    "$class": "RPG::BGM",
+    "name": "",
+    "volume": 100,
+    "pitch": 100
+  },
+  "autoplay_bgs": true,
+  "bgs": {
+    "$class": "RPG::BGS",
+    "name": "",
+    "volume": 80,
+    "pitch": 100
+  },
+  "disable_dashing": false,
+  "encounter_list": [],
+  "encounter_step": 30,
+  "parallax_name": "",
+  "parallax_loop_x": false,
+  "parallax_loop_y": false,
+  "parallax_sx": 0,
+  "parallax_sy": 0,
+  "parallax_show": false,
+  "note": "",
+  "data": {
+    "$class": "Table",
+    "dimensions": 3,
+    "xsize": 21,
+    "ysize": 21,
+    "zsize": 4,
+    "data": [
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7747,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7745,
+      7749,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7747,
+      7751,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      8098,
+      7753,
+      7749,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      8102,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8104,
+      8099,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      8108,
+      3378,
+      3364,
+      3364,
+      3380,
+      1590,
+      1590,
+      1590,
+      3378,
+      3364,
+      3364,
+      3380,
+      8105,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      3360,
+      3344,
+      3344,
+      3368,
+      1590,
+      1590,
+      1590,
+      3360,
+      3344,
+      3344,
+      3368,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      3384,
+      3372,
+      3372,
+      3382,
+      1590,
+      1590,
+      1590,
+      3384,
+      3372,
+      3372,
+      3382,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3379,
+      3377,
+      3381,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3376,
+      1591,
+      3376,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3385,
+      3377,
+      3383,
+      1590,
+      3378,
+      3364,
+      3380,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      3378,
+      3364,
+      3380,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3360,
+      3344,
+      3368,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      3360,
+      3344,
+      3368,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3360,
+      3344,
+      3368,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7744,
+      1590,
+      3384,
+      3372,
+      3382,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      3384,
+      3372,
+      3382,
+      1590,
+      7744,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7753,
+      7749,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      1590,
+      7747,
+      7751,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7753,
+      7745,
+      7745,
+      7745,
+      7745,
+      7749,
+      1590,
+      7747,
+      7745,
+      7745,
+      7745,
+      7745,
+      7751,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      7756,
+      1590,
+      7756,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      1536,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3522,
+      3524,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3528,
+      3526,
+      0,
+      0,
+      0,
+      0,
+      3530,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3530,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3520,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3530,
+      0,
+      0,
+      0,
+      3531,
+      3527,
+      0,
+      0,
+      0,
+      3522,
+      3508,
+      3508,
+      3514,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3505,
+      3508,
+      3508,
+      3524,
+      0,
+      0,
+      0,
+      0,
+      3531,
+      3497,
+      3488,
+      3488,
+      3512,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3506,
+      3516,
+      3516,
+      3513,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3528,
+      3516,
+      3516,
+      3513,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3520,
+      0,
+      0,
+      3532,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3532,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3532,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3194,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3530,
+      0,
+      0,
+      3196,
+      0,
+      3530,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3529,
+      3525,
+      0,
+      0,
+      0,
+      3532,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3531,
+      3521,
+      3533,
+      0,
+      0,
+      0,
+      3529,
+      3521,
+      3533,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      85,
+      85,
+      0,
+      369,
+      345,
+      0,
+      0,
+      85,
+      85,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      414,
+      0,
+      93,
+      93,
+      0,
+      0,
+      0,
+      0,
+      0,
+      93,
+      93,
+      0,
+      407,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      415,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      406,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      427,
+      0,
+      0,
+      0,
+      0,
+      284,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      435,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      353,
+      359,
+      354,
+      0,
+      0,
+      0,
+      336,
+      0,
+      104,
+      335,
+      104,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      356,
+      357,
+      359,
+      0,
+      0,
+      0,
+      0,
+      0,
+      104,
+      283,
+      104,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      354,
+      352,
+      353,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336,
+      336,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "events": {
+    "1": {
+      "$class": "RPG::Event",
+      "id": 1,
+      "name": "EV001",
+      "x": 12,
+      "y": 18,
+      "pages": [
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": false,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 1,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "",
+            "character_index": 0,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": true,
+          "step_anime": false,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 0,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        }
+      ]
+    },
+    "2": {
+      "$class": "RPG::Event",
+      "id": 2,
+      "name": "EV002",
+      "x": 10,
+      "y": 5,
+      "pages": [
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": false,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 1,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "!Chest",
+            "character_index": 4,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": false,
+          "step_anime": false,
+          "direction_fix": true,
+          "through": false,
+          "priority_type": 1,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 250,
+              "parameters": [
+                {
+                  "$class": "RPG::SE",
+                  "name": "Chest",
+                  "pitch": 100,
+                  "volume": 80
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 205,
+              "parameters": [
+                0,
+                {
+                  "$class": "RPG::MoveRoute",
+                  "repeat": false,
+                  "skippable": false,
+                  "wait": true,
+                  "list": [
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 36,
+                      "parameters": []
+                    },
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 17,
+                      "parameters": []
+                    },
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 15,
+                      "parameters": [
+                        3
+                      ]
+                    },
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 18,
+                      "parameters": []
+                    },
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 15,
+                      "parameters": [
+                        3
+                      ]
+                    },
+                    {
+                      "$class": "RPG::MoveCommand",
+                      "code": 0,
+                      "parameters": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 505,
+              "parameters": [
+                {
+                  "$class": "RPG::MoveCommand",
+                  "code": 36,
+                  "parameters": []
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 505,
+              "parameters": [
+                {
+                  "$class": "RPG::MoveCommand",
+                  "code": 17,
+                  "parameters": []
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 505,
+              "parameters": [
+                {
+                  "$class": "RPG::MoveCommand",
+                  "code": 15,
+                  "parameters": [
+                    3
+                  ]
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 505,
+              "parameters": [
+                {
+                  "$class": "RPG::MoveCommand",
+                  "code": 18,
+                  "parameters": []
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 505,
+              "parameters": [
+                {
+                  "$class": "RPG::MoveCommand",
+                  "code": 15,
+                  "parameters": [
+                    3
+                  ]
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 123,
+              "parameters": [
+                "A",
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 128,
+              "parameters": [
+                103,
+                0,
+                0,
+                1,
+                false
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        },
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": false,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": true,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 1,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "!Chest",
+            "character_index": 4,
+            "direction": 8,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": false,
+          "step_anime": false,
+          "direction_fix": true,
+          "through": false,
+          "priority_type": 1,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        }
+      ]
+    },
+    "3": {
+      "$class": "RPG::Event",
+      "id": 3,
+      "name": "EV003",
+      "x": 9,
+      "y": 17,
+      "pages": [
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": false,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 1,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "",
+            "character_index": 0,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": true,
+          "step_anime": false,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 0,
+          "trigger": 1,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 250,
+              "parameters": [
+                {
+                  "$class": "RPG::SE",
+                  "name": "Move",
+                  "pitch": 100,
+                  "volume": 80
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 201,
+              "parameters": [
+                0,
+                115,
+                50,
+                8,
+                0,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        }
+      ]
+    },
+    "4": {
+      "$class": "RPG::Event",
+      "id": 4,
+      "name": "EV004",
+      "x": 9,
+      "y": 6,
+      "pages": [
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": true,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 149,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "$グース",
+            "character_index": 0,
+            "direction": 8,
+            "pattern": 1
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": false,
+          "step_anime": true,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 1,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 213,
+              "parameters": [
+                0,
+                1,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Cái……!? L-làm sao anh tìm được tôi ở đây…?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 102,
+              "parameters": [
+                [
+                  "Cô tưởng cô có thể trốn được sao?",
+                  "Sao cô lại ăn trộm?"
+                ],
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 402,
+              "parameters": [
+                0,
+                "Cô tưởng cô có thể trốn được sao?"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「……Auu.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 402,
+              "parameters": [
+                1,
+                "Sao cô lại ăn trộm?"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「Tôi, tôi không ăn trộm…"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " Tôi chỉ giành lại thôi………」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 404,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 213,
+              "parameters": [
+                0,
+                6,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Được rồi…Tôi sẽ giải thích mọi thứ.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Tôi không phải thương nhân. Trước đây tôi"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " được biết đến như một tên trộm hào hiệp.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Tôi cướp của người giàu và chia cho người"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " nghèo. Đó là lẽ sống của tôi.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Vì những gã quý tộc kiêu ngạo mà những "
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " người dân vô tội trở nên khắc khổ và đói kém. "
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " Tôi không chịu được điều đó. Chẳng lẽ việc này"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " không phải là công lý hay sao?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「……Nhưng ở đây tiền và sự giàu có tôi kiếm"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " được đều trở nên vô dụng. Linh Hồn là tất cả. "
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " Và vì vậy tôi đã phải kiếm rất nhiều Linh Hồn"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " bằng cách nào đó.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Không có Linh Hồn, hàng loạt người biến thành"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " quái vật. Niềm tin thôi sẽ chẳng giúp được gì."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " Đến cuối cùng, sự sung túc là tất cả.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「\\n[1]……."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " Tôi xin lỗi vì đã trộm linh hồn của anh…."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                " Nhưng tôi không có cách nào khác.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 401,
+              "parameters": [
+                "「Anh có thể tha thứ cho tôi không?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 102,
+              "parameters": [
+                [
+                  "Tha thứ",
+                  "Không tha thứ"
+                ],
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 402,
+              "parameters": [
+                0,
+                "Tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 118,
+              "parameters": [
+                "1"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「\\n[1]. Cảm ơn rất nhiều.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「……Cảm ơn vì sự cả tin của anh.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 212,
+              "parameters": [
+                0,
+                31,
+                false
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 223,
+              "parameters": [
+                {
+                  "$class": "Tone",
+                  "red": 255,
+                  "green": 255,
+                  "blue": 255,
+                  "gray": 0
+                },
+                30,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "",
+                0,
+                1,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "Đột nhiên, một làn khói tràn vào căn lều,"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "hoàn toàn che phủ đi tầm nhìn bên trong."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「Tôi không nói dối anh."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " Tôi sẽ sử dụng những Linh Hồn này với mục"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " đích tốt. Cảm ơn vì đã đưa nó cho tôi.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「Giờ chúng ta sẽ không bao giờ gặp lại."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " Tạm biệt, \\n[1].」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 121,
+              "parameters": [
+                150,
+                150,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 223,
+              "parameters": [
+                {
+                  "$class": "Tone",
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "gray": 0
+                },
+                60,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 115,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 402,
+              "parameters": [
+                1,
+                "Không tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 213,
+              "parameters": [
+                0,
+                8,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「Cảm-uhhh……được thôi, có lẽ như thế này?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                "「Điều tôi đã làm là không thể tha thứ."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " Tôi sẽ không làm như vậy nữa,"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 401,
+              "parameters": [
+                " liệu anh sẽ tha thứ cho tôi chứ?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 102,
+              "parameters": [
+                [
+                  "Tha thứ",
+                  "Không tha thứ"
+                ],
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 402,
+              "parameters": [
+                0,
+                "Tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 119,
+              "parameters": [
+                "1"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 402,
+              "parameters": [
+                1,
+                "Không tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 213,
+              "parameters": [
+                0,
+                7,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 401,
+              "parameters": [
+                "「Cảm…tốt! TỐT THÔI!"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 401,
+              "parameters": [
+                " Anh muốn cơ thể tôi đúng không?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 401,
+              "parameters": [
+                "「Tôi không phải một phụ nữ rẻ tiền, nhưng…"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 401,
+              "parameters": [
+                " chỉ khoả thân thôi thì ổn với tôi…♡"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 401,
+              "parameters": [
+                " L-liệu điều đó đủ thoả mãn anh không?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 102,
+              "parameters": [
+                [
+                  "Tha thứ",
+                  "Không tha thứ"
+                ],
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 402,
+              "parameters": [
+                0,
+                "Tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 119,
+              "parameters": [
+                "1"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 402,
+              "parameters": [
+                1,
+                "Không tha thứ"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 213,
+              "parameters": [
+                0,
+                6,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 401,
+              "parameters": [
+                "「……Tôi có thể làm gì để được anh tha thứ?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 102,
+              "parameters": [
+                [
+                  "Tôi muốn cô về bên tôi",
+                  "Hiếp"
+                ],
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 402,
+              "parameters": [
+                0,
+                "Tôi muốn cô về bên tôi"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Về bên anh……ựa!」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Đ-đây là lời tỏ tình à……!?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 213,
+              "parameters": [
+                -1,
+                8,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Phải, phải không…anh yêu tôi……."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " Tôi phải làm gì? Đây là lần đầu tiên"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " tôi gặp phải tình huống này…」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Ah, là vì tiền phải không……"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " à không, là về Linh Hồn…."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " Vậy, nó là sự thật à……?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 213,
+              "parameters": [
+                0,
+                8,
+                true
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Em hiểu rồi……."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " \\n[1], em nghĩ anh cũng khá tuyệt đấy,"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " vậy…Em chưa có kinh nghiệm trong chuyện"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " này, nên hãy đối xử tốt với em."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 117,
+              "parameters": [
+                152
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 230,
+              "parameters": [
+                30
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Đây là…lần đầu tiên em yêu một ai đó……. "
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " Vậy anh sẽ không bao giờ phản bội em chứ?」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 101,
+              "parameters": [
+                "gu-su",
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                "「Well, uh. Em sẽ trở về Khu Rừng Thánh ngay"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " bây giờ…. Xin lỗi vì đã khiến bầu không khí"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 401,
+              "parameters": [
+                " trở nên khó xử.」"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 221,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 121,
+              "parameters": [
+                152,
+                152,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 222,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 402,
+              "parameters": [
+                1,
+                "Hiếp"
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 111,
+              "parameters": [
+                0,
+                20,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 221,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 121,
+              "parameters": [
+                192,
+                192,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 121,
+              "parameters": [
+                337,
+                337,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 222,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 122,
+              "parameters": [
+                38,
+                38,
+                1,
+                0,
+                1
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 250,
+              "parameters": [
+                {
+                  "$class": "RPG::SE",
+                  "name": "Magic1",
+                  "pitch": 80,
+                  "volume": 80
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 101,
+              "parameters": [
+                "",
+                0,
+                1,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 401,
+              "parameters": [
+                "Goose đã bị nhốt bên dưới tầng hầm."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 411,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 221,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 117,
+              "parameters": [
+                98
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 121,
+              "parameters": [
+                192,
+                192,
+                0
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 222,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 122,
+              "parameters": [
+                38,
+                38,
+                1,
+                0,
+                1
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 250,
+              "parameters": [
+                {
+                  "$class": "RPG::SE",
+                  "name": "Magic1",
+                  "pitch": 80,
+                  "volume": 80
+                }
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 101,
+              "parameters": [
+                "",
+                0,
+                1,
+                2
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 401,
+              "parameters": [
+                "Goose đã bị nhốt bên dưới tầng hầm."
+              ]
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 5,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 412,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 4,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 404,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 3,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 404,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 2,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 404,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 1,
+              "code": 0,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 404,
+              "parameters": []
+            },
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        },
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": true,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 192,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "",
+            "character_index": 0,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": true,
+          "step_anime": false,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 0,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        },
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": true,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 150,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "",
+            "character_index": 0,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": true,
+          "step_anime": false,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 0,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        },
+        {
+          "$class": "RPG::Event::Page",
+          "condition": {
+            "$class": "RPG::Event::Page::Condition",
+            "switch1_valid": true,
+            "switch2_valid": false,
+            "variable_valid": false,
+            "self_switch_valid": false,
+            "item_valid": false,
+            "actor_valid": false,
+            "switch1_id": 152,
+            "switch2_id": 1,
+            "variable_id": 1,
+            "variable_value": 0,
+            "self_switch_ch": "A",
+            "item_id": 1,
+            "actor_id": 1
+          },
+          "graphic": {
+            "$class": "RPG::Event::Page::Graphic",
+            "tile_id": 0,
+            "character_name": "",
+            "character_index": 0,
+            "direction": 2,
+            "pattern": 0
+          },
+          "move_type": 0,
+          "move_speed": 3,
+          "move_frequency": 3,
+          "move_route": {
+            "$class": "RPG::MoveRoute",
+            "repeat": true,
+            "skippable": false,
+            "wait": false,
+            "list": [
+              {
+                "$class": "RPG::MoveCommand",
+                "code": 0,
+                "parameters": []
+              }
+            ]
+          },
+          "walk_anime": true,
+          "step_anime": false,
+          "direction_fix": false,
+          "through": false,
+          "priority_type": 0,
+          "trigger": 0,
+          "list": [
+            {
+              "$class": "RPG::EventCommand",
+              "indent": 0,
+              "code": 0,
+              "parameters": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

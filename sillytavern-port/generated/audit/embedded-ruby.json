@@ -1,0 +1,480 @@
+[
+  {
+    "hash": "51639dbd339fbdcb",
+    "kind": "event-script",
+    "source": "reset_stealth",
+    "occurrences": 6,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 68,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 71,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 72,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 73,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 74,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 134,
+        "eventId": 75,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "2b9339462befb17a",
+    "kind": "event-script",
+    "source": "$game_actors[2].name = $game_actors[1].name",
+    "occurrences": 2,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 29,
+        "eventId": 21,
+        "page": 0
+      },
+      {
+        "kind": "map",
+        "id": 97,
+        "eventId": 1,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "0847e3ea3ea67ac7",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(29)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "0df658acbbdc5f50",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(15)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "18763f118e8972b1",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(16)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "24404649fc0e5a94",
+    "kind": "event-script",
+    "source": "$game_actors[3].name = $game_actors[1].name",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 97,
+        "eventId": 1,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "24e6d1461f44c4d1",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(14)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "3ac07a41f4a84b78",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(21)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "42e5b822d7d06d9e",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(26)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "5744856401098094",
+    "kind": "event-script",
+    "source": "recipe_all_switch_on",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 89,
+        "eventId": 4,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "5d3694ba4ae57ec3",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(13)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "649b36abc1d0525f",
+    "kind": "event-script",
+    "source": "$game_actors[4].name = $game_actors[1].name",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 97,
+        "eventId": 1,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "738b4ce8bc9fb8ba",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(9)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "807b9c96b7eaa7fa",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(11)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "817800fa75837930",
+    "kind": "event-script",
+    "source": "adv_self_switches(\"all\", \"all\", \"all\", false)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "common-event",
+        "id": 201
+      }
+    ]
+  },
+  {
+    "hash": "82876320078e7259",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(25)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "83aba70ba64503aa",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(18)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "88baa1927b3577fe",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(17)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "9298ab032d1906bb",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(31)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "958b853d785dc9b1",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(27)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "9ef7481e6bd538cb",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(10)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "a5183522f790ef0c",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(30)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "ad18b86a16cf4774",
+    "kind": "event-script",
+    "source": "$game_party.steps = 0",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "common-event",
+        "id": 31
+      }
+    ]
+  },
+  {
+    "hash": "b377c5659d54f119",
+    "kind": "event-script",
+    "source": "SceneManager.call(Scene_WorldMap)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "common-event",
+        "id": 244
+      }
+    ]
+  },
+  {
+    "hash": "b5f6f5d534342237",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(22)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "b84aaac3ae7f3cfc",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(24)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "c171790eec0f6251",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(20)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "d6ff46ac3ee2e238",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(28)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "e3b0a63d5c5fac5e",
+    "kind": "event-script",
+    "source": "SceneManager.call(Scene_ItemSynthesis)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 89,
+        "eventId": 4,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "eb753029c2011056",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(12)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "ebaa24ebbd98b92c",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(23)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  },
+  {
+    "hash": "efd56ffc72b07dbd",
+    "kind": "event-script",
+    "source": "RETCON::Journal::journal_activate(19)",
+    "occurrences": 1,
+    "locations": [
+      {
+        "kind": "map",
+        "id": 10,
+        "eventId": 38,
+        "page": 0
+      }
+    ]
+  }
+]
