@@ -24,7 +24,10 @@ const api = {
   loadSave: (slot) => activeHost?.loadSave(slot),
   save: (slot) => activeHost?.save(slot),
   reset: () => activeHost?.reset(),
+  pause: () => activeHost?.pause(),
+  resume: () => activeHost?.resume(),
   getState: () => activeHost?.getState() ?? null,
+  getHostState: () => activeHost?.getHostState() ?? { state: 'UNMOUNTED', presentation: 'WINDOWED', scene: null },
   getDiagnostics: () => activeHost?.getDiagnostics() ?? null,
 };
 

@@ -7,16 +7,32 @@ export class CanvasRenderer {
     this.canvas = document.createElement('canvas'); this.canvas.width = this.width; this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d'); this.context.imageSmoothingEnabled = false; stage.append(this.canvas);
     this.fade = 0; this.characterImages = new Map(); this.animations = []; this.balloons = [];
-    this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, mapId: null, tileset: null, loadedSheets: [], characters: [] };
+    this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], title: null };
+  }
+
+  async setTitle(system) {
+    const title1Path = system.title1_name ? `Graphics/Titles1/${system.title1_name}.png` : null;
+    const title2Path = system.title2_name ? `Graphics/Titles2/${system.title2_name}.png` : null;
+    const [title1, title2] = await Promise.all([
+      title1Path ? this.loader.image(title1Path) : null,
+      title2Path ? this.loader.image(title2Path) : null,
+    ]);
+    this.title = { title1, title2, title1Path, title2Path };
+    this.stats.title = {
+      title1: title1Path ? { path: title1Path, width: title1.naturalWidth || title1.width, height: title1.naturalHeight || title1.height, decoded: true } : null,
+      title2: title2Path ? { path: title2Path, width: title2.naturalWidth || title2.width, height: title2.naturalHeight || title2.height, decoded: true } : null,
+      stretchMode: 'RGSSLAB::XP_Display_Size::TITLE_TYPE=1 (640x480)',
+    };
   }
 
   async setMap(map, tileset, { playerGraphic, events = [], mapId } = {}) {
-    this.map = map; this.tileset = tileset; this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null;
-    this.sheets = await Promise.all((tileset?.tileset_names ?? []).map((name) => name ? this.loader.image(`Graphics/Tilesets/${name}.png`) : null));
-    this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.playerGraphic = playerGraphic;
+    const sheets = await Promise.all((tileset?.tileset_names ?? []).map((name) => name ? this.loader.image(`Graphics/Tilesets/${name}.png`) : null));
     const graphics = [playerGraphic, ...events.map((event) => event.page?.graphic)].filter((graphic) => graphic?.character_name);
-    await Promise.all([...new Set(graphics.map((graphic) => graphic.character_name))].map(async (name) => this.characterImages.set(name, await this.loader.image(`Graphics/Characters/${name}.png`))));
-    this.stats.characters = [...this.characterImages.keys()]; this.fog = await this.loadFog(map.note);
+    const characterImages = new Map(this.characterImages);
+    await Promise.all([...new Set(graphics.map((graphic) => graphic.character_name))].map(async (name) => characterImages.set(name, await this.loader.image(`Graphics/Characters/${name}.png`))));
+    const fog = await this.loadFog(map.note);
+    this.map = map; this.tileset = tileset; this.sheets = sheets; this.characterImages = characterImages; this.fog = fog; this.playerGraphic = playerGraphic;
+    this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null; this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.stats.characters = [...this.characterImages.keys()];
   }
 
   async loadFog(note = '') {
@@ -27,7 +43,14 @@ export class CanvasRenderer {
   }
 
   render(state, events = []) {
-    const began = performance.now(); const context = this.context; context.fillStyle = '#080709'; context.fillRect(0, 0, this.width, this.height); if (!this.map) return;
+    const began = performance.now(); const context = this.context; context.fillStyle = '#080709'; context.fillRect(0, 0, this.width, this.height);
+    this.stats.scene = state.scene ?? 'PLAYING';
+    if (state.scene === 'TITLE') {
+      this.drawTitle(state.title);
+      this.finishFrame(began);
+      return;
+    }
+    if (!this.map || !this.sheets) { this.finishFrame(began); return; }
     const visibleX = Math.ceil(this.width / this.tileSize) + 1; const visibleY = Math.ceil(this.height / this.tileSize) + 1;
     const cameraX = clamp(state.x - Math.floor(visibleX / 2), 0, Math.max(0, this.map.width - visibleX));
     const cameraY = clamp(state.y - Math.floor(visibleY / 2), 0, Math.max(0, this.map.height - visibleY)); this.camera = { x: cameraX, y: cameraY };
@@ -38,12 +61,56 @@ export class CanvasRenderer {
       if (this.isUpper(tileId)) upper.push(args); else this.drawTile(...args);
     }
     this.drawShadows(cameraX, cameraY, visibleX, visibleY);
-    const sprites = events.map((event) => ({ ...event, type: 'event' }));
-    if (!state.transparent) sprites.push({ x: state.x, y: state.y, direction: state.direction, pattern: state.pattern ?? 1, graphic: this.playerGraphic, type: 'player' });
-    sprites.sort((a, b) => a.y - b.y || (a.type === 'event' ? -1 : 1)); for (const sprite of sprites) this.drawCharacter(sprite, cameraX, cameraY);
-    for (const args of upper) this.drawTile(...args); this.drawFog(); this.drawAnimations(cameraX, cameraY); this.drawBalloons(cameraX, cameraY); this.drawMessage(state.message); this.drawChoice(state.choice);
+    const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: 'event' }));
+    if (!state.transparent) sprites.push({ x: state.x, y: state.y, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: 'player' });
+    sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === 'event' ? -1 : 1));
+    for (const sprite of sprites.filter((item) => item.priority < 2)) this.drawCharacter(sprite, cameraX, cameraY);
+    for (const args of upper) this.drawTile(...args); this.drawFog();
+    for (const sprite of sprites.filter((item) => item.priority >= 2)) this.drawCharacter(sprite, cameraX, cameraY);
+    this.drawAnimations(cameraX, cameraY); this.drawBalloons(cameraX, cameraY); this.drawMessage(state.message); this.drawChoice(state.choice);
+    if (state.scene === 'MENU' || state.scene === 'END') this.drawGameMenu(state.menu);
     if (this.fade > 0) { context.fillStyle = `rgba(0,0,0,${this.fade})`; context.fillRect(0, 0, this.width, this.height); }
+    this.finishFrame(began);
+  }
+
+  finishFrame(began) {
     const elapsed = performance.now() - began; this.stats.frames += 1; this.stats.lastFrameMs = Math.round(elapsed * 100) / 100; this.stats.maxFrameMs = Math.max(this.stats.maxFrameMs, this.stats.lastFrameMs);
+  }
+
+  drawTitle(title) {
+    const c = this.context;
+    if (this.title?.title1) c.drawImage(this.title.title1, 0, 0, this.width, this.height);
+    if (this.title?.title2) c.drawImage(this.title.title2, 0, 0, this.width, this.height);
+    const commands = title?.commands ?? [];
+    const width = 160; const lineHeight = 24; const padding = 12; const height = commands.length * lineHeight + padding * 2;
+    const x = (this.width - width) / 2; const y = (this.height * 1.6 - height) / 2;
+    this.drawWindow(x, y, width, height);
+    c.font = '18px "Noto Serif", Georgia, serif'; c.textBaseline = 'middle';
+    commands.forEach((command, index) => {
+      const selected = index === title?.selected;
+      c.fillStyle = command.enabled === false ? '#676263' : selected ? '#ffffff' : '#d5d0c8';
+      c.fillText(`${selected ? '›' : ' '} ${String(command.label).trim()}`, x + 14, y + padding + lineHeight * index + lineHeight / 2);
+    });
+    c.textBaseline = 'alphabetic';
+  }
+
+  drawGameMenu(menu) {
+    if (!menu) return;
+    const c = this.context; c.fillStyle = 'rgba(0,0,0,.58)'; c.fillRect(0, 0, this.width, this.height);
+    const width = menu.kind === 'end' ? 210 : 190; const lineHeight = 30; const padding = 14; const height = menu.commands.length * lineHeight + padding * 2;
+    const x = menu.kind === 'end' ? (this.width - width) / 2 : 18; const y = menu.kind === 'end' ? (this.height - height) / 2 : 18;
+    this.drawWindow(x, y, width, height);
+    c.font = '19px "Noto Serif", Georgia, serif'; c.textBaseline = 'middle';
+    menu.commands.forEach((command, index) => {
+      const selected = index === menu.selected;
+      c.fillStyle = command.enabled === false ? '#6e6868' : selected ? '#fff' : '#d1cbc2';
+      c.fillText(`${selected ? '›' : ' '} ${command.label}`, x + 16, y + padding + lineHeight * index + lineHeight / 2);
+    });
+    c.textBaseline = 'alphabetic';
+  }
+
+  drawWindow(x, y, width, height) {
+    const c = this.context; c.fillStyle = 'rgba(0,0,0,.90)'; c.fillRect(x, y, width, height); c.strokeStyle = '#d2cbbd'; c.lineWidth = 2; c.strokeRect(x + 1, y + 1, width - 2, height - 2); c.strokeStyle = '#514c49'; c.lineWidth = 1; c.strokeRect(x + 4.5, y + 4.5, width - 9, height - 9);
   }
 
   tileAt(x, y, z) { return this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height] ?? 0; }
@@ -78,8 +145,18 @@ export class CanvasRenderer {
     const graphic = sprite.graphic; if (!graphic?.character_name) return; const image = this.characterImages.get(graphic.character_name); if (!image) return;
     const frame = characterFrame(image, graphic.character_name, graphic.character_index ?? 0, sprite.direction ?? graphic.direction ?? 2, sprite.pattern ?? graphic.pattern ?? 1);
     const x = (sprite.x - cameraX) * 32 + 16; const y = (sprite.y - cameraY + 1) * 32; const shift = graphic.character_name.startsWith('!') ? 0 : 4;
-    this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, Math.round(x - frame.width / 2), Math.round(y - frame.height - shift), frame.width, frame.height);
+    const dx = Math.round(x - frame.width / 2); const dy = Math.round(y - frame.height - shift); const opacity = clamp(Number(sprite.opacity ?? 255) / 255, 0, 1);
+    this.context.save(); this.context.globalAlpha = opacity;
+    if (this.isBush(sprite.x, sprite.y) && frame.height >= 24) {
+      const bushHeight = Math.min(12, frame.height / 2); const topHeight = frame.height - bushHeight;
+      this.context.drawImage(image, frame.sx, frame.sy, frame.width, topHeight, dx, dy, frame.width, topHeight);
+      this.context.globalAlpha = opacity * 0.5;
+      this.context.drawImage(image, frame.sx, frame.sy + topHeight, frame.width, bushHeight, dx, dy + topHeight, frame.width, bushHeight);
+    } else this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, dx, dy, frame.width, frame.height);
+    this.context.restore();
   }
+
+  isBush(x, y) { for (let z = 2; z >= 0; z -= 1) if ((this.tileset?.flags?.data?.[this.tileAt(x, y, z)] ?? 0) & 0x40) return true; return false; }
 
   drawFog() {
     if (!this.fog) return; const { image, x, y, zoom, opacity, blend } = this.fog; const scale = zoom > 10 ? zoom / 100 : 1; const width = image.width * scale; const height = image.height * scale;

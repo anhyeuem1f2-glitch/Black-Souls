@@ -1,7 +1,7 @@
 const RUNTIME_RELEASE = Object.freeze({
   owner: 'anhyeuem1f2-glitch',
   repository: 'Black-Souls',
-  ref: String(window.BLACK_SOULS_RUNTIME_REF_OVERRIDE || 'dc98906802561de7bd9ebde3dfdae7bd6f339cb6').trim(),
+  ref: String(window.BLACK_SOULS_RUNTIME_REF_OVERRIDE || 'direct-boot-v0.3.0').trim(),
   path: 'sillytavern-port/runtime/',
 });
 
@@ -11,10 +11,11 @@ const RUNTIME_SOURCES = Object.freeze([
   Object.freeze({ id: 'github-raw', label: 'GitHub Raw last fallback', origin: 'https://raw.githubusercontent.com' }),
 ]);
 
-const DEBUG_OVERRIDE_KEY = 'black-souls-runtime-debug-override-v2';
+const DEBUG_OVERRIDE_KEY = 'black-souls-runtime-debug-override-v3';
 const MODULE_MANIFEST = 'module-manifest.json';
 const frame = window.frameElement;
 let bootSequence = 0;
+let activeRuntime = null;
 
 function showFrame() {
   frame?.style.setProperty('display', 'block', 'important');
@@ -27,8 +28,19 @@ function showFrame() {
   document.body.style.margin = '0';
 }
 
-function hideFrame() {
-  frame?.style.setProperty('display', 'none', 'important');
+function compactFrame() {
+  frame?.style.setProperty('display', 'block', 'important');
+  frame?.style.setProperty('position', 'fixed', 'important');
+  frame?.style.setProperty('inset', 'auto 16px 16px auto', 'important');
+  frame?.style.setProperty('width', '270px', 'important');
+  frame?.style.setProperty('height', '64px', 'important');
+  frame?.style.setProperty('border', '0', 'important');
+  frame?.style.setProperty('z-index', '2147483000', 'important');
+}
+
+function handleHostState(event) {
+  if (event?.state === 'PAUSED') compactFrame();
+  else if (event?.state && event.state !== 'UNMOUNTED') showFrame();
 }
 
 function releaseBase(source) {
@@ -107,6 +119,8 @@ async function boot() {
       try {
         await runtime.mount({
           target: document.body,
+          assetDevelopmentBaseUrl: window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE || undefined,
+          onHostState: handleHostState,
           onLoaderState: (state, detail = '') => {
             attempt.runtimeState = state;
             attempt.runtimeDetail = detail;
@@ -119,6 +133,7 @@ async function boot() {
       }
 
       attempt.stage = 'ready';
+      activeRuntime = runtime;
       attempt.success = true;
       diagnostics.successfulSource = source.baseUrl;
       diagnostics.completedAt = new Date().toISOString();
@@ -233,22 +248,19 @@ function renderLoader() {
       .bs-loader-card{width:min(820px,100%);border:1px solid #5d4042;padding:22px;background:#0d0a0b;box-shadow:0 18px 70px #000}
       h1{font:28px Georgia,serif;margin:0 0 20px}.bs-loader-state{font-size:17px;color:#fff}.bs-loader-detail{color:#9d9290;overflow-wrap:anywhere}
       .bs-loader-track{height:3px;margin:18px 0;background:linear-gradient(90deg,#9a343c 0 42%,#281d20 42%);animation:bs-pulse 1.1s ease-in-out infinite alternate}
-      .bs-attempts{max-height:180px;overflow:auto;color:#a59a97;white-space:pre-wrap;font-size:11px}button,input{font:inherit}button{padding:8px 14px;background:#27181b;color:#fff;border:1px solid #744;cursor:pointer}
+      button,input{font:inherit}button{padding:8px 14px;background:#27181b;color:#fff;border:1px solid #744;cursor:pointer}
       @keyframes bs-pulse{to{filter:brightness(1.6)}}
     </style>
     <main class="bs-loader"><section class="bs-loader-card">
       <h1>BLACK SOULS</h1><div class="bs-loader-state" aria-live="polite">Checking runtime...</div>
-      <div class="bs-loader-detail"></div><div class="bs-loader-track"></div><pre class="bs-attempts"></pre>
+      <div class="bs-loader-detail"></div><div class="bs-loader-track"></div>
     </section></main>`;
 }
 
 function setLoaderState(state, detail = '', diagnostics) {
   document.querySelector('.bs-loader-state')?.replaceChildren(state);
   document.querySelector('.bs-loader-detail')?.replaceChildren(detail);
-  const attempts = document.querySelector('.bs-attempts');
-  if (attempts && diagnostics) {
-    attempts.textContent = diagnostics.attempts.map((attempt) => `${attempt.success ? 'OK' : '…'} ${attempt.source} — ${attempt.stage}${attempt.error ? `\n   ${attempt.error.message}` : ''}`).join('\n');
-  }
+  void diagnostics;
 }
 
 function showFailure(diagnostics) {
@@ -264,7 +276,7 @@ function showFailure(diagnostics) {
       <h1>BLACK SOULS runtime could not load</h1>
       <p>Every configured source failed. The report below records the source, stage, HTTP status, redirect target, Content-Type, and browser error.</p>
       <pre data-diagnostics></pre>
-      <button data-retry>Retry configured sources</button><button data-close>Close</button>
+      <button data-retry>Retry configured sources</button><button data-close>Exit to SillyTavern</button>
       <details><summary>Developer override</summary>
         <label>Bootstrap URL<input data-override placeholder="https://.../runtime/bootstrap.js"></label>
         <button data-use-override>Retry override</button><button data-clear-override>Clear override</button>
@@ -286,13 +298,18 @@ function showFailure(diagnostics) {
     localStorage.removeItem(DEBUG_OVERRIDE_KEY);
     input.value = '';
   });
-  document.querySelector('[data-close]').addEventListener('click', hideFrame);
+  document.querySelector('[data-close]').addEventListener('click', showErrorRecovery);
 }
 
-eventOn(getButtonEvent('Open BLACK SOULS'), showFrame);
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') hideFrame();
-}, true);
-window.addEventListener('pagehide', () => frame?.removeAttribute('style'));
+function showErrorRecovery() {
+  document.body.innerHTML = `<style>:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080607}button{width:100%;height:100%;border:1px solid #744;color:#fff;background:linear-gradient(#28181c,#120d0f);font:13px ui-monospace,monospace;cursor:pointer}</style><button data-reopen>Retry BLACK SOULS</button>`;
+  document.querySelector('[data-reopen]').addEventListener('click', boot);
+  compactFrame();
+}
+
+window.addEventListener('pagehide', () => {
+  void activeRuntime?.unmount?.();
+  frame?.removeAttribute('style');
+});
 
 boot();

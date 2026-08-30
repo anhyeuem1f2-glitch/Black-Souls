@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { AssetResolver, parseLfsPointer, validateMagic } from '../runtime/assets/asset-resolver.js';
-import { characterFrame } from '../runtime/render/canvas-renderer.js';
+import { CanvasRenderer, characterFrame } from '../runtime/render/canvas-renderer.js';
 
 test('detects and rejects Git LFS pointer bytes before image decode', async () => {
   const pointer = new TextEncoder().encode('version https://git-lfs.github.com/spec/v1\noid sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsize 346411\n');
@@ -40,4 +40,46 @@ test('uses bundled RTP first while preserving encoded filenames', () => {
 test('VX Ace character frame supports regular and single-character sheets', () => {
   assert.deepEqual(characterFrame({ width: 384, height: 256 }, '!Flame', 5, 6, 2), { sx: 160, sy: 192, width: 32, height: 32 });
   assert.deepEqual(characterFrame({ width: 96, height: 128 }, '$c_54b', 0, 4, 1), { sx: 32, sy: 32, width: 32, height: 32 });
+});
+
+test('records the exact browser image decode failure stage', async () => {
+  const OriginalImage = globalThis.Image;
+  globalThis.Image = class {
+    set src(value) { this.url = value; }
+    async decode() { throw new Error('fixture decoder rejected bytes'); }
+  };
+  const png = Uint8Array.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);
+  const resolver = new AssetResolver({
+    manifest: { assets: [{ path: 'Graphics/Titles1/1.png', extension: 'png', lfs: true }] },
+    runtimeBaseUrl: 'https://cdn.example.test/sillytavern-port/runtime/',
+    repository: { owner: 'owner', name: 'repo', ref: 'tag' },
+    fetchImpl: async (url) => new Response(png, { status: 200, headers: { 'content-type': 'image/png', 'content-length': String(png.length) } }),
+  });
+  try {
+    await assert.rejects(() => resolver.image('Graphics/Titles1/1.png'), (error) => error.code === 'IMAGE_DECODE_FAILED');
+    assert.equal(resolver.diagnostics().lastDecodeError.path, 'Graphics/Titles1/1.png');
+    assert.equal(resolver.assetDiagnostics('Graphics/Titles1/1.png').stage, 'decode');
+    assert.equal(resolver.assetDiagnostics('Graphics/Titles1/1.png').decodeSuccess, false);
+  } finally {
+    resolver.destroy();
+    globalThis.Image = OriginalImage;
+  }
+});
+
+test('publishes a map bundle only after every required sheet has decoded', async () => {
+  let resolveSheet;
+  const sheet = new Promise((resolve) => { resolveSheet = resolve; });
+  const renderer = Object.create(CanvasRenderer.prototype);
+  renderer.loader = { image: async () => sheet };
+  renderer.characterImages = new Map();
+  renderer.stats = {};
+  renderer.loadFog = async () => null;
+  const map = { note: '', tileset_id: 1 };
+  const tileset = { name: 'fixture', tileset_names: ['World_A1'] };
+  const pending = renderer.setMap(map, tileset, { mapId: 7, playerGraphic: { character_name: '' }, events: [] });
+  assert.equal(renderer.map, undefined, 'an incomplete map must not become visible to the RAF loop');
+  resolveSheet({ width: 512, height: 512 });
+  await pending;
+  assert.equal(renderer.map, map);
+  assert.equal(renderer.sheets.length, 1);
 });

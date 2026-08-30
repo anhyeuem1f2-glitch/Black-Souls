@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 test('runtime modules are syntactically importable', async () => {
-  for (const path of ['data/loader.js', 'map/collision.js', 'map/interpreter.js', 'render/canvas-renderer.js', 'save/indexeddb.js', 'core/game-engine.js']) {
+  for (const path of ['data/loader.js', 'map/collision.js', 'map/interpreter.js', 'render/canvas-renderer.js', 'save/indexeddb.js', 'core/game-engine.js', 'core/lifecycle.js']) {
     await import(pathToFileURL(join(root, 'runtime', path)));
   }
 });
@@ -38,7 +38,11 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   assert.equal(card.spec_version, '3.0');
   assert.equal(card.data.extensions.tavern_helper.scripts[0].enabled, true);
   const content = card.data.extensions.tavern_helper.scripts[0].content;
-  assert.match(content, /getButtonEvent\('Open BLACK SOULS'\)/);
+  assert.doesNotMatch(content, /getButtonEvent\(|Open BLACK SOULS|hideFrame\(\)/);
+  assert.match(content, /direct-boot-v0\.3\.0/);
+  assert.match(content, /function compactFrame\(\)/);
+  assert.match(content, /onHostState: handleHostState/);
+  assert.match(content, /\nboot\(\);\s*$/);
   assert.match(content, /const RUNTIME_RELEASE/);
   assert.match(content, /const RUNTIME_SOURCES/);
   assert.ok(content.indexOf('https://cdn.jsdelivr.net') < content.indexOf('https://testingcf.jsdelivr.net'));
@@ -50,6 +54,10 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   for (const state of ['Loading game data...', 'Starting BLACK SOULS...', 'Ready']) {
     assert.match(host, new RegExp(state.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
+  assert.match(host, /Exit to SillyTavern/);
+  assert.match(host, /Resume BLACK SOULS/);
+  assert.match(host, /fullscreenchange/);
+  assert.match(host, /this\.stage\.focus\(\{ preventScroll: true \}\)/);
 });
 
 test('asset manifest records LFS delivery and browser-ready RTP references', async () => {
@@ -59,4 +67,6 @@ test('asset manifest records LFS delivery and browser-ready RTP references', asy
   assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Tilesets/Inside_A1.png' && item.delivery === 'runtime-bundle' && item.sha256));
   assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Tilesets/Inside_C.png' && item.delivery === 'github-media' && item.lfs));
   assert.ok(!manifest.missingDirectReferences.some((item) => item.basePath === 'Graphics/Tilesets/Inside_A1'));
+  assert.ok(manifest.directReferences.some((item) => item.basePath === 'Graphics/Titles1/1' && item.present && item.sources.includes('system:title1')));
+  assert.ok(manifest.directReferences.some((item) => item.basePath === 'Audio/BGM/タイトル、アリス' && item.present && item.sources.includes('system:title-bgm')));
 });

@@ -24,8 +24,9 @@ export class AssetResolver {
     }
     this.binaryCache = new Map();
     this.imageCache = new Map();
+    this.assetReports = new Map();
     this.objectUrls = new Set();
-    this.stats = { requests: 0, cacheHits: 0, loaded: 0, failed: 0, lfsPointersRejected: 0, sources: {}, lastError: null, lastLoaded: null };
+    this.stats = { requests: 0, cacheHits: 0, loaded: 0, decoded: 0, failed: 0, lfsPointersRejected: 0, sources: {}, lastError: null, lastLoaded: null, lastDecodeError: null };
   }
 
   entry(path) {
@@ -74,9 +75,13 @@ export class AssetResolver {
         const response = await this.fetchImpl(candidate.url, { mode: 'cors', cache: 'default' });
         attempt.status = response.status;
         attempt.contentType = response.headers.get('content-type') || '';
+        attempt.contentLength = response.headers.get('content-length') || '';
+        attempt.finalUrl = response.url || candidate.url;
+        attempt.redirected = Boolean(response.redirected);
         if (!response.ok) throw new AssetError('HTTP_ERROR', `HTTP ${response.status} ${response.statusText}`);
         const bytes = new Uint8Array(await response.arrayBuffer());
         attempt.bytes = bytes.byteLength;
+        attempt.magicBytes = hexPrefix(bytes);
         attempt.stage = 'validate';
         const pointer = parseLfsPointer(bytes);
         if (pointer) {
@@ -84,17 +89,30 @@ export class AssetResolver {
           throw new AssetError('LFS_POINTER_RECEIVED', `Asset source returned a Git LFS pointer instead of ${path}`, { pointer });
         }
         validateMagic(bytes, this.entry(path)?.extension ?? extension(path), kind);
-        const result = { bytes, contentType: attempt.contentType, url: candidate.url, source: candidate.source, entry: this.entry(path) };
+        const result = {
+          bytes,
+          contentType: attempt.contentType,
+          contentLength: attempt.contentLength,
+          url: candidate.url,
+          finalUrl: attempt.finalUrl,
+          status: response.status,
+          source: candidate.source,
+          magicBytes: attempt.magicBytes,
+          lfsPointer: false,
+          entry: this.entry(path),
+        };
         attempt.stage = 'ready';
         this.stats.loaded += 1;
         this.stats.sources[candidate.source] = (this.stats.sources[candidate.source] ?? 0) + 1;
-        this.stats.lastLoaded = { path, source: candidate.source, bytes: bytes.byteLength };
+        this.stats.lastLoaded = { path, source: candidate.source, bytes: bytes.byteLength, url: candidate.url };
+        this.assetReports.set(normalKey(path), { path, originalRepoPath: this.entry(path)?.path ?? path, ...attempt, lfsPointer: false, decodeSuccess: null });
         this.onDiagnostic({ type: 'asset-loaded', ...attempt });
         return result;
       } catch (error) {
         attempt.error = error.message;
         attempt.code = error.code ?? 'FETCH_FAILED';
         attempts.push(attempt);
+        this.assetReports.set(normalKey(path), { path, originalRepoPath: this.entry(path)?.path ?? path, ...attempt, decodeSuccess: false });
         this.onDiagnostic({ type: 'asset-attempt-failed', ...attempt });
       }
     }
@@ -122,9 +140,33 @@ export class AssetResolver {
     try {
       if (image.decode) await image.decode();
       else await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+      const report = {
+        ...(this.assetReports.get(normalKey(path)) ?? {}),
+        path,
+        originalRepoPath: asset.entry?.path ?? path,
+        resolvedRuntimeUrl: asset.finalUrl || asset.url,
+        source: asset.source,
+        status: asset.status,
+        contentType: asset.contentType,
+        contentLength: asset.contentLength || String(asset.bytes.byteLength),
+        bytes: asset.bytes.byteLength,
+        magicBytes: asset.magicBytes,
+        lfsPointer: false,
+        decodedWidth: image.naturalWidth || image.width,
+        decodedHeight: image.naturalHeight || image.height,
+        decodeSuccess: true,
+        stage: 'decoded',
+      };
+      this.assetReports.set(normalKey(path), report);
+      this.stats.decoded += 1;
+      this.onDiagnostic({ type: 'asset-decoded', ...report });
       return image;
     } catch (cause) {
-      throw new AssetError('IMAGE_DECODE_FAILED', `Browser could not decode ${path}`, { path, source: asset.source, url: asset.url, cause: String(cause) });
+      const diagnostics = { path, source: asset.source, url: asset.url, cause: String(cause), decodeSuccess: false, stage: 'decode' };
+      this.assetReports.set(normalKey(path), { ...(this.assetReports.get(normalKey(path)) ?? {}), ...diagnostics });
+      this.stats.lastDecodeError = diagnostics;
+      this.onDiagnostic({ type: 'asset-decode-failed', ...diagnostics });
+      throw new AssetError('IMAGE_DECODE_FAILED', `Browser could not decode ${path}`, diagnostics);
     }
   }
 
@@ -140,11 +182,14 @@ export class AssetResolver {
     return { ...this.stats, cacheEntries: this.binaryCache.size, manifestAssets: this.entries.size };
   }
 
+  assetDiagnostics(path) { return structuredClone(this.assetReports.get(normalKey(path)) ?? null); }
+
   destroy() {
     for (const url of this.objectUrls) URL.revokeObjectURL(url);
     this.objectUrls.clear();
     this.binaryCache.clear();
     this.imageCache.clear();
+    this.assetReports.clear();
   }
 }
 
@@ -178,3 +223,4 @@ function dedupe(items) { const seen = new Set(); return items.filter((item) => !
 function mimeFor(path) {
   return ({ png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', ogg: 'audio/ogg', wav: 'audio/wav', mp3: 'audio/mpeg' })[extension(path)] ?? 'application/octet-stream';
 }
+function hexPrefix(bytes, length = 12) { return [...bytes.subarray(0, length)].map((value) => value.toString(16).padStart(2, '0')).join(' '); }

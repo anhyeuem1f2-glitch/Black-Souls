@@ -50,6 +50,7 @@ export class DataLoader {
   image(path, { optional = false } = {}) { return this.assets.image(path, { required: !optional }); }
   audioUrl(path, { optional = false } = {}) { return this.assets.audioUrl(path, { required: !optional }); }
   resolveEntry(path) { return this.assets.entry(path); }
+  assetDiagnostics(path) { return this.assets?.assetDiagnostics(path) ?? null; }
   diagnostics() { return this.assets?.diagnostics() ?? { state: 'not-initialized' }; }
   destroy() { this.assets?.destroy(); }
 }

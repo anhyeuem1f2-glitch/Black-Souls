@@ -70,6 +70,10 @@ const actors = await json(join(generatedRoot, 'database', 'Actors.json'));
 for (const actor of actors.filter(Boolean)) { if (actor.character_name) requireAsset(`Graphics/Characters/${actor.character_name}`, `actor:${actor.id}`); if (actor.face_name) requireAsset(`Graphics/Faces/${actor.face_name}`, `actor:${actor.id}`); }
 const animations = await json(join(generatedRoot, 'database', 'Animations.json'));
 for (const animation of animations.filter(Boolean)) { if (animation.animation1_name) requireAsset(`Graphics/Animations/${animation.animation1_name}`, `animation:${animation.id}`); if (animation.animation2_name) requireAsset(`Graphics/Animations/${animation.animation2_name}`, `animation:${animation.id}`); }
+const system = await json(join(generatedRoot, 'database', 'System.json'));
+if (system.title1_name) requireAsset(`Graphics/Titles1/${system.title1_name}`, 'system:title1');
+if (system.title2_name) requireAsset(`Graphics/Titles2/${system.title2_name}`, 'system:title2');
+if (system.title_bgm?.name) requireAsset(`Audio/BGM/${system.title_bgm.name}`, 'system:title-bgm');
 for (let id = 1; id <= 150; id += 1) {
   const map = await json(join(generatedRoot, 'maps', `${String(id).padStart(3, '0')}.json`));
   if (map.parallax_name) requireAsset(`Graphics/Parallaxes/${map.parallax_name}`, `map:${id}`);
@@ -94,7 +98,7 @@ function scanCommands(commands = [], source) {
 const directReferences = [...requirements.values()].map((item) => ({ basePath: item.basePath, present: available.has(item.basePath.toLocaleLowerCase()), sources: [...item.sources].sort() })).sort((a, b) => a.basePath.localeCompare(b.basePath));
 const manifest = {
   schema: 'black-souls-asset-manifest-v2', generatedFrom: 'git HEAD LFS objects + normalized rvdata2 references + isolated browser RTP subset',
-  repository: { owner: 'anhyeuem1f2-glitch', name: 'Black-Souls', ref: 'main' },
+  repository: { owner: 'anhyeuem1f2-glitch', name: 'Black-Souls', ref: 'direct-boot-v0.3.0' },
   deliveryPolicy: { lfs: 'github-media', bundledRtp: 'runtime-bundle', validation: 'magic-bytes-before-decode' },
   assets: assets.sort((a, b) => a.path.localeCompare(b.path)), directReferences, missingDirectReferences: directReferences.filter((item) => !item.present),
 };

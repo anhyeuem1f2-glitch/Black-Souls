@@ -3,11 +3,26 @@ export class AudioManager {
     this.loader = loader;
     this.onDiagnostic = onDiagnostic;
     this.channels = { bgm: null, bgs: null };
+    this.pending = { bgm: null, bgs: null };
     this.stats = { unlocked: false, bgm: null, bgs: null, lastSe: null, failures: [] };
   }
 
-  unlock() {
+  async unlock() {
+    if (this.stats.unlocked) return;
     this.stats.unlocked = true;
+    for (const channel of ['bgm', 'bgs']) {
+      const element = this.channels[channel];
+      if (!element || !this.pending[channel]) continue;
+      try {
+        await element.play();
+        if (this.stats[channel]) this.stats[channel].state = 'playing';
+        this.pending[channel] = null;
+        this.onDiagnostic({ type: 'audio-playing', channel, path: this.stats[channel]?.path, afterUnlock: true });
+      } catch (error) {
+        if (this.stats[channel]) this.stats[channel].state = 'blocked';
+        this.failure(channel, this.stats[channel]?.name ?? '', error.message);
+      }
+    }
   }
 
   async applyMapAudio(map) {
@@ -28,7 +43,12 @@ export class AudioManager {
       element.loop = true;
       applySettings(element, descriptor);
       this.channels[channel] = element;
-      this.stats[channel] = { name: descriptor.name, path, state: 'loading' };
+      this.stats[channel] = { name: descriptor.name, path, state: this.stats.unlocked ? 'loading' : 'blocked' };
+      if (!this.stats.unlocked) {
+        this.pending[channel] = descriptor;
+        this.onDiagnostic({ type: 'audio-awaiting-unlock', channel, path });
+        return;
+      }
       await element.play();
       this.stats[channel].state = 'playing';
       this.onDiagnostic({ type: 'audio-playing', channel, path });
@@ -68,6 +88,7 @@ export class AudioManager {
     const element = this.channels[channel];
     if (element) { element.pause(); element.currentTime = 0; }
     this.channels[channel] = null;
+    this.pending[channel] = null;
     this.stats[channel] = null;
   }
 

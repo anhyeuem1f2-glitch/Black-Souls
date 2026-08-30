@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLACK SOULS card host smoke test</title></head>
+<body style="margin:0;background:#232127;color:#eee;font:16px sans-serif">
+  <main style="min-height:100vh;display:grid;grid-template-rows:1fr auto;padding:24px;gap:18px">
+    <section><h1>Simulated SillyTavern chat</h1><p>The game iframe must cover this host while active.</p></section>
+    <textarea aria-label="Simulated SillyTavern composer" style="min-height:90px">Composer restored only after explicit exit.</textarea>
+  </main>
+  <iframe title="TavernHelper card script" style="position:absolute;width:1px;height:1px;border:0"></iframe>
+  <script>
+    const iframe = document.querySelector('iframe');
+    const runtime = new URL('./runtime/bootstrap.js', location.href).href;
+    const cardEntry = new URL('./card/card-entry.js', location.href).href;
+    iframe.srcdoc = `<!doctype html><html><body><script>window.BLACK_SOULS_RUNTIME_OVERRIDE=${JSON.stringify(runtime)};window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE='https://media.githubusercontent.com/media/anhyeuem1f2-glitch/Black-Souls/main/';<\/script><script src=${JSON.stringify(cardEntry)}><\/script></body></html>`;
+  </script>
+</body>
+</html>

@@ -2,13 +2,16 @@ import { InputController } from './input.js';
 import { CollisionMap } from '../map/collision.js';
 import { EventInterpreter } from '../map/interpreter.js';
 import { AudioManager } from '../audio/audio-manager.js';
+import { cancelScene } from './lifecycle.js';
 
 export class GameEngine {
-  constructor({ loader, renderer, saves, status }) {
+  constructor({ loader, renderer, saves, status, onSceneChange = () => {}, onExitRequest = () => {} }) {
     this.loader = loader;
     this.renderer = renderer;
     this.saves = saves;
     this.status = status;
+    this.onSceneChange = onSceneChange;
+    this.onExitRequest = onExitRequest;
     this.unsupported = new Set();
     this.diagnosticsLog = [];
   }
@@ -18,39 +21,70 @@ export class GameEngine {
     this.input = new InputController(this.renderer.stage);
     this.interpreter = new EventInterpreter(this);
     this.audio = new AudioManager(this.loader, (entry) => this.recordDiagnostic(entry));
-    this.state = this.initialState();
+    this.state = this.initialState('LOADING');
+    this.hasSave = await this.saves.has(1).catch((error) => { this.recordDiagnostic({ type: 'save-probe-failed', error: error.message }); return false; });
+    await this.enterTitle();
     this.running = true;
     this.loop();
-    this.status('Ready. New game starts from the original System.rvdata2 position.');
+    this.status('');
   }
 
-  initialState() {
+  initialState(scene = 'TITLE') {
     return {
-      schema: 'black-souls-st-state-v1', mapId: this.database.system.start_map_id,
+      schema: 'black-souls-st-state-v1', scene, mapId: this.database.system.start_map_id,
       x: this.database.system.start_x, y: this.database.system.start_y, direction: 2, pattern: 1, steps: 0,
-      switches: {}, variables: {}, selfSwitches: {}, transparent: false, message: null,
+      switches: {}, variables: {}, selfSwitches: {}, transparent: false, opacity: 255, message: null,
       actors: Object.fromEntries(this.database.actors.filter(Boolean).map((actor) => [actor.id, { name: actor.name }])), choice: null,
     };
   }
 
+  async enterTitle() {
+    this.map = null;
+    this.collision = null;
+    await this.renderer.setTitle(this.database.system);
+    this.state.scene = 'TITLE';
+    this.state.message = null;
+    this.state.choice = null;
+    this.state.title = {
+      selected: this.hasSave ? 1 : 0,
+      commands: [
+        { symbol: 'new_game', label: this.database.system.terms.commands[18], enabled: true },
+        { symbol: 'continue', label: this.database.system.terms.commands[19], enabled: this.hasSave },
+        { symbol: 'shutdown', label: this.database.system.terms.commands[20], enabled: true },
+      ],
+    };
+    this.state.menu = null;
+    this.audio.stop('bgs');
+    void this.audio.playLoop('bgm', this.database.system.title_bgm);
+    this.notifyScene();
+    this.renderer.render(this.state);
+  }
+
   async newGame() {
-    this.audio.unlock();
-    this.state = this.initialState();
+    await this.audio.unlock();
+    this.state = this.initialState('PLAYING');
+    this.notifyScene();
     await this.loadMap(this.state.mapId);
     this.status(`New game: map ${this.state.mapId} (${this.state.x}, ${this.state.y})`);
-    await this.runAutorunEvents();
+    void this.runAutorunEvents().catch((error) => { this.recordDiagnostic({ type: 'autorun-failed', error: error.message }); this.status(error.message); });
   }
 
   async loadMap(mapId) {
-    const map = await this.loader.map(mapId);
-    const tileset = this.database.tilesets[map.tileset_id];
-    this.map = map;
-    this.collision = new CollisionMap(map, tileset);
-    const actorId = this.database.system.party_members?.[0] ?? 1;
-    const actor = this.database.actors[actorId];
-    const playerGraphic = { character_name: actor?.character_name ?? '', character_index: actor?.character_index ?? 0 };
-    await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId });
-    await this.audio.applyMapAudio(map);
+    this.state.loadingMap = true;
+    try {
+      const map = await this.loader.map(mapId);
+      const tileset = this.database.tilesets[map.tileset_id];
+      const collision = new CollisionMap(map, tileset);
+      const actorId = this.database.system.party_members?.[0] ?? 1;
+      const actor = this.database.actors[actorId];
+      const playerGraphic = { character_name: actor?.character_name ?? '', character_index: actor?.character_index ?? 0 };
+      await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId });
+      this.map = map;
+      this.collision = collision;
+      await this.audio.applyMapAudio(map);
+    } finally {
+      this.state.loadingMap = false;
+    }
   }
 
   async transfer(mapId, x, y, direction = 0) {
@@ -90,12 +124,25 @@ export class GameEngine {
 
   loop = () => {
     if (!this.running) return;
-    this.update();
-    this.renderer.render(this.state, this.currentRenderableEvents());
+    try {
+      this.update();
+      this.renderer.render(this.state, this.currentRenderableEvents());
+      this.lastRenderError = null;
+    } catch (error) {
+      if (error.message !== this.lastRenderError) {
+        this.lastRenderError = error.message;
+        this.recordDiagnostic({ type: 'render-frame-failed', error: error.message });
+        console.error('[BLACK SOULS] Render frame failed; the loop will retry.', error);
+      }
+    }
     this.frame = requestAnimationFrame(this.loop);
   };
 
   update() {
+    if (this.paused) return;
+    if (this.input.takeInteraction()) void this.audio.unlock();
+    if (this.state.scene === 'TITLE') { this.updateTitle(); return; }
+    if (this.state.scene === 'MENU' || this.state.scene === 'END') { this.updateMenu(); return; }
     if (this.state.choice) {
       const movement = this.input.takeDirection();
       if (movement?.[1]) this.state.choice.selected = (this.state.choice.selected + Math.sign(movement[1]) + this.state.choice.options.length) % this.state.choice.options.length;
@@ -108,7 +155,7 @@ export class GameEngine {
       return;
     }
     if (this.state.message) {
-      if (this.input.takeConfirm()) {
+      if (this.input.takeConfirm() || this.input.takeCancel()) {
         this.state.message = null;
         this.messageResolve?.();
         this.messageResolve = null;
@@ -116,24 +163,114 @@ export class GameEngine {
       return;
     }
     if (this.interpreter.running) return;
+    if (this.input.takeCancel()) { this.openMenu(); return; }
     if (this.input.takeConfirm()) {
       this.triggerActionEvent();
       return;
     }
     const movement = this.input.takeDirection();
     if (!movement || !this.map) return;
-    const [dx, dy, direction] = movement;
-    const cardinal = dx !== 0 && dy !== 0 ? [[dx, 0, dx < 0 ? 4 : 6], [0, dy, dy < 0 ? 8 : 2]] : [[dx, dy, direction]];
-    if (cardinal.every(([mx, my, dir]) => this.collision.passable(this.state.x + mx, this.state.y + my, dir))) {
-      this.state.x += dx;
-      this.state.y += dy;
-      if (dx === 0 || dy === 0) this.state.direction = direction;
-      else if ((this.state.direction === 4 && dx > 0) || (this.state.direction === 6 && dx < 0)) this.state.direction = dy < 0 ? 8 : 2;
-      else if ((this.state.direction === 8 && dy > 0) || (this.state.direction === 2 && dy < 0)) this.state.direction = dx < 0 ? 4 : 6;
-      this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4];
-      this.state.steps = (this.state.steps ?? 0) + 1;
-    }
+    this.move(...movement);
   }
+
+  updateTitle() {
+    const movement = this.input.takeDirection();
+    if (movement?.[1]) this.state.title.selected = cycle(this.state.title.selected, Math.sign(movement[1]), this.state.title.commands.length);
+    if (this.input.takeCancel()) return;
+    if (!this.input.takeConfirm() || this.transitioning) return;
+    const command = this.state.title.commands[this.state.title.selected];
+    if (!command.enabled) { this.status('Không có dữ liệu lưu.'); return; }
+    if (command.symbol === 'shutdown') { this.onExitRequest({ reason: 'title-shutdown', scene: 'TITLE' }); return; }
+    this.transitioning = true;
+    const task = command.symbol === 'new_game' ? this.newGame() : this.load(1);
+    Promise.resolve(task).catch((error) => { this.recordDiagnostic({ type: 'scene-transition-failed', error: error.message }); this.status(error.message); }).finally(() => { this.transitioning = false; });
+  }
+
+  updateMenu() {
+    const movement = this.input.takeDirection();
+    if (movement?.[1]) this.state.menu.selected = cycle(this.state.menu.selected, Math.sign(movement[1]), this.state.menu.commands.length);
+    if (this.input.takeCancel()) {
+      if (this.state.scene === 'END') this.openMenu();
+      else this.setScene(cancelScene(this.state.scene));
+      return;
+    }
+    if (!this.input.takeConfirm()) return;
+    const command = this.state.menu.commands[this.state.menu.selected];
+    if (command.enabled === false) { this.status('Mục này chưa có trong vertical slice hiện tại.'); return; }
+    if (this.state.scene === 'END') {
+      if (command.symbol === 'to_title') void this.enterTitle();
+      if (command.symbol === 'shutdown') this.onExitRequest({ reason: 'game-end-shutdown', scene: 'END' });
+      if (command.symbol === 'cancel') this.openMenu();
+      return;
+    }
+    if (command.symbol === 'save') void this.save(1);
+    if (command.symbol === 'game_end') this.openEndMenu();
+  }
+
+  openMenu() {
+    const labels = this.database.system.terms.commands;
+    this.state.menu = {
+      kind: 'menu', selected: 0,
+      commands: [
+        { symbol: 'item', label: labels[4], enabled: false }, { symbol: 'skill', label: labels[5], enabled: false },
+        { symbol: 'equip', label: labels[6], enabled: false }, { symbol: 'status', label: labels[7], enabled: false },
+        { symbol: 'save', label: labels[9], enabled: true }, { symbol: 'game_end', label: labels[10], enabled: true },
+      ],
+    };
+    this.setScene('MENU');
+  }
+
+  openEndMenu() {
+    const labels = this.database.system.terms.commands;
+    this.state.menu = { kind: 'end', selected: 0, commands: [
+      { symbol: 'to_title', label: labels[21], enabled: true },
+      { symbol: 'shutdown', label: labels[20], enabled: true },
+      { symbol: 'cancel', label: labels[22], enabled: true },
+    ] };
+    this.setScene('END');
+  }
+
+  setScene(scene) {
+    this.state.scene = scene;
+    if (scene === 'PLAYING') this.state.menu = null;
+    this.notifyScene();
+  }
+
+  notifyScene() { this.onSceneChange(this.state.scene); }
+
+  move(dx, dy, direction) {
+    if (dx !== 0 && dy !== 0) {
+      const horizontal = dx < 0 ? 4 : 6; const vertical = dy < 0 ? 8 : 2;
+      const strict = this.canStep(this.state.x, this.state.y, horizontal)
+        && this.canStep(this.state.x + dx, this.state.y, vertical)
+        && this.canStep(this.state.x, this.state.y, vertical)
+        && this.canStep(this.state.x, this.state.y + dy, horizontal);
+      if (strict) {
+        this.state.x += dx; this.state.y += dy;
+        if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
+        if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
+        this.advancePattern(); return;
+      }
+      const fallback = this.state.direction === horizontal ? [vertical, horizontal] : this.state.direction === vertical ? [horizontal, vertical] : [];
+      for (const candidate of fallback) if (this.moveCardinal(candidate)) return;
+      return;
+    }
+    this.moveCardinal(direction);
+  }
+
+  moveCardinal(direction) {
+    const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
+    this.state.direction = direction;
+    if (!this.canStep(this.state.x, this.state.y, direction)) return false;
+    this.state.x += dx; this.state.y += dy; this.advancePattern(); return true;
+  }
+
+  canStep(x, y, direction) {
+    const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
+    return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
+  }
+
+  advancePattern() { this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4]; this.state.steps = (this.state.steps ?? 0) + 1; }
 
   showMessage(text) {
     this.state.message = this.expandText(text);
@@ -186,7 +323,7 @@ export class GameEngine {
     return Object.values(map?.events ?? {}).flatMap((event) => {
       const page = this.activePage(event);
       if (!page?.graphic?.character_name) return [];
-      return [{ id: event.id, x: event.x, y: event.y, direction: page.graphic.direction, pattern: page.graphic.pattern, graphic: page.graphic, page }];
+      return [{ id: event.id, x: event.x, y: event.y, direction: page.graphic.direction, pattern: page.graphic.pattern, opacity: 255, priority: page.priority_type ?? 1, graphic: page.graphic, page }];
     });
   }
 
@@ -221,6 +358,13 @@ export class GameEngine {
   getDiagnostics() {
     return {
       map: { id: this.state?.mapId, name: this.map?.display_name, tileset: this.renderer.stats.tileset, x: this.state?.x, y: this.state?.y },
+      scene: this.state?.scene,
+      title: {
+        graphic1: this.renderer.stats.title?.title1 ?? null,
+        graphic2: this.renderer.stats.title?.title2 ?? null,
+        bgm: this.database?.system?.title_bgm?.name ?? null,
+        asset: this.renderer.stats.title?.title1?.path ? this.loader.assetDiagnostics(this.renderer.stats.title.title1.path) : null,
+      },
       playerAsset: this.renderer.playerGraphic?.character_name ?? null,
       assets: this.loader.diagnostics(), audio: this.audio?.diagnostics(), renderer: this.renderer.diagnostics(),
       unsupported: [...this.unsupported], log: [...this.diagnosticsLog],
@@ -228,14 +372,19 @@ export class GameEngine {
   }
 
   snapshot() { return structuredClone(this.state); }
-  async save(slot) { await this.saves.save(slot, this.snapshot()); this.status(`Saved slot ${slot}.`); }
+  async save(slot) { await this.saves.save(slot, this.snapshot()); this.hasSave = true; this.status(`Đã lưu vào slot ${slot}.`); }
   async load(slot) {
     const state = await this.saves.load(slot);
     if (!state) throw new Error(`Save slot ${slot} is empty.`);
     this.state = state;
+    this.state.scene = 'PLAYING'; this.state.menu = null;
     await this.loadMap(state.mapId);
-    this.status(`Loaded slot ${slot}.`);
+    this.notifyScene();
+    this.status(`Đã tải slot ${slot}.`);
   }
+
+  pause() { this.paused = true; this.input?.clear(); }
+  resume() { this.paused = false; this.input?.clear(); }
 
   async destroy() {
     this.running = false;
@@ -245,3 +394,6 @@ export class GameEngine {
     this.loader.destroy();
   }
 }
+
+function cycle(value, delta, length) { return (value + delta + length) % length; }
+function reverse(direction) { return 10 - direction; }

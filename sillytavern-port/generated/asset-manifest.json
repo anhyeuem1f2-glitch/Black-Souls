@@ -4,7 +4,7 @@
   "repository": {
     "owner": "anhyeuem1f2-glitch",
     "name": "Black-Souls",
-    "ref": "main"
+    "ref": "direct-boot-v0.3.0"
   },
   "deliveryPolicy": {
     "lfs": "github-media",
@@ -8298,7 +8298,8 @@
       "sources": [
         "map:101",
         "map:121:event:1",
-        "map:97"
+        "map:97",
+        "system:title-bgm"
       ]
     },
     {
@@ -15187,6 +15188,13 @@
       "present": true,
       "sources": [
         "tileset:21"
+      ]
+    },
+    {
+      "basePath": "Graphics/Titles1/1",
+      "present": true,
+      "sources": [
+        "system:title1"
       ]
     }
   ],

@@ -14,6 +14,11 @@ export class SaveStore {
     if (record.schema !== 'black-souls-st-save-v1') throw new Error(`Unsupported save schema: ${record.schema}`);
     return record.state;
   }
+
+  async has(slot) {
+    const database = await openDatabase();
+    return Boolean(await request(database.transaction(STORE).objectStore(STORE).getKey(slot)));
+  }
 }
 
 let databasePromise;
