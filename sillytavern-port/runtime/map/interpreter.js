@@ -89,7 +89,9 @@ export class EventInterpreter {
         case 221: await this.engine.renderer.fadeTo(1); break;
         case 222: await this.engine.renderer.fadeTo(0); break;
         case 230: await wait((parameters[0] ?? 1) * 1000 / 60); break;
-        case 250: this.engine.playSe(parameters[0]); break;
+        case 212: await this.engine.showAnimation(parameters[0], parameters[1]); break;
+        case 213: await this.engine.showBalloon(parameters[0], parameters[1]); break;
+        case 250: await this.engine.playSe(parameters[0]); break;
         case 303: await this.engine.nameInput(parameters[0], parameters[1]); break;
         case 320: this.engine.setActorName(parameters[0], String(parameters[1] ?? '')); break;
         case 355: {

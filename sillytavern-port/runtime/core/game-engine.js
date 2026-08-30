@@ -1,6 +1,7 @@
 import { InputController } from './input.js';
 import { CollisionMap } from '../map/collision.js';
 import { EventInterpreter } from '../map/interpreter.js';
+import { AudioManager } from '../audio/audio-manager.js';
 
 export class GameEngine {
   constructor({ loader, renderer, saves, status }) {
@@ -9,12 +10,14 @@ export class GameEngine {
     this.saves = saves;
     this.status = status;
     this.unsupported = new Set();
+    this.diagnosticsLog = [];
   }
 
   async initialize() {
     this.database = await this.loader.initialize();
     this.input = new InputController(this.renderer.stage);
     this.interpreter = new EventInterpreter(this);
+    this.audio = new AudioManager(this.loader, (entry) => this.recordDiagnostic(entry));
     this.state = this.initialState();
     this.running = true;
     this.loop();
@@ -24,13 +27,14 @@ export class GameEngine {
   initialState() {
     return {
       schema: 'black-souls-st-state-v1', mapId: this.database.system.start_map_id,
-      x: this.database.system.start_x, y: this.database.system.start_y, direction: 2,
+      x: this.database.system.start_x, y: this.database.system.start_y, direction: 2, pattern: 1, steps: 0,
       switches: {}, variables: {}, selfSwitches: {}, transparent: false, message: null,
       actors: Object.fromEntries(this.database.actors.filter(Boolean).map((actor) => [actor.id, { name: actor.name }])), choice: null,
     };
   }
 
   async newGame() {
+    this.audio.unlock();
     this.state = this.initialState();
     await this.loadMap(this.state.mapId);
     this.status(`New game: map ${this.state.mapId} (${this.state.x}, ${this.state.y})`);
@@ -42,7 +46,11 @@ export class GameEngine {
     const tileset = this.database.tilesets[map.tileset_id];
     this.map = map;
     this.collision = new CollisionMap(map, tileset);
-    await this.renderer.setMap(map, tileset);
+    const actorId = this.database.system.party_members?.[0] ?? 1;
+    const actor = this.database.actors[actorId];
+    const playerGraphic = { character_name: actor?.character_name ?? '', character_index: actor?.character_index ?? 0 };
+    await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId });
+    await this.audio.applyMapAudio(map);
   }
 
   async transfer(mapId, x, y, direction = 0) {
@@ -83,7 +91,7 @@ export class GameEngine {
   loop = () => {
     if (!this.running) return;
     this.update();
-    this.renderer.render(this.state);
+    this.renderer.render(this.state, this.currentRenderableEvents());
     this.frame = requestAnimationFrame(this.loop);
   };
 
@@ -119,7 +127,11 @@ export class GameEngine {
     if (cardinal.every(([mx, my, dir]) => this.collision.passable(this.state.x + mx, this.state.y + my, dir))) {
       this.state.x += dx;
       this.state.y += dy;
-      this.state.direction = direction;
+      if (dx === 0 || dy === 0) this.state.direction = direction;
+      else if ((this.state.direction === 4 && dx > 0) || (this.state.direction === 6 && dx < 0)) this.state.direction = dy < 0 ? 8 : 2;
+      else if ((this.state.direction === 8 && dy > 0) || (this.state.direction === 2 && dy < 0)) this.state.direction = dx < 0 ? 4 : 6;
+      this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4];
+      this.state.steps = (this.state.steps ?? 0) + 1;
     }
   }
 
@@ -156,11 +168,26 @@ export class GameEngine {
     if (event) this.interpreter.run(this.activePage(event).list, { eventId: event.id });
   }
 
-  playSe(audio) {
-    if (!audio?.name) return;
-    const element = new Audio(this.loader.asset(`Audio/SE/${audio.name}.ogg`));
-    element.volume = Math.max(0, Math.min(1, (audio.volume ?? 100) / 100));
-    element.play().catch(() => this.noteUnsupported(250, `missing ${audio.name}`));
+  playSe(audio) { return this.audio.playSe(audio); }
+
+  showAnimation(targetId, animationId) {
+    const event = targetId === -1 ? null : this.map?.events?.[targetId];
+    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+    return this.renderer.showAnimation(target, this.database.animations[animationId]);
+  }
+
+  showBalloon(targetId, balloonId) {
+    const event = targetId === -1 ? null : this.map?.events?.[targetId];
+    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+    return this.renderer.showBalloon(target, balloonId);
+  }
+
+  currentRenderableEvents(map = this.map) {
+    return Object.values(map?.events ?? {}).flatMap((event) => {
+      const page = this.activePage(event);
+      if (!page?.graphic?.character_name) return [];
+      return [{ id: event.id, x: event.x, y: event.y, direction: page.graphic.direction, pattern: page.graphic.pattern, graphic: page.graphic, page }];
+    });
   }
 
   runRubyCompatibility(source) {
@@ -187,7 +214,17 @@ export class GameEngine {
     if (this.unsupported.has(key)) return;
     this.unsupported.add(key);
     console.warn(`[BLACK SOULS] Unsupported command ${key}`);
-    this.status(`Compatibility gap recorded: ${key}`);
+    this.recordDiagnostic({ type: 'compatibility-gap', code, detail });
+  }
+
+  recordDiagnostic(entry) { this.diagnosticsLog.push({ at: new Date().toISOString(), ...entry }); this.diagnosticsLog = this.diagnosticsLog.slice(-30); }
+  getDiagnostics() {
+    return {
+      map: { id: this.state?.mapId, name: this.map?.display_name, tileset: this.renderer.stats.tileset, x: this.state?.x, y: this.state?.y },
+      playerAsset: this.renderer.playerGraphic?.character_name ?? null,
+      assets: this.loader.diagnostics(), audio: this.audio?.diagnostics(), renderer: this.renderer.diagnostics(),
+      unsupported: [...this.unsupported], log: [...this.diagnosticsLog],
+    };
   }
 
   snapshot() { return structuredClone(this.state); }
@@ -204,5 +241,7 @@ export class GameEngine {
     this.running = false;
     cancelAnimationFrame(this.frame);
     this.input?.destroy();
+    this.audio?.destroy();
+    this.loader.destroy();
   }
 }

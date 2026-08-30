@@ -1,6 +1,6 @@
 {
   "schema": "black-souls-st-runtime-manifest-v1",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "game": "BLACK SOULS",
   "mode": "game-only-no-ai",
   "runtime": {
@@ -19,8 +19,17 @@
     "base": "../generated/"
   },
   "assets": {
-    "base": "../../",
-    "policy": "lazy"
+    "manifest": "../generated/asset-manifest.json",
+    "policy": "map-scoped-lazy",
+    "repository": {
+      "owner": "anhyeuem1f2-glitch",
+      "name": "Black-Souls",
+      "ref": "main"
+    },
+    "delivery": {
+      "lfs": "github-media",
+      "rtp": "runtime-bundle"
+    }
   },
   "save": {
     "schema": "black-souls-st-save-v1",

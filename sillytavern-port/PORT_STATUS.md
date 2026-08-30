@@ -12,21 +12,24 @@
 - [x] Partial interpreter executes the original map-7 autorun transfer to map 97.
 - [x] IndexedDB save slot 1 survives load within the browser profile.
 - [x] Chara Card V3 JSON with `data.extensions.tavern_helper` script schema verified against installed TavernHelper source.
+- [x] LFS-pointer detection, magic-byte validation, centralized asset resolver, and isolated browser-ready RTP subset.
+- [x] Verified Map 7 → Map 97 tile/sprite/fog/BGM/SE rendering with original assets.
+- [x] Command 212 animation and command 213 balloon rendering; compatibility diagnostics stay out of player status.
 
 ## In progress / partial
 
-- [~] Tiles: B–E and A5 direct tiles are drawn from original sheets; autotile composition is currently approximate.
+- [~] Tiles: A1–A4 quarter composition, animation, A5/B–E, star priority, and shadows are implemented; broader map golden comparisons remain.
 - [~] Collision: VX Ace directional tile flags are honored; event collision, counter tiles, boats, regions, and plugin rules remain.
 - [~] Events: 28 of 80 command codes have some implementation; several are only partial.
 - [~] Ruby event compatibility: 3 simple patterns are mapped; the complete 32-snippet registry remains.
-- [~] Audio: lazy SE path exists, but extension fallback and RTP assets remain.
+- [~] Audio: map BGM/BGS and SE use manifest-resolved real binaries; fades, ME, pan, and full event coverage remain.
 
 ## Not implemented
 
 - [ ] Title/menu/name-input fidelity.
 - [ ] Full message/choice/branch/loop interpreter behavior.
-- [ ] Pictures, weather, animation, complete move routes, shops, battles, common-event scheduling.
+- [ ] Pictures, weather, complete move routes, shops, battles, common-event scheduling.
 - [ ] ATB/AP, casting, smart enemy AI, battle UI, difficulty variable 60, and other custom battle systems.
-- [ ] Full 8-direction plugin semantics, symbol encounters, fog/parallax, footsteps, journal UI, synthesis, world map.
+- [ ] Full 8-direction plugin semantics, symbol encounters, footsteps, journal UI, synthesis, world map.
 - [ ] Complete save schema parity and migrations.
 - [ ] Native SillyTavern import test (direct browser and card-bootstrap harness are tested; the installed SillyTavern tree was kept read-only and not launched).

@@ -19,6 +19,10 @@
 *.rgss2a filter=lfs diff=lfs merge=lfs -text
 *.rgssad filter=lfs diff=lfs merge=lfs -text
 *.rvdata2 filter=lfs diff=lfs merge=lfs -text
+
+# Browser-ready RTP subset used by the SillyTavern port. These must remain
+# ordinary Git blobs so a CDN never serves a Git LFS pointer to the browser.
+sillytavern-port/assets/** -filter -diff -merge -text
 *.rvdata filter=lfs diff=lfs merge=lfs -text
 *.ttf filter=lfs diff=lfs merge=lfs -text
 *.otf filter=lfs diff=lfs merge=lfs -text

@@ -1,14 +1,24 @@
 # Asset Pipeline
 
-`tools/build-assets.mjs` builds `generated/asset-manifest.json` from the Git tree and direct normalized database/map references. Runtime paths preserve the original `Graphics/...` and `Audio/...` identity and are URL-encoded segment by segment.
+`tools/build-assets.mjs` generates `generated/asset-manifest.json` schema v2. Every entry records the original path, category, extension, known size, Git LFS state, delivery mode, and—when bundled—SHA-256. Direct references are extracted from tilesets, actors, maps, events, fog notes, animation sheets, and audio/picture commands.
 
-Assets are loaded lazily when a map/scene requests them. Missing optional images resolve to a reported compatibility gap rather than an invented substitute. Required data JSON fails loudly.
+## Browser delivery
 
-The source declares `RPGVXAce` RTP in `Game.ini`. Several referenced standard sheets and sounds—such as the `Inside_*`, `Outside_*`, and `Fire1` families—are not committed in this repository. A faithful release therefore needs a legal RTP asset provisioning step or a user-supplied RTP path. The current renderer shows diagnostic colors for unresolved tiles and does not claim visual fidelity.
+`runtime/assets/asset-resolver.js` is the only asset URL policy:
 
-Planned next steps:
+1. `runtime-bundle` for the isolated VX Ace RTP subset under `sillytavern-port/assets/rtp/`;
+2. `media.githubusercontent.com/media/...` for original Git LFS assets;
+3. GitHub's `/raw/` redirect endpoint as an LFS-aware fallback;
+4. repository-relative CDN URLs only for non-LFS Git blobs.
 
-1. Generate per-map dependency shards including event command pictures/audio.
-2. Add extension probing for `.ogg`, `.mp3`, and `.wav` without duplicate network storms.
-3. Implement Cache API/IndexedDB metadata with content hashes.
-4. Require asset-integrity data for stable tagged releases.
+The resolver fetches bytes before creating `Image` or `Audio` objects. It rejects Git LFS pointer text even when a CDN labels it `image/png`, validates PNG/JPEG/Ogg/WAV/MP3 magic bytes, reports every attempted source/status/content type/stage, caches successful binaries and decoded images, and revokes generated Blob URLs during unmount. Paths are encoded segment-by-segment so Unicode, spaces, punctuation, `$`, and `!` names keep their original identity.
+
+## RTP subset
+
+The repository's `Game.ini` declares `RPGVXAce` RTP but the original Git tree does not contain every standard sheet/sound required by the boot path. The browser bundle contains only the files used by Map 7, Map 97, their first event visuals, and command 212/213 effects. `.gitattributes` explicitly disables LFS for this directory, so CDN delivery returns real files rather than pointer records.
+
+The source package was the official `RPGVXAce_RTP.zip` download, SHA-256 `7E93D0EAD93A686218B7C671BF099EF42F09F536083BD0B2F0FA6423A39FC19B`. It was extracted without modifying the canonical `Graphics/` or `Audio/` trees. Redistribution remains subject to the RPG Maker VX Ace/RTP license; a production publisher must confirm their applicable license before release.
+
+## Loading boundary
+
+Loading is map-scoped and lazy. A map loads its non-empty tileset sheets, active event graphics, player graphic, fog, and autoplay audio. Future battle/picture scenes must request their own asset sets through the same resolver; they must not construct remote URLs directly.

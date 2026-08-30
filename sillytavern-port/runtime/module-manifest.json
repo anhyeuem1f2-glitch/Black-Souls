@@ -1,10 +1,12 @@
 {
   "schema": "black-souls-runtime-module-tree-v1",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "entry": "bootstrap.js",
   "modules": [
     "bootstrap.js",
     "host.js",
+    "assets/asset-resolver.js",
+    "audio/audio-manager.js",
     "core/game-engine.js",
     "core/input.js",
     "data/loader.js",

@@ -2,28 +2,28 @@
 
 ## Automated Node tests
 
-- `Scripts.rvdata2` parses to exactly 167 entries.
-- Every `Map001.rvdata2` through `Map150.rvdata2` parses as `RPG::Map`.
-- Runtime modules import without syntax errors.
-- Generated card is Chara Card V3 and contains an enabled TavernHelper character script/button.
-- Runtime module-tree manifest covers every static relative ES-module import.
-- Card loader source order and all five visible loader states are regression-tested.
+- `Scripts.rvdata2` parses to exactly 167 entries; all 150 maps and every database file parse.
+- Every runtime module imports, and `module-manifest.json` covers the complete static relative import tree.
+- The generated Chara Card V3 contains the enabled TavernHelper script, centralized release config, CDN fallback order, and visible loader states.
+- Interpreter fixtures cover choices, conditions, actor-name conditions, labels, and the original Map 97 opening prefix.
+- Asset tests cover Git LFS pointer rejection before decode, PNG/Ogg magic bytes, bundled RTP priority, special filenames, and regular/`$` VX Ace character frames.
 
-## Extraction/audit run
+## Static audit
 
-- 165 `.rvdata2` files extracted.
-- 150 maps generated.
+- 165 `.rvdata2` files extracted; 150 maps generated.
 - 70,425 event command instances / 80 distinct codes inventoried.
 - 32 unique embedded Ruby snippets / 38 occurrences inventoried.
 - 57 custom/plugin scripts total 667,312 bytes / 16,411 lines.
-- `Win32API` static matches: zero.
+- 818+ browser asset records include per-path LFS/delivery/status metadata; unresolved references remain listed for later maps.
 
 ## Browser smoke test
 
-Direct runtime and card-bootstrap harnesses loaded successfully in the in-app browser. Canvas dimensions were 640×480. Clicking New Game used the original `System.rvdata2` start (`map 7`, `x 7`, `y 6`) and ran the original autorun command list through fade, direct transfer to map 97, player transparency update, fade-in, and switch 4. The map-97 autorun then displayed the original Vietnamese Alice dialogue. Three confirmations reached the original name-input command; a normal test name expanded `\\N[1]` in the original confirmation text. The next original two-option choice rendered and accepted keyboard selection. A regression test executes this exact original command prefix and verifies the two choices `Đúng` / `Không đúng`; a separate branch fixture verifies label/choice selection behavior. Saving and loading slot 1 produced `Saved slot 1.` and `Loaded slot 1.`
+The direct runtime loaded in the Codex in-app browser at 640×480. New Game loaded the original Map 7 at `(7,6)` and ran its autorun transfer to Map 97 `(12,18)`. Visual inspection of Map 97 showed composed library tiles, original `!Flame`, `$c_54b`, and `!Other3` sprites, original fog, and Vietnamese Alice dialogue—no diagnostic-color tiles or mock player art.
 
-The only captured console warning was the expected missing RTP sound `Fire1`. Visual inspection showed diagnostic tiles plus an original custom sheet tile after the graphics sparse checkout; this is not considered a visual-fidelity pass.
+Runtime Diagnostics reported successful assets from both `runtime-bundle` and `github-media`, zero failed loads, zero LFS pointer bodies reaching a decoder, BGM `タイトル、アリス` playing, `Fire1` SE playing, active fog, and all eight non-empty Map 97 tileset sheets. IndexedDB returned `Saved slot 1.`. The opening command 213 balloon path is implemented with the RTP balloon sheet; command 212 uses the normalized database animation and original animation sheet.
+
+The authenticated `https://st.proxyvn.top` instance was not available in this workspace. The generated card uses the same URL-based module tree and browser asset endpoints, but final native import confirmation on that deployment remains a user-side acceptance step.
 
 ## Remote loader diagnostics
 
-The card loader performs a CORS fetch preflight for `module-manifest.json` and every module in the static import tree before calling dynamic `import()` on the real CDN URL. Each source attempt records requested and final URL, redirect state, HTTP status, Content-Type, exposed CORS header, failing stage, error stack, and mount cleanup errors. The actual import remains URL-based; no Blob conversion is used, so relative imports resolve against the selected CDN base.
+The card loader CORS-preflights `module-manifest.json` and every module in the static import tree before calling dynamic `import()` on a real CDN URL. Each source attempt records requested/final URL, redirects, HTTP status, Content-Type, exposed CORS header, failing stage, nested module errors, and mount cleanup errors. No fetch-to-Blob module conversion is used, so relative imports resolve against the selected CDN base.

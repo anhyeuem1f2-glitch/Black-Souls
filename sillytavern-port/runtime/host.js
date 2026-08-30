@@ -4,12 +4,12 @@ import { CanvasRenderer } from './render/canvas-renderer.js';
 import { SaveStore } from './save/indexeddb.js';
 
 export class BlackSoulsHost {
-  constructor({ manifest, manifestUrl, target = document.body, dataBaseUrl, assetBaseUrl, onLoaderState = () => {} }) {
+  constructor({ manifest, manifestUrl, target = document.body, dataBaseUrl, onLoaderState = () => {} }) {
     this.manifest = manifest;
     this.manifestUrl = manifestUrl;
     this.target = target;
     this.dataBaseUrl = new URL(dataBaseUrl ?? manifest.data.base, manifestUrl);
-    this.assetBaseUrl = new URL(assetBaseUrl ?? manifest.assets.base, manifestUrl);
+    this.runtimeBaseUrl = new URL('./', manifestUrl);
     this.onLoaderState = onLoaderState;
   }
 
@@ -27,8 +27,10 @@ export class BlackSoulsHost {
           <button data-action="continue">Continue</button>
           <button data-action="save">Save</button>
           <button data-action="fullscreen">Fullscreen</button>
+          <button data-action="diagnostics" aria-expanded="false">Diagnostics</button>
         </nav>
         <output class="bs-status" aria-live="polite"></output>
+        <aside class="bs-diagnostics" hidden><pre></pre></aside>
       </section>`;
     this.target.replaceChildren(this.root);
     this.stage = this.root.querySelector('.bs-stage');
@@ -36,13 +38,13 @@ export class BlackSoulsHost {
     this.progress = this.root.querySelector('.bs-progress');
 
     this.notifyLoader('Loading game data...', this.dataBaseUrl.href);
-    const loader = new DataLoader(this.dataBaseUrl, this.assetBaseUrl, (message, fraction) => {
+    const loader = new DataLoader(this.dataBaseUrl, this.runtimeBaseUrl, this.manifest.assets, (message, fraction) => {
       this.setProgress(message, fraction);
       if (fraction >= 0.45) {
         this.setProgress('Starting BLACK SOULS...', 0.72);
         this.notifyLoader('Starting BLACK SOULS...', message);
       }
-    });
+    }, (entry) => { console.debug('[BLACK SOULS diagnostics]', entry); this.refreshDiagnostics(); });
     const renderer = new CanvasRenderer(this.stage, loader, this.manifest.engine);
     const saves = new SaveStore();
     this.engine = new GameEngine({ loader, renderer, saves, status: (message) => this.setStatus(message) });
@@ -52,6 +54,7 @@ export class BlackSoulsHost {
     this.notifyLoader('Ready', `runtime ${this.manifest.version}`);
     this.readyTimer = setTimeout(() => { if (this.progress) this.progress.hidden = true; }, 1000);
     this.stage.focus();
+    this.diagnosticsTimer = setInterval(() => this.refreshDiagnostics(), 1000);
     return this;
   }
 
@@ -64,6 +67,7 @@ export class BlackSoulsHost {
         if (action === 'continue') await this.engine.load(1);
         if (action === 'save') await this.engine.save(1);
         if (action === 'fullscreen') await this.root.requestFullscreen?.();
+        if (action === 'diagnostics') this.toggleDiagnostics(event.target.closest('button'));
         this.stage.focus();
       } catch (error) {
         this.setStatus(error.message, true);
@@ -86,13 +90,28 @@ export class BlackSoulsHost {
     try { this.onLoaderState(state, detail); } catch (error) { console.warn('[BLACK SOULS] Loader state callback failed', error); }
   }
 
+  toggleDiagnostics(button) {
+    const panel = this.root.querySelector('.bs-diagnostics');
+    panel.hidden = !panel.hidden;
+    button?.setAttribute('aria-expanded', String(!panel.hidden));
+    this.refreshDiagnostics();
+  }
+
+  refreshDiagnostics() {
+    const output = this.root?.querySelector('.bs-diagnostics pre');
+    if (!output || !this.engine) return;
+    output.textContent = JSON.stringify({ runtime: { version: this.manifest.version, manifestUrl: this.manifestUrl.href }, ...this.engine.getDiagnostics() }, null, 2);
+  }
+
   async save(slot) { return this.engine.save(slot); }
   async loadSave(slot) { return this.engine.load(slot); }
   async reset() { return this.engine.newGame(); }
   getState() { return this.engine.snapshot(); }
+  getDiagnostics() { return this.engine.getDiagnostics(); }
 
   async unmount() {
     clearTimeout(this.readyTimer);
+    clearInterval(this.diagnosticsTimer);
     this.root?.removeEventListener('click', this.onClick);
     await this.engine?.destroy();
     this.root?.remove();
@@ -122,4 +141,6 @@ const styles = `
   button:hover { background: #2a1a1e; }
   .bs-status { display: block; min-height: 30px; padding: 6px 12px; color: #aaa; font: 12px ui-monospace, monospace; }
   .bs-status.error { color: #ff8d92; }
+  .bs-diagnostics { max-height: 260px; overflow: auto; border-top: 1px solid #382a2c; background: #050506; }
+  .bs-diagnostics pre { margin: 0; padding: 12px; color: #aeb9ad; font: 11px/1.45 ui-monospace, monospace; white-space: pre-wrap; }
 `;

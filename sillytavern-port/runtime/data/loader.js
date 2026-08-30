@@ -1,30 +1,41 @@
+import { AssetResolver } from '../assets/asset-resolver.js';
+
 export class DataLoader {
-  constructor(dataBaseUrl, assetBaseUrl, progress = () => {}) {
+  constructor(dataBaseUrl, runtimeBaseUrl, assetConfig, progress = () => {}, onDiagnostic = () => {}) {
     this.dataBaseUrl = dataBaseUrl;
-    this.assetBaseUrl = assetBaseUrl;
+    this.runtimeBaseUrl = runtimeBaseUrl;
+    this.assetConfig = assetConfig;
     this.progress = progress;
+    this.onDiagnostic = onDiagnostic;
     this.jsonCache = new Map();
-    this.imageCache = new Map();
   }
 
   async initialize() {
     this.progress('Loading game data...', 0.15);
-    const [system, tilesets, actors, commonEvents] = await Promise.all([
+    const [system, tilesets, actors, commonEvents, animations, assetManifest] = await Promise.all([
       this.json('database/System.json'),
       this.json('database/Tilesets.json'),
       this.json('database/Actors.json'),
       this.json('database/CommonEvents.json'),
+      this.json('database/Animations.json'),
+      this.json(this.assetConfig.manifest, this.runtimeBaseUrl),
     ]);
+    this.assets = new AssetResolver({
+      manifest: assetManifest,
+      runtimeBaseUrl: this.runtimeBaseUrl,
+      repository: this.assetConfig.repository,
+      onDiagnostic: this.onDiagnostic,
+    });
     this.progress('Game data ready', 0.45);
-    return { system, tilesets, actors, commonEvents };
+    return { system, tilesets, actors, commonEvents, animations, assetManifest };
   }
 
   map(id) {
     return this.json(`maps/${String(id).padStart(3, '0')}.json`);
   }
 
-  async json(path) {
-    const url = new URL(path, this.dataBaseUrl).href;
+  async json(path, base = this.dataBaseUrl) {
+    const url = new URL(path, base).href;
     if (!this.jsonCache.has(url)) {
       this.jsonCache.set(url, fetch(url).then((response) => {
         if (!response.ok) throw new Error(`Required game data failed: HTTP ${response.status} ${response.statusText} at ${url}`);
@@ -36,21 +47,9 @@ export class DataLoader {
     return this.jsonCache.get(url);
   }
 
-  asset(path) {
-    return new URL(path.split('/').map(encodeURIComponent).join('/'), this.assetBaseUrl).href;
-  }
-
-  async image(path, { optional = true } = {}) {
-    const url = this.asset(path);
-    if (!this.imageCache.has(url)) {
-      this.imageCache.set(url, new Promise((resolve, reject) => {
-        const image = new Image();
-        image.crossOrigin = 'anonymous';
-        image.onload = () => resolve(image);
-        image.onerror = () => optional ? resolve(null) : reject(new Error(`Required image missing: ${path}`));
-        image.src = url;
-      }));
-    }
-    return this.imageCache.get(url);
-  }
+  image(path, { optional = false } = {}) { return this.assets.image(path, { required: !optional }); }
+  audioUrl(path, { optional = false } = {}) { return this.assets.audioUrl(path, { required: !optional }); }
+  resolveEntry(path) { return this.assets.entry(path); }
+  diagnostics() { return this.assets?.diagnostics() ?? { state: 'not-initialized' }; }
+  destroy() { this.assets?.destroy(); }
 }

@@ -1,11 +1,9 @@
 # Known Differences
 
-- VX Ace autotiles are not yet composed from their four quarter tiles; the current fallback selects a source region only for development visibility.
-- Standard RPG Maker VX Ace RTP assets are referenced by the game but absent from the Git repository. Missing tiles/audio are visible and reported.
-- Player/event sprites are not yet decoded with `$`/`!` sheet layout semantics; the development renderer uses a marker for the player.
-- Event interpreter coverage is partial and unsupported codes are logged once rather than silently ignored.
-- Fade timing, movement cadence, animation timing, audio pitch, and message window layout are provisional.
-- Only a small subset of embedded Ruby calls has a compatibility mapping.
-- Battle and all game-specific battle plugins are absent.
-- The development card follows mutable `main`. A stable release must pin a published commit/tag and verify integrity.
-- Native SillyTavern was intentionally not launched during this session because the forensic investigation treated that installation as read-only. The card bootstrap is tested in a browser harness and its schema is matched to the installed source.
+- VX Ace A1–A4 autotiles now use quarter-tile composition, animated water/waterfalls, A5/B–E sheets, star priority, and map shadows. Edge cases such as terrain-specific table rendering still need broader golden-map comparison.
+- Player and active event sprites use original `$`/`!` sheet semantics and cardinal rows during eight-direction movement. Full move-route animation cadence and event collision remain incomplete.
+- Boot-map fog, BGM, SE, database animations (command 212), and balloons (command 213) are implemented. Pictures, weather, screen flashes/shakes, and full animation timing SE/flash behavior remain incomplete.
+- The isolated RTP bundle covers the verified Map 7 → Map 97 path, not every RTP dependency in all 150 maps. Missing later assets fail with diagnostics instead of placeholder art.
+- Event interpreter and embedded Ruby compatibility remain partial; battle and game-specific battle plugins are absent.
+- The development card follows mutable `main`. A stable release must pin a published commit/tag and refresh integrity metadata.
+- The browser harness is verified; the authenticated `st.proxyvn.top` session was not available in this workspace, so final import confirmation there remains a user-side check.

@@ -25,6 +25,7 @@ const api = {
   save: (slot) => activeHost?.save(slot),
   reset: () => activeHost?.reset(),
   getState: () => activeHost?.getState() ?? null,
+  getDiagnostics: () => activeHost?.getDiagnostics() ?? null,
 };
 
 globalThis.BlackSoulsRuntime = api;
