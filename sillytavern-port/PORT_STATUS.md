@@ -1,38 +1,13 @@
 # BLACK SOULS SillyTavern Port Status
 
-Release: **0.6.0** (runtime pinned to verified commit `f0ed57350f8cf47b80d091df39b9b8cb80101a0f`)
+Release **0.7.0** is pinned to verified runtime commit `188bf2be16f87b4e531e9bd7526b0395d5fb6e23` with bundle SHA-256 `C7366CD06CC3E17930A9B3B1535161D08216D99FD246E3FA8A324176821B971A`.
 
-The importable Chara Card V3 boots a deterministic browser game in a TavernHelper iframe and makes no model/API gameplay calls. It starts at the original title, executes the Map 7 → Map 97 → Map 10 opening, and keeps game Cancel/Menu separate from the explicit SillyTavern exit control.
+This release restores the source-defined Map 7 → Map 97 opening and both final branches: skip to Map 10 `(15,16)` and no-skip to Map 98 `(55,5)`. Class choice performs real party replacement (actor 2/3/4), copies the entered name, applies class variables/switches/gifts, and renders the actual party leader.
 
-## Implemented in this release
+VX Ace-styled title, menu, item, skill, equipment, status, file, message/choice, and battle windows use the original Window skin/IconSet at 640×480. Save schema v2 provides exactly 16 IndexedDB slots, metadata, title Continue → load selection, full state restore, and JSON export/import. Movement is fixed at 60 Hz with the original `2 ** real_move_speed / 256.0` formula, dash +1 speed, and unnormalized diagonal travel.
 
-- Complete extraction/audit of 150 maps, 6,444 events, 248 common events, 355 troops, 70,425 event commands, database content, and 167 Ruby script entries.
-- Nine required whole-game dependency/reverse indexes across map, event, common event, combat, inventory, UI, audio, and assets.
-- Predictive bounded streaming plus a generic same-interpreter resource barrier with transfer rollback and Retry/Cancel recovery.
-- Exact Map 97 name-input continuation and switch-14 `14遺体` blood/corpse page transition.
-- VX Ace map/tile/character/fog/picture/screen-effect rendering and real title/audio paths.
-- Persistent party, stack inventory, item use, eight-slot equipment, status, shop, and 15-recipe synthesis systems.
-- Real troop/enemy/skill battle state with MAX_AP 4000, deterministic hit/variance/critical rolls, smart action ratings, casting/interruption, rewards/drops, difficulty variable 60, and map return.
-- IndexedDB saves containing party, actor, inventory, equipment, recipes, event state, and pictures; restricted iframe storage degrades to session memory instead of aborting boot.
-- One browser-ready classic runtime bundle with generated build manifest, card-embedded SHA-256, browser SRI, explicit code/data/asset bases, three current CDN sources, visible last-known-good fallback, clean Retry, and staged loader diagnostics.
-- Production export guard that requires an exact pushed commit plus verified primary/fallback CDN and required boot-data URLs before writing the card.
+Streaming pins global UI/title resources, warms Map 7/97/10/98, deduplicates in-flight fetch/decode work, gates map visibility on decoded critical resources, and instruments queues/caches/transitions. The authoritative RTP subset completes Map98 without replacing custom game assets.
 
-## Browser-verified vertical slices
+The browser acceptance run completed the unskipped Map98 cutscene, opened the original menu, scrolled to and saved slot 16, returned to title, confirmed Continue opened the load-file scene, and reloaded Map98 with `Grim`, actor 2, item 47, and no unsupported commands. Original `Data/`, `Graphics/`, `Audio/`, `System/`, `Game.exe`, and `Game.ini` have no Git diff.
 
-1. Clean 0.6.0 title → New Game → name modal → `Alice. XÁC NHẬN?` → accepted branch.
-2. Map 97 switch 14 loaded and displayed `14遺体`; diagnostics showed the graphic decoded, no missing active character, and the same interpreter continuing at index 238.
-3. Opening completed at Map 10 `(15,16)` with interpreter stopped cleanly at Event 38 index 29 and no wait mode.
-4. Cancel opened the original menu; Item showed real opening inventory; Equip showed all eight actor slots.
-5. The battle harness loaded real troop 1, three battlers, a repository battleback, AP/HP UI, accepted keyboard attacks, retargeted living enemies, reached victory, cleared the battle renderer, restored Map 10 BGM, and returned to `PLAYING`.
-6. A sandboxed TavernHelper-style `srcdoc` iframe reported `origin:null`, preflighted all boot resources, verified the classic bundle, exposed `window.BlackSoulsRuntime`, rendered the original title, and entered New Game.
-
-## Explicit remaining gaps
-
-This is not full RGSS3/plugin parity. The authoritative gaps are in `EVENT_COMMAND_COVERAGE.md`, `CUSTOM_SCRIPT_COVERAGE.md`, `KNOWN_DIFFERENCES.md`, and the domain reports. Important partial areas include move-route breadth, all conditional operand types, battle troop event pages, the complete smart-target plugin, elements/features/buffs, key-item/number-input UI, movie/vehicle/scroll commands, and numerous custom Ruby systems. The supplied game/repository also lacks 212 referenced RTP resources; opening-critical RTP is bundled, optional missing visuals are diagnostic, and critical missing resources block with recovery.
-
-## Artifacts
-
-- Runtime: `sillytavern-port/runtime/`
-- Generated data/indexes: `sillytavern-port/generated/`
-- Source card build: `sillytavern-port/card/Black_Souls_ST.json`
-- Final deliverable: `deliverables/Black_Souls_ST.json`
+The compatibility boundary remains documented in `KNOWN_DIFFERENCES.md`, `EVENT_COMMAND_COVERAGE.md`, and `CUSTOM_SCRIPT_COVERAGE.md`.

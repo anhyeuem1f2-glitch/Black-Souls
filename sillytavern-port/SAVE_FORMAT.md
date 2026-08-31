@@ -1,7 +1,9 @@
 # Save Format
 
-Current schema: `black-souls-st-save-v1`, stored in IndexedDB database `black-souls-sillytavern`, object store `saves`, keyed by numeric slot.
+Release 0.7.0 uses IndexedDB database `black-souls-sillytavern` version 2. It exposes exactly 16 numbered save slots, matching `DataManager.savefile_max` in the original VX Ace scripts. The stores are `saves`, `metadata`, and `settings`; restricted iframes fall back to session memory without aborting the game.
 
-Each record contains `slot`, `schema`, `savedAt`, and a structured-cloned state containing map/position/direction, switches, variables, self switches, transparency, and compatibility state added by supported plugins.
+Save records use schema `black-souls-st-save-v2`. The payload retains map identity and real/tile position, direction and movement route state, switches, variables, self switches, party members, actor identity/class/name/graphics/stats/equipment/states, inventory and gold, timer/playtime/steps, system flags, screen/picture/weather state, interpreter compatibility state, battle return state, and supported plugin data. Slot metadata contains player name, level, map/location, party graphics, playtime, and timestamp.
 
-This schema is intentionally versioned but not yet original-save compatible. Before compatibility is claimed it must add party, inventory, actors, equipment, states, timers, vehicles, common-event interpreter stacks, screen/picture state, RNG state where needed, and every covered custom plugin state. Future migrations must be explicit and preserve the prior record until the migrated save is validated.
+The title `Tiếp Tục` command opens the load-file scene rather than auto-loading. Save and load show four 108 px file windows at a time and scroll through all 16 slots. Save defaults to the last accessed slot; load defaults to the newest usable slot. The host `Export Save` and `Import Save` controls round-trip a versioned JSON envelope, and import validates the envelope before writing its target slot.
+
+Version-1 records remain readable. Database upgrades are additive and do not rewrite the canonical original game data.

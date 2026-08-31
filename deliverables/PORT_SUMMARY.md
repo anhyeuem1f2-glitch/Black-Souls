@@ -1,30 +1,9 @@
-# BLACK SOULS → SillyTavern Port Summary
+# BLACK SOULS → SillyTavern 0.7.0
 
-Release **0.6.0** is delivered as an importable Chara Card V3 at `deliverables/Black_Souls_ST.json`. It requires TavernHelper / JS-Slash-Runner 4.8.19 or a compatible character-script runtime. Gameplay is deterministic and makes no LLM/API generation calls.
+Import `Black_Souls_ST.json` and enable its TavernHelper / JS-Slash-Runner character script. Re-import is required for this release. Gameplay is deterministic and makes no AI generation calls.
 
-## Delivered systems
+Delivered: exact Map 7 `(7,6)` → Map 97 `(12,18)` opening; class actor replacement; skip → Map 10 `(15,16)` and no-skip → Map 98 `(55,5)`; VX Ace Window/IconSet title/menu/status/item/equip/save/load/battle UI; 16 IndexedDB slots with full-state load and export/import; fixed-60 Hz VX Ace movement/dash/diagonal behavior; and decoded-resource prefetch with opening-route warming, pinning, dedupe, and diagnostics.
 
-- Original title and Map 7 → 97 → 10 opening, including name confirmation and Alice blood/corpse transition.
-- 150-map extraction plus whole-game map/event/common-event/combat/inventory/UI/audio/reverse-asset dependency indexes.
-- Map-scoped predictive streaming, validated LFS/RTP delivery, same-interpreter resource waits, and retryable transfer recovery.
-- Persistent party, inventory, item use, eight-slot equipment, status, shop, and synthesis state.
-- Real-data AP combat, smart action ratings, skill formulas/scopes/repeats, casting, criticals, drops/rewards, difficulty variable 60, and battle-to-map return.
-- IndexedDB save/load, restricted-origin memory fallback, and forensic runtime diagnostics.
-- Environment-aware loader with a single browser bundle, generated build manifest, SHA-256/SRI, explicit resource bases, three verified CDN sources, visible last-known-good fallback, and clean Retry.
+The card pins verified runtime commit `188bf2be16f87b4e531e9bd7526b0395d5fb6e23`, source commit `6527019cf04d15c77a8b0bfac1d85881b0e5f62a`, runtime 0.7.0, and bundle SHA-256 `C7366CD06CC3E17930A9B3B1535161D08216D99FD246E3FA8A324176821B971A`. GitHub, primary CDN, and fallback CDNs passed the release gate before card generation.
 
-## Verification
-
-- Runtime bundle build: passed from committed source and produced SHA-256 `E0A4D59609F9AA575C938827C5283EF172C0ED6D5D97872586A8BA6FD8AD2558`.
-- `npm test`: 68/68 passed.
-- Clean `origin:null` browser: runtime 0.6.0 integrity/global/mount/title/New Game verified; prior title/opening/blood scene/Map 10/menu/item/equipment coverage remains regression-tested.
-- Clean browser combat: real troop 1 rendered and reached victory; a dead-target retargeting bug found during the run was fixed and regression-tested.
-- Production exact-ref bootstrap reached remote runtime game-data initialization; all runtime and boot-data URLs passed independent Git/CDN validation.
-- Original `Game.exe`, `Game.ini`, `System/`, `Data/`, `Graphics/`, and `Audio/` have no Git diff.
-
-## Import
-
-Re-import `Black_Souls_ST.json` as a character card, enable the included TavernHelper character script when prompted, and select the character. The card mounts the game directly and loads verified immutable runtime commit `f0ed57350f8cf47b80d091df39b9b8cb80101a0f` through integrity-checked CDN fallbacks.
-
-## Compatibility boundary
-
-This release materially extends the playable port but is not a complete browser reimplementation of RGSS3 and every bundled Ruby plugin. See `sillytavern-port/PORT_STATUS.md`, `EVENT_COMMAND_COVERAGE.md`, `CUSTOM_SCRIPT_COVERAGE.md`, and the domain compatibility reports for exact implemented/partial/missing behavior. Missing optional RTP visuals remain diagnostic; render-critical resources use recovery barriers.
+Verification: 72/72 automated tests; full browser unskipped opening; Map98 Event10 completion; 12/12 critical resources; slot-16 save; title Continue → load-file scene; Map98 reload with actor 2/`$主人公`, item 47, and no unsupported commands. Original game files modified: **NONE**.
