@@ -36,18 +36,23 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   const card = JSON.parse(await readFile(join(root, 'card', 'Black_Souls_ST.json'), 'utf8'));
   assert.equal(card.spec, 'chara_card_v3');
   assert.equal(card.spec_version, '3.0');
+  assert.equal(card.data.character_version, '0.6.0');
   assert.equal(card.data.extensions.tavern_helper.scripts[0].enabled, true);
+  assert.match(card.data.extensions.black_souls_release.ref, /^[0-9a-f]{40}$/);
+  assert.match(card.data.extensions.black_souls_release.entrySha256, /^[0-9A-F]{64}$/);
   const content = card.data.extensions.tavern_helper.scripts[0].content;
   assert.doesNotMatch(content, /getButtonEvent\(|Open BLACK SOULS|hideFrame\(\)/);
-  assert.match(content, /systems-v0\.5\.0/);
+  assert.match(content, new RegExp(card.data.extensions.black_souls_release.ref));
+  assert.equal(card.data.extensions.black_souls_release.entry, 'sillytavern-port/runtime/dist/black-souls-runtime.bundle.js');
+  assert.match(content, /script\.integrity/);
+  assert.match(content, /last-known-good/);
   assert.match(content, /function compactFrame\(\)/);
   assert.match(content, /onHostState: handleHostState/);
-  assert.match(content, /\nboot\(\);\s*$/);
-  assert.match(content, /const RUNTIME_RELEASE/);
-  assert.match(content, /const RUNTIME_SOURCES/);
-  assert.ok(content.indexOf('https://cdn.jsdelivr.net') < content.indexOf('https://testingcf.jsdelivr.net'));
-  assert.ok(content.indexOf('https://testingcf.jsdelivr.net') < content.indexOf('https://raw.githubusercontent.com'));
-  for (const state of ['Checking runtime...', 'Loading runtime...', 'Loading game data...']) {
+  assert.match(content, /void boot\(\);\s*\}\)\(\);\s*$/);
+  assert.ok(content.indexOf('cdn.jsdelivr.net') < content.indexOf('testingcf.jsdelivr.net'));
+  assert.ok(content.indexOf('testingcf.jsdelivr.net') < content.indexOf('fastly.jsdelivr.net'));
+  assert.doesNotMatch(content, /raw\.githubusercontent\.com/);
+  for (const state of ['Checking runtime...', 'Loading runtime...', 'Verifying runtime...', 'Loading game data...']) {
     assert.match(content, new RegExp(state.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
   const host = await readFile(join(root, 'runtime', 'host.js'), 'utf8');

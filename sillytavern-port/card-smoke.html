@@ -1,7 +1,14 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>BLACK SOULS card bootstrap smoke test</title></head>
 <body><script type="module">
-  window.BLACK_SOULS_RUNTIME_OVERRIDE = new URL('./runtime/bootstrap.js', location.href).href;
-  window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE = new URL('../', location.href).href;
-  await import('./card/card-entry.js');
+  if (new URLSearchParams(location.search).get('local') === '1') {
+    window.BLACK_SOULS_RUNTIME_OVERRIDE = new URL('./runtime/', location.href).href;
+    window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE = new URL('../', location.href).href;
+  }
+  const card = await fetch('./card/Black_Souls_ST.json', { cache: 'no-store' }).then((response) => response.json());
+  const source = card.data.extensions.tavern_helper.scripts[0].content;
+  const script = document.createElement('script');
+  script.dataset.cardSmoke = 'black-souls';
+  script.textContent = source;
+  document.body.append(script);
 </script></body></html>
