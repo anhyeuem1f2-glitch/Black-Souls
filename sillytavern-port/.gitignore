@@ -1,2 +1,4 @@
 dev-server.stdout.log
 dev-server.stderr.log
+node_modules/
+generated/dev-card-loader.bundle.js

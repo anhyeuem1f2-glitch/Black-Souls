@@ -1,18 +1,13 @@
-const RUNTIME_RELEASE = Object.freeze({
+import { bootRuntime, createReleaseCandidates, LOADER_STATES, serializeError } from './loader-core.js';
+
+const RELEASE = Object.freeze({
   owner: 'anhyeuem1f2-glitch',
   repository: 'Black-Souls',
-  ref: String(window.BLACK_SOULS_RUNTIME_REF_OVERRIDE || 'systems-v0.5.0').trim(),
-  path: 'sillytavern-port/runtime/',
+  currentRef: __BLACK_SOULS_RUNTIME_REF__,
+  currentSha256: __BLACK_SOULS_RUNTIME_SHA256__,
+  fallbackRef: '5ac55ae9b4b983e5aa3d9f107447f975e60e059b',
 });
-
-const RUNTIME_SOURCES = Object.freeze([
-  Object.freeze({ id: 'jsdelivr', label: 'jsDelivr primary', origin: 'https://cdn.jsdelivr.net' }),
-  Object.freeze({ id: 'jsdelivr-testingcf', label: 'jsDelivr testing fallback', origin: 'https://testingcf.jsdelivr.net' }),
-  Object.freeze({ id: 'github-raw', label: 'GitHub Raw last fallback', origin: 'https://raw.githubusercontent.com' }),
-]);
-
-const DEBUG_OVERRIDE_KEY = 'black-souls-runtime-debug-override-v3';
-const MODULE_MANIFEST = 'module-manifest.json';
+const DEBUG_OVERRIDE_KEY = 'black-souls-runtime-debug-override-v4';
 const frame = window.frameElement;
 let bootSequence = 0;
 let activeRuntime = null;
@@ -43,201 +38,75 @@ function handleHostState(event) {
   else if (event?.state && event.state !== 'UNMOUNTED') showFrame();
 }
 
-function releaseBase(source) {
-  const { owner, repository, ref, path } = RUNTIME_RELEASE;
-  if (source.id === 'github-raw') return `${source.origin}/${owner}/${repository}/${ref}/${path}`;
-  return `${source.origin}/gh/${owner}/${repository}@${ref}/${path}`;
-}
-
-function configuredSources() {
-  const override = String(window.BLACK_SOULS_RUNTIME_OVERRIDE || localStorage.getItem(DEBUG_OVERRIDE_KEY) || '').trim();
-  if (override) {
-    const bootstrapUrl = new URL(override, location.href).href;
-    return [{
-      id: 'developer-override',
-      label: 'Developer override',
-      baseUrl: new URL('./', bootstrapUrl).href,
-      bootstrapUrl,
-    }];
-  }
-  return RUNTIME_SOURCES.map((source) => {
-    const baseUrl = releaseBase(source);
-    return { ...source, baseUrl, bootstrapUrl: new URL('bootstrap.js', baseUrl).href };
-  });
-}
-
 async function boot() {
   const sequence = ++bootSequence;
   showFrame();
   renderLoader();
+  await cleanupRuntime();
+  if (sequence !== bootSequence) return;
+  const overrideBaseUrl = String(window.BLACK_SOULS_RUNTIME_OVERRIDE || storageGet(DEBUG_OVERRIDE_KEY) || '').trim();
+  const candidates = createReleaseCandidates({ ...RELEASE, overrideBaseUrl });
   const diagnostics = {
-    schema: 'black-souls-loader-diagnostics-v1',
+    schema: 'black-souls-loader-diagnostics-v2',
     origin: location.origin,
-    release: { ...RUNTIME_RELEASE },
+    executionContext: 'TavernHelper srcdoc iframe',
+    loaderStrategy: 'verified classic bundle with legacy last-known-good fallback',
+    release: { ...RELEASE, currentSha256: RELEASE.currentSha256 },
     startedAt: new Date().toISOString(),
     attempts: [],
     successfulSource: null,
+    fallbackUsed: false,
   };
   window.BLACK_SOULS_LOADER_DIAGNOSTICS = diagnostics;
-
-  for (const source of configuredSources()) {
-    if (sequence !== bootSequence) return;
-    const attempt = {
-      source: source.label,
-      baseUrl: source.baseUrl,
-      bootstrapUrl: source.bootstrapUrl,
-      stage: 'checking-runtime',
-      requests: [],
-      success: false,
-    };
-    diagnostics.attempts.push(attempt);
-    try {
-      setLoaderState('Checking runtime...', source.label, diagnostics);
-      await preflightRuntime(source, attempt);
-
-      attempt.stage = 'module-import';
-      setLoaderState('Loading runtime...', source.bootstrapUrl, diagnostics);
-      const importUrl = cacheBusted(source.bootstrapUrl);
-      attempt.importUrl = importUrl;
-      let runtimeNamespace;
-      try {
-        runtimeNamespace = await import(importUrl);
-      } catch (error) {
-        throw stageError(
-          'module-import',
-          `bootstrap.js or one of its descendants failed during browser module import after ${attempt.moduleCount} files passed HTTP/MIME preflight. Browser error: ${errorMessage(error)}`,
-          error,
-        );
-      }
-      const runtime = runtimeNamespace.BlackSoulsRuntime || window.BlackSoulsRuntime;
-      if (!runtime || typeof runtime.mount !== 'function') {
-        throw stageError('runtime-contract', 'bootstrap.js loaded but did not expose BlackSoulsRuntime.mount().');
-      }
-
-      attempt.stage = 'runtime-mount';
-      setLoaderState('Loading game data...', source.baseUrl, diagnostics);
-      try {
-        await runtime.mount({
-          target: document.body,
-          assetDevelopmentBaseUrl: window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE || undefined,
-          onHostState: handleHostState,
-          onLoaderState: (state, detail = '') => {
-            attempt.runtimeState = state;
-            attempt.runtimeDetail = detail;
-            console.info(`[BLACK SOULS loader] ${state}`, detail);
-          },
-        });
-      } catch (error) {
-        try { await runtime.unmount?.(); } catch (cleanupError) { attempt.cleanupError = serializeError(cleanupError); }
-        throw stageError('runtime-mount', `Runtime loaded from ${source.label}, but mount failed: ${errorMessage(error)}`, error);
-      }
-
-      attempt.stage = 'ready';
-      activeRuntime = runtime;
-      attempt.success = true;
-      diagnostics.successfulSource = source.baseUrl;
-      diagnostics.completedAt = new Date().toISOString();
-      console.info('[BLACK SOULS loader] Runtime ready', { source: source.label, baseUrl: source.baseUrl, diagnostics });
+  try {
+    const result = await bootRuntime({
+      candidates,
+      onState: (state, context) => {
+        diagnostics.state = state;
+        diagnostics.attempts = context.attempts ?? diagnostics.attempts;
+        if (state === LOADER_STATES.PREFLIGHT) setLoaderState('Checking runtime...', `${context.candidate.label} · ${context.candidate.ref}`);
+        if (state === LOADER_STATES.LOADING_RUNTIME) setLoaderState('Loading runtime...', context.candidate.kind === 'bundle' ? 'Verified classic bundle' : 'Last-known-good ES-module fallback');
+        if (state === LOADER_STATES.VERIFYING_RUNTIME) setLoaderState('Verifying runtime...', context.candidate.label);
+        if (state === LOADER_STATES.INITIALIZING) setLoaderState('Loading game data...', context.candidate.baseUrl);
+        if (state === LOADER_STATES.ERROR) console.error('[BLACK SOULS loader] Source failed', context.attempt);
+      },
+      mountOptions: () => ({
+        target: document.body,
+        assetDevelopmentBaseUrl: window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE || undefined,
+        onHostState: handleHostState,
+        onLoaderState: (state, detail = '') => {
+          diagnostics.runtimeState = state;
+          diagnostics.runtimeDetail = detail;
+          setLoaderState(state, detail);
+        },
+      }),
+    });
+    if (sequence !== bootSequence) {
+      await result.runtime.unmount?.();
       return;
-    } catch (error) {
-      attempt.stage = error.stage || attempt.stage;
-      attempt.error = serializeError(error);
-      console.error('[BLACK SOULS loader] Source failed', { source: source.label, attempt });
-      if (sequence !== bootSequence) return;
-      renderLoader();
-      setLoaderState('Checking runtime...', `Trying the next source after ${source.label}`, diagnostics);
     }
-  }
-
-  diagnostics.completedAt = new Date().toISOString();
-  showFailure(diagnostics);
-}
-
-async function preflightRuntime(source, attempt) {
-  attempt.stage = 'module-manifest-fetch';
-  const manifestUrl = new URL(MODULE_MANIFEST, source.baseUrl).href;
-  const response = await checkedFetch(manifestUrl, attempt, 'module manifest');
-  let manifest;
-  try {
-    manifest = await response.json();
+    activeRuntime = result.runtime;
+    diagnostics.attempts = result.attempts;
+    diagnostics.successfulSource = result.candidate.baseUrl;
+    diagnostics.successfulRef = result.candidate.ref;
+    diagnostics.fallbackUsed = result.candidate.role === 'last-known-good';
+    diagnostics.completedAt = new Date().toISOString();
+    console.info('[BLACK SOULS loader] Runtime ready', diagnostics);
   } catch (error) {
-    throw stageError('module-manifest-parse', `Module manifest is not valid JSON: ${manifestUrl}`, error);
+    if (sequence !== bootSequence) return;
+    diagnostics.state = LOADER_STATES.ERROR;
+    diagnostics.attempts = error.attempts ?? diagnostics.attempts;
+    diagnostics.error = serializeError(error);
+    diagnostics.completedAt = new Date().toISOString();
+    showFailure(diagnostics);
   }
-  if (manifest.schema !== 'black-souls-runtime-module-tree-v1' || !Array.isArray(manifest.modules)) {
-    throw stageError('module-manifest-validate', `Unsupported module manifest at ${manifestUrl}.`);
-  }
-  if (!manifest.modules.includes(manifest.entry) || new URL(manifest.entry, source.baseUrl).href !== source.bootstrapUrl) {
-    throw stageError('module-manifest-validate', `Module manifest entry does not match ${source.bootstrapUrl}.`);
-  }
-
-  attempt.stage = 'module-tree-preflight';
-  attempt.moduleCount = manifest.modules.length;
-  const results = await Promise.allSettled(manifest.modules.map(async (path) => {
-    const url = new URL(path, source.baseUrl).href;
-    const moduleResponse = await checkedFetch(url, attempt, `ES module ${path}`);
-    const contentType = moduleResponse.headers.get('content-type') || '';
-    if (!isJavaScriptMime(contentType)) {
-      throw stageError('module-mime-check', `ES module ${path} has unusable Content-Type "${contentType || '(missing)'}" at ${url}.`);
-    }
-  }));
-  const failed = results.find((result) => result.status === 'rejected');
-  if (failed) throw failed.reason;
 }
 
-async function checkedFetch(url, attempt, label) {
-  let response;
-  try {
-    response = await fetch(url, { cache: 'no-store', mode: 'cors', credentials: 'omit' });
-  } catch (error) {
-    attempt.requests.push({ label, url, stage: 'fetch', error: errorMessage(error) });
-    throw stageError('http-fetch', `${label} could not be fetched from ${url}: ${errorMessage(error)}`, error);
-  }
-  const record = {
-    label,
-    url,
-    finalUrl: response.url,
-    redirected: response.redirected,
-    status: response.status,
-    statusText: response.statusText,
-    contentType: response.headers.get('content-type') || '(missing)',
-    cors: response.headers.get('access-control-allow-origin') || '(not exposed)',
-  };
-  attempt.requests.push(record);
-  if (!response.ok) {
-    throw stageError('http-status', `${label} returned HTTP ${response.status} ${response.statusText} at ${url}.`);
-  }
-  return response;
-}
-
-function cacheBusted(url) {
-  const result = new URL(url);
-  if (RUNTIME_RELEASE.ref === 'main') result.searchParams.set('bs_dev', `${Date.now()}-${bootSequence}`);
-  return result.href;
-}
-
-function isJavaScriptMime(contentType) {
-  return /^(?:application|text)\/(?:javascript|ecmascript)(?:\s*;|$)/i.test(contentType);
-}
-
-function stageError(stage, message, cause) {
-  const error = new Error(message);
-  error.stage = stage;
-  if (cause) error.cause = cause;
-  return error;
-}
-
-function errorMessage(error) {
-  return String(error?.message || error || 'Unknown error');
-}
-
-function serializeError(error) {
-  return {
-    name: String(error?.name || 'Error'),
-    stage: String(error?.stage || 'unknown'),
-    message: errorMessage(error),
-    stack: String(error?.stack || ''),
-    cause: error?.cause ? errorMessage(error.cause) : undefined,
-  };
+async function cleanupRuntime() {
+  try { await activeRuntime?.unmount?.(); } catch (error) { console.warn('[BLACK SOULS loader] Cleanup failed', error); }
+  activeRuntime = null;
+  document.querySelectorAll('script[data-black-souls-runtime]').forEach((script) => script.remove());
+  try { delete window.BlackSoulsRuntime; } catch { window.BlackSoulsRuntime = undefined; }
 }
 
 function renderLoader() {
@@ -257,10 +126,9 @@ function renderLoader() {
     </section></main>`;
 }
 
-function setLoaderState(state, detail = '', diagnostics) {
+function setLoaderState(state, detail = '') {
   document.querySelector('.bs-loader-state')?.replaceChildren(state);
   document.querySelector('.bs-loader-detail')?.replaceChildren(detail);
-  void diagnostics;
 }
 
 function showFailure(diagnostics) {
@@ -274,42 +142,36 @@ function showFailure(diagnostics) {
     </style>
     <main><section class="box">
       <h1>BLACK SOULS runtime could not load</h1>
-      <p>Every configured source failed. The report below records the source, stage, HTTP status, redirect target, Content-Type, and browser error.</p>
+      <p>Every verified current and last-known-good source failed. Retry clears failed runtime state and starts source selection again.</p>
       <pre data-diagnostics></pre>
-      <button data-retry>Retry configured sources</button><button data-close>Exit to SillyTavern</button>
+      <button data-retry>Retry verified sources</button><button data-close>Exit to SillyTavern</button>
       <details><summary>Developer override</summary>
-        <label>Bootstrap URL<input data-override placeholder="https://.../runtime/bootstrap.js"></label>
+        <label>Runtime base URL<input data-override placeholder="http://127.0.0.1:4174/sillytavern-port/runtime/"></label>
         <button data-use-override>Retry override</button><button data-clear-override>Clear override</button>
       </details>
     </section></main>`;
   document.querySelector('[data-diagnostics]').textContent = JSON.stringify(diagnostics, null, 2);
   const input = document.querySelector('[data-override]');
-  input.value = String(window.BLACK_SOULS_RUNTIME_OVERRIDE || localStorage.getItem(DEBUG_OVERRIDE_KEY) || '');
-  document.querySelector('[data-retry]').addEventListener('click', () => {
-    localStorage.removeItem(DEBUG_OVERRIDE_KEY);
-    boot();
-  });
-  document.querySelector('[data-use-override]').addEventListener('click', () => {
-    const value = input.value.trim();
-    if (value) localStorage.setItem(DEBUG_OVERRIDE_KEY, value);
-    boot();
-  });
-  document.querySelector('[data-clear-override]').addEventListener('click', () => {
-    localStorage.removeItem(DEBUG_OVERRIDE_KEY);
-    input.value = '';
-  });
+  input.value = String(window.BLACK_SOULS_RUNTIME_OVERRIDE || storageGet(DEBUG_OVERRIDE_KEY) || '');
+  document.querySelector('[data-retry]').addEventListener('click', () => { storageRemove(DEBUG_OVERRIDE_KEY); void boot(); });
+  document.querySelector('[data-use-override]').addEventListener('click', () => { const value = input.value.trim(); if (value) storageSet(DEBUG_OVERRIDE_KEY, value); void boot(); });
+  document.querySelector('[data-clear-override]').addEventListener('click', () => { storageRemove(DEBUG_OVERRIDE_KEY); input.value = ''; });
   document.querySelector('[data-close]').addEventListener('click', showErrorRecovery);
 }
 
 function showErrorRecovery() {
   document.body.innerHTML = `<style>:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080607}button{width:100%;height:100%;border:1px solid #744;color:#fff;background:linear-gradient(#28181c,#120d0f);font:13px ui-monospace,monospace;cursor:pointer}</style><button data-reopen>Retry BLACK SOULS</button>`;
-  document.querySelector('[data-reopen]').addEventListener('click', boot);
+  document.querySelector('[data-reopen]').addEventListener('click', () => void boot());
   compactFrame();
 }
 
+function storageGet(key) { try { return localStorage.getItem(key); } catch { return null; } }
+function storageSet(key, value) { try { localStorage.setItem(key, value); } catch { /* opaque origins may deny storage */ } }
+function storageRemove(key) { try { localStorage.removeItem(key); } catch { /* opaque origins may deny storage */ } }
+
 window.addEventListener('pagehide', () => {
-  void activeRuntime?.unmount?.();
+  void cleanupRuntime();
   frame?.removeAttribute('style');
 });
 
-boot();
+void boot();

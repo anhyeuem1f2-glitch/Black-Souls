@@ -1,10 +1,10 @@
 {
   "schema": "black-souls-st-runtime-manifest-v1",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "game": "BLACK SOULS",
   "mode": "game-only-no-ai",
   "runtime": {
-    "entry": "./bootstrap.js",
+    "entry": "./dist/black-souls-runtime.bundle.js",
     "api": "window.BlackSoulsRuntime.mount"
   },
   "engine": {
@@ -24,7 +24,7 @@
     "repository": {
       "owner": "anhyeuem1f2-glitch",
       "name": "Black-Souls",
-      "ref": "systems-v0.5.0"
+      "ref": "runtime-ref-is-supplied-by-verified-card-loader"
     },
     "delivery": {
       "lfs": "github-media",

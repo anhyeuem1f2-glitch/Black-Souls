@@ -4,10 +4,11 @@ let activeHost = null;
 
 async function mount(options = {}) {
   if (activeHost) await activeHost.unmount();
-  const manifestUrl = new URL(options.manifestUrl ?? './manifest.json', import.meta.url);
+  const codeBaseUrl = new URL(options.codeBaseUrl ?? './', options.documentUrl ?? document.baseURI);
+  const manifestUrl = new URL(options.manifestUrl ?? 'manifest.json', codeBaseUrl);
   options.onLoaderState?.('Loading game data...', manifestUrl.href);
   const manifest = await fetchJson(manifestUrl);
-  activeHost = new BlackSoulsHost({ ...options, manifest, manifestUrl });
+  activeHost = new BlackSoulsHost({ ...options, manifest, manifestUrl, runtimeBaseUrl: codeBaseUrl });
   await activeHost.mount();
   return activeHost;
 }

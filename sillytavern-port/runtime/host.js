@@ -5,13 +5,18 @@ import { CanvasRenderer } from './render/canvas-renderer.js';
 import { SaveStore } from './save/indexeddb.js';
 
 export class BlackSoulsHost {
-  constructor({ manifest, manifestUrl, target = document.body, dataBaseUrl, assetDevelopmentBaseUrl, onLoaderState = () => {}, onHostState = () => {} }) {
+  constructor({ manifest, manifestUrl, runtimeBaseUrl, releaseRef, target = document.body, dataBaseUrl, assetDevelopmentBaseUrl, onLoaderState = () => {}, onHostState = () => {} }) {
     this.manifest = manifest;
     this.manifestUrl = manifestUrl;
     this.target = target;
     this.dataBaseUrl = new URL(dataBaseUrl ?? manifest.data.base, manifestUrl);
-    this.runtimeBaseUrl = new URL('./', manifestUrl);
-    this.assetConfig = assetDevelopmentBaseUrl ? { ...manifest.assets, repository: { ...manifest.assets.repository, developmentBaseUrl: assetDevelopmentBaseUrl } } : manifest.assets;
+    this.runtimeBaseUrl = new URL(runtimeBaseUrl ?? './', manifestUrl);
+    const repository = {
+      ...manifest.assets.repository,
+      ref: releaseRef ?? manifest.assets.repository?.ref,
+      ...(assetDevelopmentBaseUrl ? { developmentBaseUrl: assetDevelopmentBaseUrl } : {}),
+    };
+    this.assetConfig = { ...manifest.assets, repository };
     this.onLoaderState = onLoaderState;
     this.onHostState = onHostState;
     this.lifecycleState = HOST_STATES.UNINITIALIZED;

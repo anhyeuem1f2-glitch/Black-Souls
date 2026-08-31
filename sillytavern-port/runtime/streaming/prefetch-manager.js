@@ -5,7 +5,7 @@ const DEFAULT_TIMEOUTS = Object.freeze({ json: 10_000, image: 18_000, audio: 30_
 export class PrefetchManager {
   constructor({
     version = 'dev', dataVersion = 'dev', assetVersion = 'dev', fetchImpl = (...args) => fetch(...args),
-    cacheStorage = globalThis.caches, maxConcurrent = 8, reservedCritical = 2,
+    cacheStorage = safeCacheStorage(), maxConcurrent = 8, reservedCritical = 2,
     memoryBudgetBytes = 64 * 1024 * 1024, decodedBudgetBytes = 160 * 1024 * 1024,
     now = () => globalThis.performance?.now?.() ?? Date.now(), backoffMs = 120,
     onDiagnostic = () => {}, timeouts = {}, developerMode = false,
@@ -462,6 +462,11 @@ function average(values) { return values.length ? values.reduce((sum, value) => 
 function percentile(values, percentileValue) { return values.length ? values[Math.min(values.length - 1, Math.max(0, Math.ceil(values.length * percentileValue) - 1))] : 0; }
 function ratio(left, total) { return total ? left / total : 0; }
 function idleTransition() { return { state: 'idle', targetMapId: null, startedAt: 0, criticalReady: 0, criticalTotal: 0, waitingFor: [], prefetchHit: false, warning: null }; }
+
+function safeCacheStorage() {
+  try { return globalThis.caches ?? null; }
+  catch { return null; }
+}
 function dedupeActions(actions) {
   const result = new Map();
   for (const action of actions) {
