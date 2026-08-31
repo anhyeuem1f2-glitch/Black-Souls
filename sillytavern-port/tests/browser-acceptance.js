@@ -75,7 +75,7 @@ async function stressRenderer(engine, durationMs, report) {
 }
 
 async function driveEncounter(engine, timeoutMs, report, stress) {
-  const began = performance.now(); let battleSeen = false; let actorActions = 0; let enemyActions = 0; let lastLogLength = 0; let guarded = false; let enemyActed = false;
+  const began = performance.now(); let battleSeen = false; let actorActions = 0; let enemyActions = 0; let lastLogLength = 0; let guarded = false; let playerAttacked = false; let enemyActed = false;
   while (performance.now() - began < timeoutMs) {
     const battle = engine.state.battle;
     if (engine.state.scene === 'BATTLE' && battle) {
@@ -89,11 +89,11 @@ async function driveEncounter(engine, timeoutMs, report, stress) {
     if (battle) {
       const actorNames = new Set(battle.actors.map((entry) => entry.name)); const enemyNames = new Set(battle.enemies.map((entry) => entry.name));
       for (const line of battle.log.slice(lastLogLength)) {
-        if ([...actorNames].some((name) => line.startsWith(name)) && /defended|used|damage|missed/.test(line)) { actorActions += 1; if (/defended/.test(line)) guarded = true; }
+        if ([...actorNames].some((name) => line.startsWith(name)) && /defended|used|damage|missed/.test(line)) { actorActions += 1; if (/defended/.test(line)) guarded = true; if (/used Attack/.test(line)) playerAttacked = true; }
         if ([...enemyNames].some((name) => line.startsWith(name)) && /used|damage|missed/.test(line)) { enemyActions += 1; enemyActed = true; }
       }
       lastLogLength = battle.log.length;
-      if (actorActions > 0 && enemyActions > 0) break;
+      if (guarded && playerAttacked && enemyActions > 0) break;
     }
     if (Math.floor(performance.now() - began) % 1000 < 60) report({ phase: 'hostile-encounter', stress, elapsedMs: Math.round(performance.now() - began), scene: engine.state.scene, player: [engine.state.x, engine.state.y], event16: engine.events.runtime(16, engine.map.events[16]), encounter: engine.events.lastEncounter, battle: battle ? { troopId: battle.troopId, phase: battle.phase, actorActions, enemyActions, log: battle.log.slice(-6) } : null });
     await wait(50);
@@ -104,10 +104,10 @@ async function driveEncounter(engine, timeoutMs, report, stress) {
   const contact = eventDiagnostics.chaseTrace.some((entry) => entry.eventId === 16 && entry.type === 'contact');
   const highPrefetch = eventDiagnostics.battlePrefetch.some((entry) => entry.eventId === 16 && entry.troopId === 3 && entry.priority === 'HIGH' && entry.state === 'ready');
   return {
-    passed: battleSeen && battle?.troopId === 3 && detected && chaseSteps > 0 && contact && highPrefetch && actorActions > 0 && enemyActions > 0,
+    passed: battleSeen && battle?.troopId === 3 && detected && chaseSteps > 0 && contact && highPrefetch && guarded && playerAttacked && enemyActions > 0,
     elapsedMs: Math.round(performance.now() - began), mapId: engine.state.mapId, eventId: 16, battleSeen, troopId: battle?.troopId ?? null, troopName: battle?.troopName ?? null,
     detected, chaseSteps, contact, contactCondition: eventDiagnostics.lastEncounter?.contactCondition ?? null, preemptive: battle?.preemptive ?? false, surprise: battle?.surprise ?? false,
-    highPrefetch, guarded, actorActions, enemyActions, battlePhase: battle?.phase ?? null, battleFrames: battle?.frames ?? 0, battleLog: battle?.log?.slice(-12) ?? [],
+    highPrefetch, guarded, playerAttacked, actorActions, enemyActions, battlePhase: battle?.phase ?? null, battleFrames: battle?.frames ?? 0, battleLog: battle?.log?.slice(-12) ?? [],
   };
 }
 
