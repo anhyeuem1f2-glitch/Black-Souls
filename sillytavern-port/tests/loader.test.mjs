@@ -16,7 +16,7 @@ const bundleBytes = new TextEncoder().encode('window.BlackSoulsRuntime={mount(){
 const bundleHash = createHash('sha256').update(bundleBytes).digest('hex').toUpperCase();
 
 test('versioned runtime build manifest validates', () => {
-  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.6.0');
+  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.7.0');
 });
 
 test('missing runtime entry is rejected', () => {
@@ -105,7 +105,7 @@ test('retry performs a fresh source selection after an earlier failure', async (
 test('card export verification requires successful primary and fallback sources', () => {
   const valid = {
     schema: 'black-souls-verified-runtime-v1', verified: true, ref: 'c'.repeat(40),
-    entrySha256: 'D'.repeat(64), runtimeVersion: '0.6.0',
+    entrySha256: 'D'.repeat(64), runtimeVersion: '0.7.0',
     sources: [{ role: 'primary', ok: true }, { role: 'fallback', ok: true }],
   };
   assert.equal(validateVerification(valid).ref, 'c'.repeat(40));
@@ -133,9 +133,27 @@ test('opaque-origin cache access degrades to memory instead of aborting boot', (
 
 test('unavailable IndexedDB falls back to session-memory save/load', async () => {
   const saves = new SaveStore();
-  await saves.save(99, { mapId: 7 });
-  assert.equal(await saves.has(99), true);
-  assert.deepEqual(await saves.load(99), { mapId: 7 });
+  await saves.save(16, { mapId: 7 });
+  assert.equal(await saves.has(16), true);
+  assert.deepEqual(await saves.load(16), { mapId: 7 });
+});
+
+test('save system exposes exactly 16 slots and round-trips full-state export/import', async () => {
+  const saves = new SaveStore({ runtimeVersion: '0.7.0', dataVersion: 'test-data' });
+  const state = {
+    schema: 'black-souls-st-state-v2', mapId: 98, mapName: 'Phòng mở đầu', x: 55, y: 5,
+    party: { members: [2], gold: 123, inventory: { items: { 47: 1 }, weapons: {}, armors: {} } },
+    actors: { 2: { name: 'Grim', level: 4, characterName: '$主人公', characterIndex: 0 } },
+    switches: { 8: true }, variables: { 6: 1, 14: 2 }, selfSwitches: {}, system: { playtimeSeconds: 321 },
+  };
+  await saves.save(3, state);
+  const slots = await saves.list();
+  assert.equal(slots.length, 16); assert.equal(slots[2].empty, false); assert.equal(slots[2].playerName, 'Grim');
+  const serialized = await saves.export(3);
+  const imported = await saves.import(serialized, 16);
+  assert.equal(imported.slot, 16);
+  assert.deepEqual(await saves.load(16), state);
+  await assert.rejects(() => saves.save(17, state), /between 1 and 16/);
 });
 
 function candidate(overrides = {}) {
@@ -149,7 +167,7 @@ function candidate(overrides = {}) {
 
 function buildManifest(overrides = {}) {
   return {
-    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.6.0', sourceCommit: '1'.repeat(40),
+    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.7.0', sourceCommit: '1'.repeat(40),
     builtAt: '2026-08-31T00:00:00Z', entry: 'black-souls-runtime.bundle.js', entrySha256: bundleHash,
     entryBytes: bundleBytes.byteLength, runtimeManifest: '../manifest.json',
     dataVersion: 'black-souls-normalized-data-v1', dependencyIndexVersion: 'black-souls-game-dependency-index-v1',

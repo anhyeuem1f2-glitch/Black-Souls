@@ -104,6 +104,61 @@ test('Map 97 switch 14 waits for active corpse graphics and then exposes origina
   assert.equal(renderable.filter((event) => event.graphic.character_name === '14遺体').length, 5);
 });
 
+test('original class selection replaces the flame actor with Knight Grim and both opening routes remain executable', async () => {
+  const [{ database, party, state }, map97, map98, commonEvents] = await Promise.all([
+    realSystems(), json('generated/maps/097.json'), json('generated/maps/098.json'), json('generated/database/CommonEvents.json'),
+  ]);
+  database.commonEvents = commonEvents;
+  const engine = Object.create(GameEngine.prototype);
+  engine.database = database; engine.party = party; engine.map = map97;
+  engine.state = { ...state, mapId: 97, x: 12, y: 18, realX: 12, realY: 18, direction: 6, scene: 'PLAYING', transparent: false, opacity: 255, eventOverrides: {}, pictures: {}, system: {} };
+  engine.renderer = { playerGraphic: { character_name: '!Flame', character_index: 5 }, fadeTo: async () => {}, ensureEventGraphics: async () => {}, flashScreen: async () => {} };
+  engine.audio = { stop: () => {} }; engine.prefetch = null; engine.diagnosticsLog = []; engine.unsupported = new Set();
+  engine.waitFrames = async () => {}; engine.refreshCurrentMapVisuals = async () => {}; engine.playSe = async () => {};
+  engine.showAnimation = async () => {}; engine.showBalloon = async () => {}; engine.showMessage = async () => {};
+  engine.nameInput = async (actorId) => engine.setActorName(actorId, 'Alice');
+  engine.showChoice = async (options) => options.includes('Bỏ qua') ? 1 : 0;
+  const transfers = [];
+  engine.transfer = async (mapId, x, y, direction) => { Object.assign(engine.state, { mapId, x, y, realX: x, realY: y, direction: direction || engine.state.direction }); transfers.push([mapId, x, y, direction]); };
+  const interpreter = new EventInterpreter(engine);
+  await interpreter.run(map97.events['1'].pages[0].list, { eventId: 1 });
+  assert.deepEqual(engine.state.party.members, [2]);
+  assert.equal(engine.state.actors[2].name, 'Alice');
+  assert.deepEqual(engine.renderer.playerGraphic, { character_name: '$主人公', character_index: 0 });
+  assert.equal(engine.state.variables[6], 1); assert.equal(engine.state.variables[14], 2); assert.equal(engine.state.switches[1], true);
+  assert.deepEqual(transfers.at(-1).slice(0, 3), [98, 55, 5]);
+
+  engine.map = map98; engine.state.mapId = 98;
+  const introMessages = [];
+  engine.showMessage = async (text) => introMessages.push(text);
+  await interpreter.run(map98.events['10'].pages[0].list, { eventId: 10, trigger: 4 });
+  assert.equal(map98.events['10'].pages[0].trigger, 4);
+  assert.equal(engine.state.switches[8], true);
+  assert.ok(introMessages.length > 0);
+  assert.equal(engine.state.eventOverrides['98,12'].moveSpeed, 4);
+  assert.equal(engine.state.eventOverrides['98,12'].moveFrequency, 3);
+});
+
+test('VX Ace movement uses exact 60 Hz speed-4 and dash-5 distances without diagonal normalization', () => {
+  const engine = Object.create(GameEngine.prototype);
+  engine.map = { disable_dashing: false };
+  engine.input = { isDashPressed: () => false };
+  engine.state = { scene: 'PLAYING', x: 1, y: 0, realX: 0, realY: 0, moveSpeed: 4, switches: {}, pattern: 1, originalPattern: 1, animationCount: 0 };
+  for (let frame = 0; frame < 16; frame += 1) engine.updateMovement(1 / 60);
+  assert.equal(engine.state.realX, 1);
+
+  Object.assign(engine.state, { x: 1, y: 0, realX: 0, realY: 0 });
+  engine.input.isDashPressed = () => true;
+  for (let frame = 0; frame < 8; frame += 1) engine.updateMovement(1 / 60);
+  assert.equal(engine.state.realX, 1);
+
+  Object.assign(engine.state, { x: 1, y: 1, realX: 0, realY: 0 });
+  engine.input.isDashPressed = () => false;
+  engine.updateMovement(1 / 60);
+  assert.equal(engine.state.realX, 1 / 16); assert.equal(engine.state.realY, 1 / 16);
+  assert.equal(Math.hypot(engine.state.realX, engine.state.realY), Math.SQRT2 / 16);
+});
+
 test('map transfer resource barrier resumes the same interpreter after recovery', async () => {
   const gate = deferred(); const engine = {
     state: { mapId: 7, switches: {}, variables: {}, selfSwitches: {}, actors: {}, party: { members: [] } },

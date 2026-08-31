@@ -69,6 +69,7 @@ test('event lookahead discovers transfer, picture, audio, move-route graphic and
   const manager = graphManager(calls);
   const actions = manager.scanUpcoming([
     { code: 201, parameters: [0, 2, 1, 1] },
+    { code: 101, parameters: ['AliceFace', 0, 0, 2] },
     { code: 212, parameters: [-1, 5] },
     { code: 231, parameters: [1, 'Cutscene'] },
     { code: 241, parameters: [{ name: 'Theme' }] },
@@ -78,6 +79,7 @@ test('event lookahead discovers transfer, picture, audio, move-route graphic and
   ]);
   await tick();
   assert.ok(actions.some((action) => action.type === 'map' && action.mapId === 2));
+  assert.ok(actions.some((action) => action.path === 'Graphics/Faces/AliceFace.png'));
   assert.ok(actions.some((action) => action.path === 'Graphics/Pictures/Cutscene.png'));
   assert.ok(actions.some((action) => action.path === 'Audio/BGM/Theme.ogg'));
   assert.ok(actions.some((action) => action.path === 'Graphics/Characters/Hero.png'));
@@ -199,6 +201,7 @@ function graphManager(calls) {
     battles: { 6: { assets: ['Graphics/Battlers/Enemy.png', 'Audio/BGM/Battle.ogg'] } },
   });
   const entries = new Map([
+    ['graphics/faces/aliceface', 'Graphics/Faces/AliceFace.png'],
     ['graphics/pictures/cutscene', 'Graphics/Pictures/Cutscene.png'],
     ['graphics/characters/hero', 'Graphics/Characters/Hero.png'],
     ['audio/bgm/theme', 'Audio/BGM/Theme.ogg'],

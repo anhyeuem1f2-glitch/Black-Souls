@@ -26,6 +26,7 @@ export class PrefetchManager {
     this.memory = new WeightedLru(memoryBudgetBytes);
     this.decoded = new WeightedLru(decodedBudgetBytes);
     this.parsed = new WeightedLru(24 * 1024 * 1024);
+    this.globalPins = new Set();
     this.inflight = new Map();
     this.queue = [];
     this.active = new Map();
@@ -66,6 +67,7 @@ export class PrefetchManager {
     const pending = this.schedule(logicalKey, priority, async () => {
       const result = await this.loadCandidates(logicalKey, normalizeCandidates(candidates), { kind, retries, timeoutMs, validate, persistent, priority });
       this.memory.set(logicalKey, result, result.bytes.byteLength);
+      if (this.globalPins.has(key)) this.memory.pin(logicalKey);
       return result;
     });
     this.inflight.set(logicalKey, pending);
@@ -187,7 +189,11 @@ export class PrefetchManager {
     return value;
   }
 
-  setDecoded(key, value, bytes) { this.decoded.set(this.versioned(key), value, bytes); }
+  setDecoded(key, value, bytes) {
+    const logicalKey = this.versioned(key);
+    this.decoded.set(logicalKey, value, bytes);
+    if (this.globalPins.has(key)) this.decoded.pin(logicalKey);
+  }
   hasResource(key) { return this.memory.entries.has(this.versioned(key)); }
   recordDecode(milliseconds) { this.metrics.decodeMs += milliseconds; }
   getParsed(key) {
@@ -196,6 +202,15 @@ export class PrefetchManager {
     return value;
   }
   setParsed(key, value, bytes = 1) { this.parsed.set(this.versioned(key), value, bytes); }
+
+  pinGlobalAssets(paths) {
+    for (const path of unique(paths)) {
+      const normalized = normalKey(path);
+      const assetKey = `asset:${normalized}`; const imageKey = `image:${normalized}`;
+      this.globalPins.add(assetKey); this.globalPins.add(imageKey);
+      this.memory.pin(this.versioned(assetKey)); this.decoded.pin(this.versioned(imageKey));
+    }
+  }
 
   async prefetchAssets(paths, { priority = PREFETCH_PRIORITY.NORMAL, reason = 'assets' } = {}) {
     if (!this.loader) return [];
@@ -261,6 +276,7 @@ export class PrefetchManager {
     const actions = [];
     for (const command of (list ?? []).slice(start, start + limit)) {
       const parameters = command?.parameters ?? [];
+      if (command?.code === 101 && parameters[0]) actions.push({ type: 'asset', path: this.resolveAsset(`Graphics/Faces/${parameters[0]}`), priority: PREFETCH_PRIORITY.HIGH });
       if (command?.code === 201 && parameters[0] === 0) actions.push({ type: 'map', mapId: Number(parameters[1]), priority: PREFETCH_PRIORITY.HIGH });
       if (command?.code === 212) actions.push(...(this.manifest?.animations?.[Number(parameters[1])]?.assets ?? []).map((path) => ({ type: 'asset', path, priority: PREFETCH_PRIORITY.HIGH })));
       if (command?.code === 231 && parameters[1]) actions.push({ type: 'asset', path: this.resolveAsset(`Graphics/Pictures/${parameters[1]}`), priority: PREFETCH_PRIORITY.HIGH });
@@ -359,6 +375,10 @@ export class PrefetchManager {
 
   pinMap(mapId) {
     this.memory.unpinAll(); this.decoded.unpinAll(); this.parsed.unpinAll();
+    for (const key of this.globalPins) {
+      if (key.startsWith('asset:')) this.memory.pin(this.versioned(key));
+      if (key.startsWith('image:')) this.decoded.pin(this.versioned(key));
+    }
     const dependency = this.manifest?.maps?.[mapId];
     if (!dependency) return;
     this.parsed.pin(this.versioned(`map:${mapId}`));
@@ -380,6 +400,7 @@ export class PrefetchManager {
     return {
       versionKey: this.versionKey, cacheName: this.cacheName,
       policy: { maxConcurrent: this.maxConcurrent, reservedCritical: this.reservedCritical, lookahead: this.manifest?.policy?.eventLookahead ?? 48, graphDepth: 2, timeouts: { ...this.timeouts } },
+      globalPinnedAssets: this.globalPins.size / 2,
       transition: this.transitionSnapshot(),
       pendingCriticalFetches: active.filter((item) => item.priority === 'CRITICAL').length + queued.filter((item) => item.priority === 'CRITICAL').length,
       oldestRequestAge: Math.max(0, ...active.map((item) => item.ageMs), ...queued.map((item) => item.ageMs)),

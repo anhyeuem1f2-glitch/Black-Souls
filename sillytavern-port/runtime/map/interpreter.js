@@ -67,7 +67,10 @@ export class EventInterpreter {
         case 101: {
           const lines = [];
           while (list[index + 1]?.code === 401) lines.push(String(list[++index].parameters?.[0] ?? ''));
-          await this.suspend('message', this.engine.showMessage(lines.join('\n'), { face: parameters[0], faceIndex: parameters[1], background: parameters[2], position: parameters[3] }));
+          const choiceAttached = list[index + 1]?.code === 102;
+          const message = this.engine.showMessage(lines.join('\n'), { face: parameters[0], faceIndex: parameters[1], background: parameters[2], position: parameters[3], choiceAttached });
+          if (choiceAttached) await message;
+          else await this.suspend('message', message);
           break;
         }
         case 102: {
@@ -132,10 +135,12 @@ export class EventInterpreter {
         case 126: this.changeInventory('item', parameters); break;
         case 127: this.changeInventory('weapon', parameters); break;
         case 128: this.changeInventory('armor', parameters); break;
-        case 129: this.changePartyMember(parameters); break;
+        case 129: await this.suspendVisual('resource', this.changePartyMember(parameters), { operation: 'party-member', actorId: parameters[0] }); break;
         case 132: this.engine.changeBattleBgm?.(parameters[0]); break;
-        case 135: this.engine.state.menuEnabled = parameters[0] === 0; break;
-        case 136: this.engine.state.encounterEnabled = parameters[0] === 0; break;
+        case 134: this.engine.state.system ??= {}; this.engine.state.system.saveDisabled = parameters[0] !== 0; break;
+        case 135: this.engine.state.system ??= {}; this.engine.state.system.menuDisabled = parameters[0] !== 0; break;
+        case 136: this.engine.state.system ??= {}; this.engine.state.system.encounterDisabled = parameters[0] !== 0; break;
+        case 137: this.engine.state.system ??= {}; this.engine.state.system.formationDisabled = parameters[0] !== 0; break;
         case 201:
           if (parameters[0] !== 0) throw new Error('Variable-based transfers are not implemented yet');
           await this.suspend('resource', this.engine.transferWithRecovery?.(parameters[1], parameters[2], parameters[3], parameters[4]) ?? this.engine.transfer(parameters[1], parameters[2], parameters[3], parameters[4]), { operation: 'transfer', mapId: parameters[1] });
@@ -177,6 +182,7 @@ export class EventInterpreter {
         case 249: await this.suspendVisual('audio', this.engine.playMe?.(parameters[0]) ?? Promise.resolve(), { channel: 'me', name: parameters[0]?.name }); break;
         case 250: await this.suspend('audio', this.engine.playSe(parameters[0])); break;
         case 251: this.engine.stopSe?.(); break;
+        case 281: this.engine.state.mapNameDisplay = parameters[0] === 0; break;
         case 301: {
           if (parameters[0] !== 0) { this.engine.noteUnsupported(301, 'variable/random troop'); break; }
           const outcome = await this.suspend('battle', this.engine.startBattle(parameters[1], parameters[2], parameters[3]), { troopId: parameters[1] });
@@ -211,6 +217,7 @@ export class EventInterpreter {
         case 318: for (const actorId of this.actorTargets(parameters)) this.engine.changeActorSkill?.(actorId, parameters[2], parameters[3]); break;
         case 319: this.engine.changeActorEquipment?.(parameters[0], parameters[1], parameters[2]); break;
         case 320: this.engine.setActorName(parameters[0], String(parameters[1] ?? '')); break;
+        case 321: this.engine.changeActorClass?.(parameters[0], parameters[1], Boolean(parameters[2])); break;
         case 322: await this.suspendVisual('resource', this.engine.setActorGraphic?.(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]) ?? Promise.resolve(), { actorId: parameters[0], graphic: parameters[1] }); break;
         case 353: this.engine.setScene?.('GAMEOVER'); break;
         case 354: await this.engine.enterTitle?.(); return { exit: true };
@@ -319,6 +326,8 @@ export class EventInterpreter {
     let value = 0;
     if (operandType === 0) value = operand[0];
     else if (operandType === 1) value = this.engine.state.variables[operand[0]] ?? 0;
+    else if (operandType === 2) value = randomInteger(Number(operand[0]), Number(operand[1]));
+    else if (operandType === 3) value = this.gameDataOperand(operand[0], operand[1], operand[2]);
     else return this.engine.noteUnsupported(122, `operand ${operandType}`);
     for (let id = first; id <= last; id += 1) {
       const current = this.engine.state.variables[id] ?? 0;
@@ -326,14 +335,53 @@ export class EventInterpreter {
     }
   }
 
+  gameDataOperand(type, first, second) {
+    if (type === 0) return this.engine.party?.quantity?.(this.engine.state, 'item', first) ?? 0;
+    if (type === 1) return this.engine.party?.quantity?.(this.engine.state, 'weapon', first) ?? 0;
+    if (type === 2) return this.engine.party?.quantity?.(this.engine.state, 'armor', first) ?? 0;
+    if (type === 3) {
+      const actor = this.engine.state.actors?.[first]; const parameters = this.engine.party?.parameters?.(this.engine.state, first) ?? {};
+      return [actor?.level, actor?.exp, actor?.hp, actor?.mp, parameters.mhp, parameters.mmp, parameters.atk, parameters.def, parameters.mat, parameters.mdf, parameters.agi, parameters.luk][second] ?? 0;
+    }
+    if (type === 5) {
+      if (Number(first) === -1) return [this.engine.state.x, this.engine.state.y, this.engine.state.direction][second] ?? 0;
+      const id = Number(first) === 0 ? this.current?.eventId : Number(first); const event = this.engine.map?.events?.[id];
+      const override = this.engine.state.eventOverrides?.[`${this.engine.state.mapId},${id}`];
+      return [override?.x ?? event?.x, override?.y ?? event?.y, override?.direction][second] ?? 0;
+    }
+    if (type === 6) return this.engine.state.party?.members?.[Number(first)] ?? 0;
+    if (type === 7) return [
+      this.engine.state.mapId, this.engine.state.party?.members?.length ?? 0, this.engine.state.party?.gold ?? 0,
+      this.engine.state.steps ?? 0, Math.floor(this.engine.state.system?.playtimeSeconds ?? 0), Math.floor((this.engine.state.timer?.count ?? 0) / 60),
+      this.engine.state.system?.saveCount ?? 0, this.engine.state.system?.battleCount ?? 0,
+    ][first] ?? 0;
+    this.engine.noteUnsupported(122, `game data ${type}:${first}:${second}`);
+    return 0;
+  }
+
   async applyMoveRoute(target, route, context = {}) {
     for (const command of route?.list ?? []) {
-      if (target === -1 && command.code === 39) this.engine.state.transparent = true;
-      else if (target === -1 && command.code === 40) this.engine.state.transparent = false;
+      const parameters = command.parameters ?? [];
+      if (command.code >= 1 && command.code <= 8) {
+        const movement = [[0, 0, 0], [0, 1, 2], [-1, 0, 4], [1, 0, 6], [0, -1, 8], [-1, 1, 1], [1, 1, 3], [-1, -1, 7], [1, -1, 9]][command.code];
+        await this.engine.moveRouteStep?.(target, ...movement, context.eventId);
+      }
+      else if (command.code === 15) await (this.engine.waitFrames?.(Math.max(0, Number(parameters[0]) - 1)) ?? wait(Math.max(0, Number(parameters[0]) - 1) * 1000 / 60));
+      else if (command.code >= 16 && command.code <= 19) this.engine.setRouteDirection?.(target, ({ 16: 2, 17: 4, 18: 6, 19: 8 })[command.code], context.eventId);
+      else if (command.code === 27) this.engine.state.switches[parameters[0]] = true;
+      else if (command.code === 28) this.engine.state.switches[parameters[0]] = false;
+      else if (command.code === 29) this.engine.setRouteProperty?.(target, 'moveSpeed', Number(parameters[0]), context.eventId);
+      else if (command.code === 30) this.engine.setRouteProperty?.(target, 'moveFrequency', Number(parameters[0]), context.eventId);
+      else if (command.code === 37) this.engine.setRouteProperty?.(target, 'through', true, context.eventId);
+      else if (command.code === 38) this.engine.setRouteProperty?.(target, 'through', false, context.eventId);
+      else if (command.code === 39) this.engine.setRouteProperty?.(target, 'transparent', true, context.eventId);
+      else if (command.code === 40) this.engine.setRouteProperty?.(target, 'transparent', false, context.eventId);
       else if (command.code === 41) {
         await this.suspendVisual('resource', this.engine.changeCharacterGraphic(target, command.parameters?.[0], command.parameters?.[1], context.eventId), { reason: 'move-route-graphic', target, name: command.parameters?.[0] });
       }
-      else if (command.code !== 0) this.engine.noteUnsupported(205, `move command ${command.code}`);
+      else if (command.code === 42) this.engine.setRouteProperty?.(target, 'opacity', Number(parameters[0]), context.eventId);
+      else if (command.code === 44) await this.engine.playSe?.(parameters[0]);
+      else if (![0, 31, 32, 33, 34, 35, 36, 43].includes(command.code)) this.engine.noteUnsupported(205, `move command ${command.code}`);
     }
   }
 
@@ -345,9 +393,12 @@ export class EventInterpreter {
   }
 
   changePartyMember(parameters) {
-    const [actorId, operation] = parameters; this.engine.state.party ??= { members: [] }; const members = this.engine.state.party.members;
+    const [actorId, operation, initialize] = parameters;
+    if (this.engine.changePartyMember) return this.engine.changePartyMember(actorId, operation, Boolean(initialize));
+    this.engine.state.party ??= { members: [] }; const members = this.engine.state.party.members;
     if (operation === 0 && !members.includes(actorId)) members.push(actorId);
     if (operation === 1) this.engine.state.party.members = members.filter((id) => id !== actorId);
+    return Promise.resolve();
   }
 
   actorTargets(parameters) {
@@ -394,6 +445,10 @@ function pictureParameters(parameters) {
 function firstParam(parameters) { return Array.isArray(parameters) ? parameters[0] : parameters; }
 
 function wait(milliseconds) { return new Promise((resolve) => setTimeout(resolve, milliseconds)); }
+function randomInteger(minimum, maximum) {
+  const low = Math.min(minimum, maximum); const high = Math.max(minimum, maximum);
+  return low + Math.floor(Math.random() * (high - low + 1));
+}
 
 let interpreterSequence = 0;
 

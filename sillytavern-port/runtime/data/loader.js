@@ -56,6 +56,9 @@ export class DataLoader {
       streaming: this.prefetch,
     });
     this.prefetch.setManifest(prefetchManifest);
+    const globalUiAssets = [...(uiDependencies.MENU_UI ?? []).slice(0, 2), ...(uiDependencies.TITLE ?? [])];
+    this.prefetch.pinGlobalAssets(globalUiAssets);
+    void this.prefetch.prefetchAssets(globalUiAssets, { priority: PREFETCH_PRIORITY.HIGH, reason: 'global-ui-warmup' });
     this.progress('Game data ready', 0.45);
     return { system, tilesets, actors, classes, skills, items, weapons, armors, enemies, troops, states, commonEvents, animations, assetManifest, prefetchManifest, inventoryDependencies, combatDependencies, uiDependencies };
   }

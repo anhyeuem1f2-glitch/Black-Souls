@@ -23,6 +23,9 @@ export class PartySystem {
     const equips = this.initialEquips(actor);
     const state = {
       id: actor.id, name: actor.name, classId: actor.class_id, level, exp: 0, hp: 1, mp: 0, tp: 0,
+      nickname: actor.nickname ?? '', description: actor.description ?? '',
+      characterName: actor.character_name ?? '', characterIndex: Number(actor.character_index) || 0,
+      faceName: actor.face_name ?? '', faceIndex: Number(actor.face_index) || 0,
       states: [], skills: this.initialSkills(actor.class_id, level), equips,
     };
     const parameters = this.parameters({ actors: { [actor.id]: state } }, actor.id);
@@ -62,6 +65,9 @@ export class PartySystem {
       state.actors[actorData.id] ??= this.createActor(actorData);
       const actor = state.actors[actorData.id];
       actor.id ??= actorData.id; actor.classId ??= actorData.class_id; actor.level ??= actorData.initial_level || 1; actor.exp ??= 0;
+      actor.nickname ??= actorData.nickname ?? ''; actor.description ??= actorData.description ?? '';
+      actor.characterName ??= actorData.character_name ?? ''; actor.characterIndex ??= Number(actorData.character_index) || 0;
+      actor.faceName ??= actorData.face_name ?? ''; actor.faceIndex ??= Number(actorData.face_index) || 0;
       actor.states ??= []; actor.skills ??= this.initialSkills(actor.classId, actor.level); actor.equips ??= this.initialEquips(actorData);
       const parameters = this.parameters(state, actorData.id);
       actor.hp = clamp(Number(actor.hp ?? parameters.mhp), 0, parameters.mhp);

@@ -24,6 +24,8 @@ const api = {
   unmount,
   loadSave: (slot) => activeHost?.loadSave(slot),
   save: (slot) => activeHost?.save(slot),
+  exportSave: (slot) => activeHost?.exportSave(slot),
+  importSave: (serialized, slot) => activeHost?.importSave(serialized, slot),
   reset: () => activeHost?.reset(),
   pause: () => activeHost?.pause(),
   resume: () => activeHost?.resume(),

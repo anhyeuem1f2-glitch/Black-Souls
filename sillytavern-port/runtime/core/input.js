@@ -22,12 +22,14 @@ export class InputController {
     this.confirmed = false;
     this.cancelled = false;
     this.interacted = false;
+    this.dashPressed = false;
     this.onKeyDown = (event) => {
       if (!this.ownsKeyboard(event)) return;
       const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
       if (axes.has(key)) {
+        const firstPress = !this.held.has(key);
         this.held.set(key, axes.get(key));
-        this.enqueueHeldDirection();
+        if (firstPress) this.enqueueHeldDirection();
         this.consume(event);
       } else if (keypad.has(key) && /^Numpad/.test(event.code || '')) {
         this.queue.push(keypad.get(key));
@@ -44,10 +46,12 @@ export class InputController {
         this.interacted = true;
         this.consume(event);
       }
+      if (key === 'Shift') { this.dashPressed = true; this.consume(event); }
     };
     this.onKeyUp = (event) => {
       const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
       this.held.delete(key);
+      if (key === 'Shift') this.dashPressed = false;
     };
     this.window.addEventListener('keydown', this.onKeyDown, true);
     this.window.addEventListener('keyup', this.onKeyUp, true);
@@ -74,10 +78,23 @@ export class InputController {
   }
 
   takeDirection() { return this.queue.shift() ?? null; }
+  currentDirection() {
+    let dx = 0; let dy = 0;
+    for (const [x, y] of this.held.values()) { dx += x; dy += y; }
+    dx = Math.sign(dx); dy = Math.sign(dy);
+    const direction = directionNumber.get(`${dx},${dy}`);
+    return direction ? [dx, dy, direction] : null;
+  }
+  takeMovementDirection() {
+    const held = this.currentDirection();
+    if (held) { this.queue.length = 0; return held; }
+    return this.takeDirection();
+  }
+  isDashPressed() { return this.dashPressed; }
   takeConfirm() { const value = this.confirmed; this.confirmed = false; return value; }
   takeCancel() { const value = this.cancelled; this.cancelled = false; return value; }
   takeInteraction() { const value = this.interacted; this.interacted = false; return value; }
-  clear() { this.queue.length = 0; this.confirmed = false; this.cancelled = false; this.held.clear(); }
+  clear() { this.queue.length = 0; this.confirmed = false; this.cancelled = false; this.held.clear(); this.dashPressed = false; }
   destroy() {
     this.window.removeEventListener('keydown', this.onKeyDown, true);
     this.window.removeEventListener('keyup', this.onKeyUp, true);

@@ -1,6 +1,6 @@
 {
   "schema": "black-souls-st-runtime-manifest-v1",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "game": "BLACK SOULS",
   "mode": "game-only-no-ai",
   "runtime": {
@@ -40,7 +40,7 @@
     "timeouts": { "json": 10000, "image": 18000, "audio": 30000, "binary": 18000 }
   },
   "save": {
-    "schema": "black-souls-st-save-v1",
+    "schema": "black-souls-st-save-v2",
     "storage": "IndexedDB"
   }
 }

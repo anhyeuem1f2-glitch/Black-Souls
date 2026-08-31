@@ -24,6 +24,27 @@ test('choice interpreter executes only the selected original-style branch', asyn
   assert.equal(engine.state.switches[2], true);
 });
 
+test('VX Ace text followed by choices keeps the message window attached until selection', async () => {
+  const engine = Object.create(GameEngine.prototype);
+  engine.state = { scene: 'PLAYING', actors: {}, switches: {}, variables: {}, selfSwitches: {}, message: null, choice: null };
+  engine.renderer = { prepareFace: async () => null };
+  engine.recordDiagnostic = () => {}; engine.noteUnsupported = () => {}; engine.consumePendingAutorun = () => false;
+  const interpreter = new EventInterpreter(engine);
+  const run = interpreter.run([
+    command(101, ['', 0, 1, 2]), command(401, ['Bỏ qua phần mở đầu?']),
+    command(102, [['Bỏ qua', 'Không bỏ qua'], 2]),
+    command(402, [0, 'Bỏ qua']), command(121, [25, 25, 0], 1),
+    command(402, [1, 'Không bỏ qua']), command(121, [26, 26, 0], 1), command(404), command(0),
+  ]);
+  await until(() => Boolean(engine.state.choice));
+  assert.equal(engine.state.message.text, 'Bỏ qua phần mở đầu?');
+  assert.equal(engine.state.message.choiceAttached, true);
+  assert.deepEqual(engine.state.choice.options, ['Bỏ qua', 'Không bỏ qua']);
+  const resolveChoice = engine.choiceResolve; engine.state.choice = null; engine.state.message = null; resolveChoice(1);
+  await run;
+  assert.equal(engine.state.switches[25], undefined); assert.equal(engine.state.switches[26], true);
+});
+
 test('conditional interpreter selects the matching switch branch', async () => {
   const engine = mockEngine();
   engine.state.switches[4] = true;

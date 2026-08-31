@@ -30,17 +30,29 @@ const assets = await Promise.all(repoAssets.map(async (path) => {
 }));
 
 const bundled = [
+  ['Graphics/Tilesets/Dungeon_A1.png', 'Graphics/Tilesets/Dungeon_A1.png'],
+  ['Graphics/Tilesets/Dungeon_A2.png', 'Graphics/Tilesets/Dungeon_A2.png'],
+  ['Graphics/Tilesets/Dungeon_A4.png', 'Graphics/Tilesets/Dungeon_A4.png'],
+  ['Graphics/Tilesets/Dungeon_A5.png', 'Graphics/Tilesets/Dungeon_A5.png'],
+  ['Graphics/Tilesets/Dungeon_C.png', 'Graphics/Tilesets/Dungeon_C.png'],
   ['Graphics/Tilesets/Inside_A1.png', 'Graphics/Tilesets/Inside_A1.png'],
   ['Graphics/Tilesets/Inside_A2.png', 'Graphics/Tilesets/Inside_A2.png'],
   ['Graphics/Tilesets/Inside_A4.png', 'Graphics/Tilesets/Inside_A4.png'],
   ['Graphics/Tilesets/Inside_A5.png', 'Graphics/Tilesets/Inside_A5.png'],
   ['Graphics/Tilesets/Inside_B.png', 'Graphics/Tilesets/Inside_B.png'],
+  ['Graphics/Characters/Damage3.png', 'Graphics/Characters/Damage3.png'],
+  ['Graphics/Characters/Monster1.png', 'Graphics/Characters/Monster1.png'],
   ['Graphics/Characters/!Flame.png', 'Graphics/Characters/!Flame.png'],
   ['Graphics/Characters/!Other3.png', 'Graphics/Characters/!Other3.png'],
+  ['Graphics/Animations/Light6.png', 'Graphics/Animations/Light6.png'],
   ['Graphics/Animations/Sword2.png', 'Graphics/Animations/Sword2.png'],
   ['Graphics/System/Balloon.png', 'Graphics/System/Balloon.png'],
   ['Audio/SE/Fire1.ogg', 'Audio/SE/Fire1.ogg'],
+  ['Audio/SE/Move.ogg', 'Audio/SE/Move.ogg'],
+  ['Audio/SE/Open3.ogg', 'Audio/SE/Open3.ogg'],
   ['Audio/SE/Slash1.ogg', 'Audio/SE/Slash1.ogg'],
+  ['Audio/SE/Slash7.ogg', 'Audio/SE/Slash7.ogg'],
+  ['Audio/SE/Slash9.ogg', 'Audio/SE/Slash9.ogg'],
 ];
 for (const [path, bundledPath] of bundled) {
   const file = join(portRoot, 'assets', 'rtp', ...bundledPath.split('/'));

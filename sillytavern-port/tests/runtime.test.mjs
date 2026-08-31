@@ -36,7 +36,7 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   const card = JSON.parse(await readFile(join(root, 'card', 'Black_Souls_ST.json'), 'utf8'));
   assert.equal(card.spec, 'chara_card_v3');
   assert.equal(card.spec_version, '3.0');
-  assert.equal(card.data.character_version, '0.6.0');
+  assert.equal(card.data.character_version, '0.7.0');
   assert.equal(card.data.extensions.tavern_helper.scripts[0].enabled, true);
   assert.match(card.data.extensions.black_souls_release.ref, /^[0-9a-f]{40}$/);
   assert.match(card.data.extensions.black_souls_release.entrySha256, /^[0-9A-F]{64}$/);
@@ -70,8 +70,12 @@ test('asset manifest records LFS delivery and browser-ready RTP references', asy
   assert.ok(manifest.assets.length > 700);
   assert.equal(manifest.schema, 'black-souls-asset-manifest-v2');
   assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Tilesets/Inside_A1.png' && item.delivery === 'runtime-bundle' && item.sha256));
+  assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Tilesets/Dungeon_A5.png' && item.delivery === 'runtime-bundle' && item.sha256));
+  assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Characters/Monster1.png' && item.delivery === 'runtime-bundle' && item.sha256));
+  assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Animations/Light6.png' && item.delivery === 'runtime-bundle' && item.sha256));
   assert.ok(manifest.assets.some((item) => item.path === 'Graphics/Tilesets/Inside_C.png' && item.delivery === 'github-media' && item.lfs));
   assert.ok(!manifest.missingDirectReferences.some((item) => item.basePath === 'Graphics/Tilesets/Inside_A1'));
+  assert.ok(!manifest.missingDirectReferences.some((item) => item.basePath === 'Graphics/Tilesets/Dungeon_A5'));
   assert.ok(manifest.directReferences.some((item) => item.basePath === 'Graphics/Titles1/1' && item.present && item.sources.includes('system:title1')));
   assert.ok(manifest.directReferences.some((item) => item.basePath === 'Audio/BGM/タイトル、アリス' && item.present && item.sources.includes('system:title-bgm')));
 });

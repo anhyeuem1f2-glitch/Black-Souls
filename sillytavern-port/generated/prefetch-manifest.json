@@ -50,7 +50,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Graphics/Characters/!Other3.png"
+        "Graphics/Characters/!Other3.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -180,13 +181,23 @@
       "displayName": "Ngục Tối",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -195,13 +206,20 @@
         "Graphics/Characters/Monster1_zorome.png",
         "Graphics/Characters/vx_chara07_a.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Open3.ogg",
         "Graphics/Battlers/BOSS17.png",
         "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS19.png",
         "Audio/SE/Fire1.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -401,6 +419,7 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/$ポロ.png",
         "Graphics/Characters/紅.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/紅ずきん.png",
         "Graphics/Battlers/ポロ.png",
         "Audio/BGM/戦闘２.mp3"
@@ -522,6 +541,7 @@
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/$090-Monster04.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg"
       ],
       "warmAssets": [
@@ -661,6 +681,7 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/紅.png",
         "Graphics/Characters/$ポロ.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/紅ずきん.png",
         "Graphics/Battlers/ポロ.png",
         "Audio/BGM/戦闘２.mp3"
@@ -762,6 +783,7 @@
         "Graphics/Characters/Monster1_zorome.png",
         "Graphics/Characters/$デュラハン.png",
         "Graphics/Characters/騎士.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/33.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/boss32.png",
@@ -1035,7 +1057,9 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/暗黒.mp3",
-        "Graphics/Characters/$カラミール.png"
+        "Graphics/Characters/$カラミール.png",
+        "Graphics/Characters/Monster1.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/ダンジョンA1.png",
@@ -1047,7 +1071,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/暗黒.mp3",
-        "Graphics/Characters/$カラミール.png"
+        "Graphics/Characters/$カラミール.png",
+        "Graphics/Characters/Monster1.png"
       ],
       "eventAssets": [
         {
@@ -1061,6 +1086,60 @@
           "x": 54,
           "y": 51,
           "path": "Graphics/Characters/$カラミール.png"
+        },
+        {
+          "eventId": 11,
+          "x": 33,
+          "y": 49,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 21,
+          "x": 15,
+          "y": 40,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 22,
+          "x": 17,
+          "y": 21,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 23,
+          "x": 59,
+          "y": 28,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 24,
+          "x": 47,
+          "y": 14,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 25,
+          "x": 65,
+          "y": 40,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 26,
+          "x": 57,
+          "y": 38,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 27,
+          "x": 54,
+          "y": 37,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 42,
+          "x": 43,
+          "y": 17,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 44,
@@ -1184,6 +1263,7 @@
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/$ヘルカイザー.png",
         "Graphics/Characters/Monster1_zorome.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS4.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -1430,6 +1510,7 @@
         "Audio/BGM/拠点２.mp3",
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/兎.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/オックス.png",
         "Graphics/Characters/ベリオール.png",
@@ -1445,6 +1526,7 @@
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/mob.png",
         "Audio/SE/Fire1.ogg",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/kata6.png",
         "Graphics/Battlers/kata4.png",
         "Graphics/Battlers/kata5.png",
@@ -1467,6 +1549,7 @@
         "Audio/BGM/拠点２.mp3",
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/兎.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/オックス.png",
         "Graphics/Characters/ベリオール.png",
@@ -1491,6 +1574,12 @@
           "x": 17,
           "y": 16,
           "path": "Graphics/Characters/兎.png"
+        },
+        {
+          "eventId": 3,
+          "x": 13,
+          "y": 11,
+          "path": "Graphics/Characters/Damage3.png"
         },
         {
           "eventId": 4,
@@ -1831,6 +1920,7 @@
         "Graphics/Characters/$グース.png",
         "Graphics/Characters/$マッチ売り.png",
         "Graphics/Characters/$ミランダ.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
@@ -2006,6 +2096,7 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/暗黒.mp3",
         "Graphics/Characters/騎士.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/月.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -2140,7 +2231,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/pipo-fog020.png",
         "Audio/BGM/River.ogg",
-        "Audio/BGS/森SB010003.ogg"
+        "Audio/BGS/森SB010003.ogg",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -2210,6 +2302,8 @@
         "Graphics/Characters/!Other3.png",
         "Graphics/Characters/$Cyclops2.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
+        "Audio/SE/Open3.ogg",
         "Graphics/Battlers/53.png",
         "Audio/BGM/戦闘２.mp3",
         "Audio/SE/Fire1.ogg"
@@ -2407,7 +2501,9 @@
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/エズワルド.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/$ごすろり.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/boss35.png",
         "Graphics/Battlers/エリザベート.png"
@@ -2427,6 +2523,7 @@
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/エズワルド.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/$ごすろり.png"
       ],
       "eventAssets": [
@@ -2465,6 +2562,12 @@
           "x": 30,
           "y": 13,
           "path": "Graphics/Characters/エズワルド.png"
+        },
+        {
+          "eventId": 12,
+          "x": 27,
+          "y": 15,
+          "path": "Graphics/Characters/Damage3.png"
         },
         {
           "eventId": 13,
@@ -2563,7 +2666,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/004-Shade02.png",
         "Audio/BGS/森２.ogg",
-        "Graphics/Characters/$ドロシー.png"
+        "Graphics/Characters/$ドロシー.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -2631,7 +2735,9 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Audio/BGM/暗黒.mp3"
+        "Audio/BGM/暗黒.mp3",
+        "Graphics/Characters/Monster1.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/ダンジョンA1.png",
@@ -2642,7 +2748,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Audio/BGM/暗黒.mp3"
+        "Audio/BGM/暗黒.mp3",
+        "Graphics/Characters/Monster1.png"
       ],
       "eventAssets": [
         {
@@ -2650,6 +2757,48 @@
           "x": 0,
           "y": 0,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 2,
+          "x": 48,
+          "y": 46,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 3,
+          "x": 31,
+          "y": 45,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 4,
+          "x": 52,
+          "y": 32,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 5,
+          "x": 10,
+          "y": 38,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 6,
+          "x": 16,
+          "y": 12,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 7,
+          "x": 38,
+          "y": 14,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 34,
+          "x": 11,
+          "y": 24,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 49,
@@ -2757,6 +2906,7 @@
         "Graphics/Characters/!Other3.png",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/$eriza.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/カラス.mp3",
         "Graphics/Battlers/eriza.png",
         "Audio/BGM/戦闘２.mp3",
@@ -2952,6 +3102,7 @@
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/p4_t_soldier.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/82.png",
         "Graphics/Characters/14遺体.png",
@@ -3289,6 +3440,7 @@
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/$巨大青鬼.png",
         "Graphics/Characters/$巨大赤鬼.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/ozu3.png",
         "Audio/BGM/戦闘２.mp3",
@@ -3540,6 +3692,7 @@
         "Audio/BGS/森２.ogg",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/ヴィル.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/カラス.mp3",
         "Graphics/Battlers/boss42.png",
         "Audio/BGM/戦闘２.mp3"
@@ -3690,6 +3843,7 @@
         "Graphics/Characters/ヴィル.png",
         "Graphics/Characters/$090-Monster06.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss.png",
         "Graphics/Battlers/boss2.png",
         "Audio/BGM/戦闘２.mp3",
@@ -3923,6 +4077,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/kemo1.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/ozu2.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -4059,7 +4214,8 @@
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Parallaxes/kurayami01.png"
+        "Graphics/Parallaxes/kurayami01.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -4138,13 +4294,23 @@
       "displayName": "Cống Ngầm",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -4154,6 +4320,7 @@
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/モンスター4.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/boss3.png",
         "Graphics/Battlers/13.png",
@@ -4162,7 +4329,12 @@
         "Graphics/Battlers/boss32.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -4806,7 +4978,8 @@
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Parallaxes/kurayami01.png"
+        "Graphics/Parallaxes/kurayami01.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -4888,6 +5061,7 @@
         "Audio/BGS/City_Ambi-Festival01-1.mp3",
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/$マッチ売りpng.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/gucha004a.wav",
         "Graphics/Battlers/16.png",
         "Audio/BGM/戦闘２.mp3",
@@ -5253,7 +5427,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Tilesets/VXTileC.png",
         "Graphics/Tilesets/VXTileD.png",
-        "Graphics/Characters/!Flame.png"
+        "Graphics/Characters/!Flame.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -5491,6 +5666,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/20120115101416a62.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss36.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -5611,6 +5787,7 @@
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/City_Ambi-Festival01-1.mp3",
         "Graphics/Characters/!Map1_a.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/ノック.wav"
       ],
       "warmAssets": [
@@ -5719,6 +5896,7 @@
         "Graphics/Characters/!Other3.png",
         "Graphics/Characters/14遺体.png",
         "Graphics/Characters/$090-Monster07.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/gucha004a.wav",
         "Graphics/Battlers/63.png",
         "Audio/BGM/戦闘２.mp3"
@@ -5845,6 +6023,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Characters/14遺体.png",
         "Graphics/Characters/$裸の王様.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGS/くちゅくちゅ.wav",
         "Audio/SE/gucha004a.wav",
         "Audio/BGM/戦闘２.mp3"
@@ -5982,6 +6161,8 @@
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/ベル.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
+        "Audio/SE/Open3.ogg",
         "Audio/SE/Fire1.ogg",
         "Audio/BGM/巨大な敵.mp3",
         "Graphics/Battlers/51.png",
@@ -6210,6 +6391,7 @@
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/201508301414149cc.png",
         "Graphics/Characters/Meka.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/ozu.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -6400,6 +6582,7 @@
         "Graphics/Parallaxes/fog.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/201508301414149cc.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/creek1.wav"
       ],
       "warmAssets": [
@@ -6636,6 +6819,7 @@
         "Graphics/Characters/グリフォン.png",
         "Graphics/Characters/$デュラハン.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/creek1.wav",
         "Graphics/Battlers/22.png",
         "Audio/BGM/戦闘２.mp3",
@@ -6991,6 +7175,7 @@
         "Graphics/Parallaxes/fog.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/o0732037611771025330.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/Werewolf.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -7138,7 +7323,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
-        "Audio/BGS/風できしむ.ogg"
+        "Audio/BGS/風できしむ.ogg",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -7217,20 +7403,36 @@
       "displayName": "Mỏ Hoang của Jacob",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Graphics/Characters/20150616223115b44.png"
+        "Graphics/Characters/20150616223115b44.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -7353,25 +7555,41 @@
       "displayName": "Mỏ Hoang của Jacob",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/!$slim2.png",
         "Graphics/Characters/20150616223115b44.png",
         "Graphics/Characters/p4_t_soldier.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/26.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/BOSS18.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -7601,23 +7819,39 @@
       "displayName": "Mỏ Hoang của Jacob",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/20150616223115b44.png",
         "Graphics/Characters/!$slim2.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/26.png",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -7705,13 +7939,23 @@
       "displayName": "Mỏ Hoang của Jacob",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -7720,13 +7964,19 @@
         "Graphics/Characters/20150616223115b44.png",
         "Graphics/Characters/妖精小.png",
         "Audio/SE/Fire1.ogg",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/26.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/BOSS13.png",
         "Graphics/Battlers/23-2.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -7928,7 +8178,8 @@
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Audio/BGS/夜の森.mp3"
+        "Audio/BGS/夜の森.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -8016,7 +8267,9 @@
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Graphics/Characters/Damage3.png",
+        "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -8027,7 +8280,8 @@
         "Graphics/Tilesets/Inside_C.png",
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Tilesets/VXTileB.png",
-        "Graphics/Characters/!Flame.png"
+        "Graphics/Characters/!Flame.png",
+        "Graphics/Characters/Damage3.png"
       ],
       "eventAssets": [
         {
@@ -8035,6 +8289,12 @@
           "x": 1,
           "y": 0,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 2,
+          "x": 8,
+          "y": 7,
+          "path": "Graphics/Characters/Damage3.png"
         },
         {
           "eventId": 4,
@@ -8089,7 +8349,8 @@
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
-        "Graphics/Characters/!Flame.png"
+        "Graphics/Characters/!Flame.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -8155,6 +8416,8 @@
         "Audio/BGS/雪原.ogg",
         "Graphics/Characters/モンスター6.png",
         "Graphics/Characters/モンスター4.png",
+        "Audio/SE/Move.ogg",
+        "Audio/SE/Open3.ogg",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
@@ -8268,6 +8531,7 @@
         "Graphics/Characters/グリフォン.png",
         "Graphics/Characters/$ギガントボス.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Characters/もこ.png",
         "Graphics/Battlers/【C】e5fccc07d588ec4c818bad4e3749e21d.png",
@@ -8952,7 +9216,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka57.png",
         "Graphics/Parallaxes/fog.png",
-        "Audio/BGS/風できしむ.ogg"
+        "Audio/BGS/風できしむ.ogg",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -9042,7 +9307,8 @@
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
-        "Graphics/Characters/!Flame.png"
+        "Graphics/Characters/!Flame.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -9099,6 +9365,7 @@
         "Graphics/Characters/!$Shadow-Mirror-Parts1(Ace).png",
         "Graphics/Characters/!$Shadow-Mirror(Ace).png",
         "Audio/SE/Fire1.ogg",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/黒の騎士.mp3",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3"
@@ -9364,13 +9631,23 @@
       "displayName": "Tầng Hầm",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -9380,12 +9657,18 @@
         "Graphics/Characters/紅.png",
         "Graphics/Characters/$こびと.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/sirayukihime.png",
         "Graphics/Battlers/sirayukihime2.png",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -9596,7 +9879,8 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/白雪城.wav",
         "Graphics/Characters/$c_mizu.png",
-        "Graphics/Characters/兎.png"
+        "Graphics/Characters/兎.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -9771,6 +10055,7 @@
         "Audio/BGM/白雪城.wav",
         "Graphics/Characters/$c_mizu.png",
         "Graphics/Characters/$uma.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/【C】e5fccc07d588ec4c818bad4e3749e21d.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/BOSS23.png"
@@ -9896,7 +10181,8 @@
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Parallaxes/yuka60.png"
+        "Graphics/Parallaxes/yuka60.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -9964,7 +10250,9 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/!Other3.png",
+        "Graphics/Characters/Monster1.png",
         "Graphics/Characters/モンスター4.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/13.png"
       ],
@@ -9981,6 +10269,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/!Other3.png",
+        "Graphics/Characters/Monster1.png",
         "Graphics/Characters/モンスター4.png"
       ],
       "eventAssets": [
@@ -10031,6 +10320,12 @@
           "x": 71,
           "y": 5,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 20,
+          "x": 41,
+          "y": 31,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 21,
@@ -10184,7 +10479,8 @@
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Audio/BGS/夜の森.mp3"
+        "Audio/BGS/夜の森.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -10287,23 +10583,39 @@
       "displayName": "Tháp Gothel",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/Monster2_zorome.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/黒の騎士.mp3",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
@@ -10452,24 +10764,40 @@
       "displayName": "Tháp Gothel",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/big_dragon_set.png",
         "Graphics/Characters/Monster2_zorome.png",
         "Graphics/Characters/!Other3.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/84.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/BOSS21.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
@@ -10627,24 +10955,40 @@
       "displayName": "Tháp Gothel",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/!Other3.png",
         "Graphics/Characters/Monster2_zorome.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/【C】e5fccc07d588ec4c818bad4e3749e21d.png",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
@@ -10769,21 +11113,37 @@
       "displayName": "Tháp Gothel",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss39.png",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/風できしむ.ogg",
@@ -10840,13 +11200,23 @@
       "displayName": "Đỉnh Tháp",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/Mountains6.jpg"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/Mountains6.jpg",
@@ -10854,13 +11224,19 @@
         "Graphics/Characters/ラプンツェル.png",
         "Graphics/Characters/$Omazin.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/rapuntulel2.png",
         "Audio/BGM/戦闘２.mp3",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/BOSS13.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/Mountains6.jpg",
@@ -10957,6 +11333,7 @@
         "Graphics/Characters/p4_t_soldier.png",
         "Graphics/Characters/騎士.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/BOSS17.png",
         "Audio/BGM/戦闘２.mp3",
@@ -11312,6 +11689,7 @@
         "Graphics/Characters/妖精小.png",
         "Graphics/Characters/$黒2.png",
         "Graphics/Characters/jnu.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/gucha004a.wav",
         "Graphics/Battlers/BOSS14.png",
         "Audio/BGM/戦闘２.mp3",
@@ -11780,7 +12158,8 @@
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka101_Forest_Floor.png",
-        "Graphics/Parallaxes/kurayami01.png"
+        "Graphics/Parallaxes/kurayami01.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -11892,6 +12271,7 @@
         "Audio/BGS/死者の声.wav",
         "Graphics/Characters/20120115101416a62.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/黒の騎士.mp3",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3"
@@ -12154,7 +12534,8 @@
         "Graphics/Tilesets/VXTileEkaidan.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka223_Sandright.png",
-        "Graphics/Characters/妖精小.png"
+        "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -12238,6 +12619,7 @@
         "Audio/BGS/滝.wav",
         "Graphics/Characters/$c_sakana.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/黒の騎士.mp3",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3"
@@ -12565,7 +12947,8 @@
         "Graphics/Tilesets/VXTileEkaidan.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka232_Sand&Stone.png",
-        "Graphics/Parallaxes/kurayami01.png"
+        "Graphics/Parallaxes/kurayami01.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -12666,6 +13049,7 @@
         "Graphics/Parallaxes/yuka223_Sandright.png",
         "Audio/BGS/滝.wav",
         "Graphics/Characters/モンスター3.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss41.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -12771,6 +13155,7 @@
         "Graphics/Characters/20120115101416a62.png",
         "Graphics/Characters/$EXジャガーノート.png",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/BOSS24.png",
         "Audio/BGM/戦闘２.mp3"
@@ -12966,24 +13351,40 @@
       "displayName": "Bên trong Tiên Cá",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka235_Stone_fielde.png",
         "Graphics/Parallaxes/009-Water03.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka235_Stone_fielde.png",
         "Graphics/Parallaxes/009-Water03.png",
         "Audio/BGS/水中.wav",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/人魚姫のピアノ.mp3",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka235_Stone_fielde.png",
@@ -13072,6 +13473,7 @@
         "Graphics/Parallaxes/yuka999.png",
         "Audio/BGS/滝.wav",
         "Graphics/Characters/$mante.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS22.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -13167,22 +13569,38 @@
       "displayName": "Bên trong Tiên Cá",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/009-Water03.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/009-Water03.png",
         "Audio/BGS/水中.wav",
         "Graphics/Characters/$c_sakana.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/人魚姫のピアノ.mp3"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/009-Water03.png",
@@ -13293,6 +13711,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/$ヘルカイザー.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS5.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -13509,7 +13928,8 @@
         "Graphics/Parallaxes/yuka159_flower_garden.png",
         "Graphics/Parallaxes/pipo-fog020.png",
         "Graphics/Battlers/【C】e5fccc07d588ec4c818bad4e3749e21d.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -13592,6 +14012,7 @@
         "Graphics/Parallaxes/pipo-fog020.png",
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/p4_t_soldier.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS17.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/BOSS18.png"
@@ -13682,14 +14103,24 @@
       "displayName": "Đầm Lầy Chết",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka219_Obsolete_stone_floor.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka219_Obsolete_stone_floor.png",
@@ -13714,10 +14145,16 @@
         "Audio/BGM/カエルのワルツ.mp3",
         "Graphics/Characters/紅.png",
         "Graphics/Characters/Yデーモン.png",
-        "Graphics/Battlers/88.png"
+        "Graphics/Battlers/88.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/yuka219_Obsolete_stone_floor.png",
@@ -14200,7 +14637,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGM/不思議の国.mp3",
-        "Graphics/Characters/兎.png"
+        "Graphics/Characters/兎.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -14533,9 +14971,11 @@
         "Audio/BGS/滝.wav",
         "Graphics/Characters/$ピノッキオ.png",
         "Audio/SE/Fire1.ogg",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss37.png",
         "Graphics/Battlers/62.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Audio/BGM/戦闘２.mp3",
+        "Graphics/Characters/Monster1.png"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -14672,6 +15112,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/boss11.png",
         "Graphics/Parallaxes/fog.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/戦闘２.mp3"
       ],
       "warmAssets": [
@@ -14814,7 +15255,8 @@
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Parallaxes/fog.png"
+        "Graphics/Parallaxes/fog.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -14901,6 +15343,7 @@
         "Audio/BGS/異次元空間.wav",
         "Graphics/Characters/$黒2.png",
         "Graphics/Characters/$EXpipo-charachip020.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/sinderera.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -15070,7 +15513,8 @@
         "Graphics/Characters/$黒2.png",
         "Graphics/Characters/14遺体.png",
         "Graphics/Characters/$グース.png",
-        "Graphics/Characters/ベル.png"
+        "Graphics/Characters/ベル.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -15774,7 +16218,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/vx_chara07_a.png",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -15850,6 +16295,7 @@
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/$黒2.png",
         "Graphics/Characters/$デュラハン.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3",
         "Audio/BGM/黒の騎士.mp3"
@@ -15991,6 +16437,7 @@
         "Graphics/Parallaxes/fog.png",
         "Audio/BGS/異次元空間.wav",
         "Graphics/Characters/騎士倒れ.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg"
       ],
       "warmAssets": [
@@ -16211,7 +16658,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
         "Audio/BGS/宇宙空間.wav",
-        "Audio/SE/Fire1.ogg"
+        "Audio/SE/Fire1.ogg",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -16389,6 +16837,7 @@
         "Audio/BGS/宇宙空間.wav",
         "Graphics/Characters/p4_t_soldier.png",
         "Graphics/Characters/$シンデレラ.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/sinderera3.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Battlers/boss30.png",
@@ -16547,7 +16996,8 @@
         "Graphics/Parallaxes/pipo-fog020.png",
         "Graphics/Characters/big_dragon_set.png",
         "Graphics/Battlers/80.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -16634,6 +17084,7 @@
         "Graphics/Characters/$黒2.png",
         "Graphics/Characters/ベル.png",
         "Graphics/Characters/dragon01.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/【DS】GreatDevil.png",
         "Graphics/Battlers/BOSS26.png",
@@ -17391,6 +17842,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/$黒2.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/ジャンヌ.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -17588,6 +18040,7 @@
         "Graphics/Characters/14遺体.png",
         "Graphics/Characters/!Other3.png",
         "Audio/SE/gucha004a.wav",
+        "Graphics/Animations/Light6.png",
         "Audio/SE/ホラー効果音　.wav"
       ],
       "warmAssets": [
@@ -17680,27 +18133,50 @@
       "displayName": "Ngục Tối",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/!Other3.png",
+        "Graphics/Characters/Monster1.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/jnu.png",
+        "Audio/SE/Open3.ogg",
+        "Audio/SE/Slash7.ogg",
+        "Audio/SE/Slash9.ogg",
         "Graphics/Battlers/2.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/!Other3.png",
+        "Graphics/Characters/Monster1.png",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/jnu.png"
       ],
       "eventAssets": [
@@ -17759,16 +18235,46 @@
           "path": "Graphics/Characters/!Other3.png"
         },
         {
+          "eventId": 11,
+          "x": 50,
+          "y": 9,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 11,
+          "x": 50,
+          "y": 9,
+          "path": "Graphics/Characters/Damage3.png"
+        },
+        {
           "eventId": 12,
           "x": 38,
           "y": 9,
           "path": "Graphics/Characters/jnu.png"
         },
         {
+          "eventId": 13,
+          "x": 39,
+          "y": 9,
+          "path": "Graphics/Characters/Damage3.png"
+        },
+        {
+          "eventId": 14,
+          "x": 56,
+          "y": 9,
+          "path": "Graphics/Characters/Damage3.png"
+        },
+        {
           "eventId": 15,
           "x": 56,
           "y": 8,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 16,
+          "x": 4,
+          "y": 19,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 17,
@@ -17842,14 +18348,17 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
-        "Graphics/Characters/jnu.png"
+        "Graphics/Characters/jnu.png",
+        "Graphics/Characters/Monster1.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
-        "Graphics/Characters/jnu.png"
+        "Graphics/Characters/jnu.png",
+        "Graphics/Characters/Monster1.png"
       ],
       "eventAssets": [
         {
@@ -17887,6 +18396,30 @@
           "x": 38,
           "y": 0,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 8,
+          "x": 9,
+          "y": 64,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 9,
+          "x": 60,
+          "y": 65,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 10,
+          "x": 19,
+          "y": 65,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 11,
+          "x": 39,
+          "y": 52,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 16,
@@ -17961,6 +18494,7 @@
         "Graphics/Parallaxes/fog.png",
         "Graphics/Characters/jnu.png",
         "Graphics/Characters/$ヘルカイザー.png",
+        "Audio/SE/Move.ogg",
         "Audio/BGM/ジャンヌ.mp3",
         "Graphics/Battlers/BOSS4.png",
         "Audio/BGM/戦闘２.mp3"
@@ -18080,7 +18614,8 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/タイトル、アリス.mp3",
         "Graphics/Characters/!Other3.png",
-        "Graphics/Characters/$c_54b.png"
+        "Graphics/Characters/$c_54b.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -18186,6 +18721,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Characters/J_Animal.png",
         "Graphics/Characters/J_monster.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/bure-men.png",
         "Graphics/Battlers/bure-men2 (2).png",
         "Graphics/Battlers/bure-men3 (2).png",
@@ -18273,16 +18809,25 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/夜の森.mp3",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/Damage3.png",
+        "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Audio/BGS/夜の森.mp3",
+        "Graphics/Characters/Damage3.png",
         "Graphics/Characters/14遺体.png"
       ],
       "eventAssets": [
+        {
+          "eventId": 3,
+          "x": 7,
+          "y": 9,
+          "path": "Graphics/Characters/Damage3.png"
+        },
         {
           "eventId": 4,
           "x": 8,
@@ -18378,6 +18923,8 @@
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/$c_54b.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
+        "Graphics/Animations/Light6.png",
         "Audio/BGS/心臓鼓動 (1).mp3"
       ],
       "warmAssets": [
@@ -18392,7 +18939,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/$c_54b.png",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/14遺体.png",
+        "Graphics/Animations/Light6.png"
       ],
       "eventAssets": [
         {
@@ -18671,7 +19219,8 @@
         "Graphics/Characters/$ミランダ.png",
         "Graphics/Battlers/boss32.png",
         "Audio/BGM/戦闘２.mp3",
-        "Audio/BGM/黒の騎士.mp3"
+        "Audio/BGM/黒の騎士.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -18805,6 +19354,7 @@
         "Graphics/Parallaxes/RedSky.jpg",
         "Audio/BGM/裏ルート２.mp3",
         "Graphics/Characters/妖精小.png",
+        "Graphics/Animations/Light6.png",
         "Graphics/Pictures/40.png",
         "Audio/BGM/裏ルート3.mp3",
         "Graphics/Battlers/boss lass.png",
@@ -18824,6 +19374,7 @@
         "Graphics/Parallaxes/RedSky.jpg",
         "Audio/BGM/裏ルート２.mp3",
         "Graphics/Characters/妖精小.png",
+        "Graphics/Animations/Light6.png",
         "Graphics/Pictures/40.png",
         "Audio/BGM/裏ルート3.mp3",
         "Graphics/Characters/$c_54b.png",
@@ -18889,6 +19440,7 @@
         "Graphics/Characters/!Other3.png",
         "Graphics/Characters/兎.png",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/BOSS28.png",
         "Audio/BGM/戦闘２.mp3",
         "Audio/SE/gucha004a.wav"
@@ -19109,20 +19661,36 @@
       "displayName": "Mỏ Hoang của Jacob",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Graphics/Characters/20150616223115b44.png"
+        "Graphics/Characters/20150616223115b44.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
@@ -19219,7 +19787,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/RedSky.jpg",
         "Audio/BGM/裏ルート２.mp3",
-        "Graphics/Characters/妖精小.png"
+        "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -19346,7 +19915,8 @@
         "Graphics/Tilesets/VXTileC.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Characters/$メイド.png"
+        "Graphics/Characters/$メイド.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -19444,7 +20014,9 @@
         "Graphics/Characters/$ぐれーてる.png",
         "Graphics/Characters/$へんぜる.png",
         "Graphics/Characters/$娼婦.png",
-        "Graphics/Characters/baho.png"
+        "Graphics/Characters/baho.png",
+        "Graphics/Animations/Light6.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -20830,7 +21402,8 @@
         "Graphics/Characters/20120115101416a62.png",
         "Graphics/Battlers/katarina.png",
         "Audio/BGM/戦闘２.mp3",
-        "Graphics/Battlers/katarina2.png"
+        "Graphics/Battlers/katarina2.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -20927,7 +21500,9 @@
         "Graphics/Characters/jnu.png",
         "Graphics/Characters/$ミランダ.png",
         "Graphics/Characters/ベル.png",
-        "Graphics/Characters/$娼婦.png"
+        "Graphics/Characters/$娼婦.png",
+        "Audio/SE/Move.ogg",
+        "Audio/SE/Open3.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -21221,7 +21796,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
-        "Graphics/Characters/$090-Monster09.png"
+        "Graphics/Characters/$090-Monster09.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -21376,7 +21952,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
-        "Graphics/Characters/$090-Monster09.png"
+        "Graphics/Characters/$090-Monster09.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Dungeon_B.png",
@@ -21590,6 +22167,7 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/fog.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Characters/$BigMonsterMV2.png",
         "Graphics/Battlers/boss38.png",
         "Audio/BGM/戦闘２.mp3"
@@ -21696,7 +22274,8 @@
         "Graphics/Tilesets/treesrestaffmar11_soruve.png",
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Characters/$グース.png"
+        "Graphics/Characters/$グース.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/Inside_A1.png",
@@ -21769,7 +22348,9 @@
         "Graphics/Parallaxes/yuka232_Sand&Stone.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGS/死者の声.wav",
-        "Graphics/Characters/jnu.png"
+        "Graphics/Characters/Monster1.png",
+        "Graphics/Characters/jnu.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -21785,9 +22366,16 @@
         "Graphics/Parallaxes/yuka232_Sand&Stone.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGS/死者の声.wav",
+        "Graphics/Characters/Monster1.png",
         "Graphics/Characters/jnu.png"
       ],
       "eventAssets": [
+        {
+          "eventId": 7,
+          "x": 12,
+          "y": 5,
+          "path": "Graphics/Characters/Monster1.png"
+        },
         {
           "eventId": 8,
           "x": 16,
@@ -22421,6 +23009,7 @@
         "Audio/BGM/裏ルート.mp3",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg",
         "Audio/SE/gucha004a.wav"
       ],
       "warmAssets": [
@@ -22510,6 +23099,7 @@
         "Graphics/Characters/エズワルド.png",
         "Graphics/Characters/14遺体.png",
         "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg",
         "Audio/SE/gucha004a.wav"
       ],
       "warmAssets": [
@@ -22636,6 +23226,7 @@
         "Audio/BGM/裏ルート.mp3",
         "Audio/BGS/風できしむ.ogg",
         "Graphics/Characters/妖精小.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/FA2.png",
         "Graphics/Battlers/FA3.png",
         "Graphics/Battlers/FA.png",
@@ -22730,7 +23321,9 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Audio/BGM/暗黒.mp3"
+        "Audio/BGM/暗黒.mp3",
+        "Graphics/Characters/Monster1.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/ダンジョンA1.png",
@@ -22741,7 +23334,8 @@
         "Graphics/Tilesets/VXTileB.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Audio/BGM/暗黒.mp3"
+        "Audio/BGM/暗黒.mp3",
+        "Graphics/Characters/Monster1.png"
       ],
       "eventAssets": [
         {
@@ -22749,6 +23343,96 @@
           "x": 4,
           "y": 0,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 3,
+          "x": 24,
+          "y": 39,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 5,
+          "x": 42,
+          "y": 55,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 6,
+          "x": 55,
+          "y": 28,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 7,
+          "x": 49,
+          "y": 28,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 8,
+          "x": 53,
+          "y": 24,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 9,
+          "x": 33,
+          "y": 21,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 10,
+          "x": 23,
+          "y": 36,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 12,
+          "x": 40,
+          "y": 56,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 13,
+          "x": 46,
+          "y": 56,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 14,
+          "x": 31,
+          "y": 24,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 15,
+          "x": 36,
+          "y": 23,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 16,
+          "x": 33,
+          "y": 8,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 17,
+          "x": 42,
+          "y": 9,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 18,
+          "x": 40,
+          "y": 9,
+          "path": "Graphics/Characters/Monster1.png"
+        },
+        {
+          "eventId": 19,
+          "x": 35,
+          "y": 10,
+          "path": "Graphics/Characters/Monster1.png"
         },
         {
           "eventId": 78,
@@ -22858,7 +23542,8 @@
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -23005,6 +23690,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/暗黒.mp3",
+        "Audio/SE/Move.ogg",
         "Graphics/Characters/$カラミール.png",
         "Graphics/Battlers/boss40.png",
         "Audio/BGM/戦闘２.mp3",
@@ -23098,9 +23784,11 @@
         "Graphics/Characters/baho.png",
         "Graphics/Characters/騎士.png",
         "Graphics/Characters/14遺体.png",
+        "Graphics/Characters/Monster1.png",
         "Audio/BGM/バフォメテーマ.mp3",
         "Graphics/Battlers/バフォメ.png",
         "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg"
       ],
       "warmAssets": [
@@ -23116,7 +23804,8 @@
         "Audio/BGS/滝.wav",
         "Graphics/Characters/baho.png",
         "Graphics/Characters/騎士.png",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/14遺体.png",
+        "Graphics/Characters/Monster1.png"
       ],
       "eventAssets": [
         {
@@ -23148,6 +23837,12 @@
           "x": 13,
           "y": 33,
           "path": "Graphics/Characters/!Flame.png"
+        },
+        {
+          "eventId": 16,
+          "x": 11,
+          "y": 33,
+          "path": "Graphics/Characters/Monster1.png"
         }
       ],
       "transfers": [
@@ -23254,6 +23949,7 @@
         "Audio/BGS/City_Ambi-Festival01-1.mp3",
         "Graphics/Characters/妖精小.png",
         "Audio/SE/hito_ge_koe_akawarai01.mp3",
+        "Audio/SE/Move.ogg",
         "Audio/SE/Fire1.ogg"
       ],
       "warmAssets": [
@@ -23470,6 +24166,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGS/laughing1.mp3",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/76.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -23544,6 +24241,7 @@
         "Audio/SE/Fire1.ogg",
         "Graphics/Battlers/boss38.png",
         "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/77.png"
       ],
       "warmAssets": [
@@ -24005,6 +24703,7 @@
         "Graphics/Parallaxes/yuka155_ground_in_forest.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Graphics/Characters/$077-Devil03.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/boss43.png",
         "Audio/BGM/戦闘２.mp3",
         "Graphics/Characters/$デュラハン.png",
@@ -24112,6 +24811,7 @@
         "Audio/BGS/森SB010003.ogg",
         "Graphics/Characters/14遺体.png",
         "Graphics/Characters/$c_54b.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/81.png",
         "Audio/BGM/戦闘２.mp3"
       ],
@@ -24189,17 +24889,32 @@
       "displayName": "Thử Thách Chiến Đấu",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
@@ -24215,17 +24930,32 @@
       "displayName": "Thử Thách Chiến Đấu",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
@@ -24316,7 +25046,8 @@
         "Graphics/Characters/$090-Monster08.png",
         "Graphics/Battlers/31.png",
         "Graphics/Battlers/83.png",
-        "Audio/BGM/戦闘２.mp3"
+        "Audio/BGM/戦闘２.mp3",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -24374,17 +25105,33 @@
       "displayName": "Cho cô gái thân yêu của tôi",
       "tilesetId": 4,
       "criticalAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
       "assets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
-        "Graphics/Characters/!Flame.png"
+        "Graphics/Characters/!Flame.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
+        "Graphics/Tilesets/Dungeon_A1.png",
+        "Graphics/Tilesets/Dungeon_A2.png",
+        "Graphics/Tilesets/Dungeon_A4.png",
+        "Graphics/Tilesets/Dungeon_A5.png",
         "Graphics/Tilesets/Dungeon_B.png",
+        "Graphics/Tilesets/Dungeon_C.png",
         "Graphics/Tilesets/Inside_B.png",
         "Graphics/Characters/!Flame.png"
       ],
@@ -24431,6 +25178,7 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Characters/$娼婦.png",
         "Graphics/Characters/Monster2_zorome.png",
+        "Audio/SE/Move.ogg",
         "Graphics/Battlers/85.png",
         "Graphics/Battlers/87.png",
         "Audio/BGM/戦闘２.mp3"
@@ -24550,7 +25298,8 @@
         "Graphics/Characters/!Flame.png",
         "Graphics/Parallaxes/kurayami01.png",
         "Audio/BGM/裏ルート４.mp3",
-        "Graphics/Characters/14遺体.png"
+        "Graphics/Characters/14遺体.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -24671,7 +25420,8 @@
         "Graphics/Tilesets/VXTileC.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Parallaxes/kurayami01.png"
+        "Graphics/Parallaxes/kurayami01.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -24930,7 +25680,8 @@
         "Graphics/Tilesets/VXTileC.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Characters/!Map1_a.png"
+        "Graphics/Characters/!Map1_a.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -24998,7 +25749,8 @@
         "Graphics/Tilesets/VXTileC.png",
         "Graphics/Tilesets/VXTileD.png",
         "Graphics/Characters/!Flame.png",
-        "Graphics/Characters/!Map1_a.png"
+        "Graphics/Characters/!Map1_a.png",
+        "Audio/SE/Move.ogg"
       ],
       "warmAssets": [
         "Graphics/Tilesets/VXTileA1.png",
@@ -25656,7 +26408,9 @@
       "commonEvents": []
     },
     "3": {
-      "assets": [],
+      "assets": [
+        "Graphics/Animations/Light6.png"
+      ],
       "transfers": [],
       "commonEvents": [
         43
@@ -25969,7 +26723,9 @@
       "commonEvents": []
     },
     "55": {
-      "assets": [],
+      "assets": [
+        "Audio/SE/Slash7.ogg"
+      ],
       "transfers": [],
       "commonEvents": []
     },
@@ -30516,7 +31272,9 @@
       "assets": []
     },
     "109": {
-      "assets": []
+      "assets": [
+        "Graphics/Animations/Light6.png"
+      ]
     },
     "110": {
       "assets": []

@@ -35,8 +35,11 @@ export class BlackSoulsHost {
         <div class="bs-progress" role="status" aria-live="polite"><div class="bs-progress-card"><strong>BLACK SOULS</strong><span>Loading game data...</span><i></i></div></div>
         <nav class="bs-toolbar" aria-label="BLACK SOULS host controls">
           <button data-action="fullscreen" title="Fullscreen">⛶</button>
+          <button data-action="export-save" title="Export browser save">Export Save</button>
+          <button data-action="import-save" title="Import browser save">Import Save</button>
           <button data-action="exit" title="Exit to SillyTavern">Exit to SillyTavern</button>
           <button data-action="diagnostics" aria-expanded="false" title="Developer diagnostics">⋯</button>
+          <input data-bs-save-import type="file" accept="application/json,.json" hidden>
         </nav>
         <output class="bs-status" aria-live="polite" hidden></output>
         <aside class="bs-diagnostics" hidden><pre></pre></aside>
@@ -64,7 +67,7 @@ export class BlackSoulsHost {
         ...this.manifest.streaming,
       });
       const renderer = new CanvasRenderer(this.stage, loader, this.manifest.engine);
-      const saves = new SaveStore();
+      const saves = new SaveStore({ runtimeVersion: this.manifest.version, dataVersion: this.manifest.data.schema });
       this.engine = new GameEngine({
         loader,
         renderer,
@@ -101,6 +104,8 @@ export class BlackSoulsHost {
           else await this.root.requestFullscreen?.();
         }
         if (action === 'exit') await this.pause();
+        if (action === 'export-save') await this.exportSaveFile();
+        if (action === 'import-save') this.root.querySelector('[data-bs-save-import]')?.click();
         if (action === 'resume') await this.resume();
         if (action === 'diagnostics') this.toggleDiagnostics(event.target.closest('button'));
         if (action !== 'exit') this.focusGame();
@@ -115,6 +120,13 @@ export class BlackSoulsHost {
       this.refreshDiagnostics();
     };
     this.root.addEventListener('click', this.onClick);
+    this.onSaveImport = async (event) => {
+      const file = event.target.files?.[0]; if (!file || !this.engine) return;
+      try { await this.engine.importSave(await file.text()); this.setStatus('Đã nhập dữ liệu lưu.'); }
+      catch (error) { this.setStatus(error.message, true); }
+      finally { event.target.value = ''; }
+    };
+    this.root.querySelector('[data-bs-save-import]')?.addEventListener('change', this.onSaveImport);
     document.addEventListener('fullscreenchange', this.onFullscreenChange);
   }
 
@@ -207,6 +219,8 @@ export class BlackSoulsHost {
 
   async save(slot) { return this.engine.save(slot); }
   async loadSave(slot) { return this.engine.load(slot); }
+  async exportSave(slot) { return this.engine.exportSave(slot); }
+  async importSave(serialized, slot) { return this.engine.importSave(serialized, slot); }
   async reset() { return this.engine.newGame(); }
   getState() { return this.engine.snapshot(); }
   getHostState() { return { state: this.lifecycleState, presentation: this.presentationState, scene: this.engine?.state?.scene ?? null }; }
@@ -217,11 +231,21 @@ export class BlackSoulsHost {
     clearTimeout(this.statusTimer);
     clearInterval(this.diagnosticsTimer);
     this.root?.removeEventListener('click', this.onClick);
+    this.root?.querySelector('[data-bs-save-import]')?.removeEventListener('change', this.onSaveImport);
     document.removeEventListener('fullscreenchange', this.onFullscreenChange);
     if (document.fullscreenElement === this.root) await document.exitFullscreen?.();
     await this.engine?.destroy();
     this.setLifecycle('UNMOUNT');
     this.root?.remove();
+  }
+
+  async exportSaveFile() {
+    if (!this.engine) return;
+    const serialized = await this.engine.exportSave();
+    const blob = new Blob([serialized], { type: 'application/json' }); const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = `Black_Souls_Save_${String(this.engine.lastSaveSlot ?? 1).padStart(2, '0')}.json`; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    this.setStatus('Đã xuất dữ liệu lưu.');
   }
 }
 
@@ -229,7 +253,7 @@ const styles = `
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
-  body { margin: 0; background: #000; color: #e9e5dd; font: 14px/1.4 Georgia, serif; }
+  body { margin: 0; background: #000; color: #e9e5dd; font: 14px/1.4 Arial, "Noto Sans", "Segoe UI", sans-serif; }
   .black-souls-host { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; background: #000; }
   .bs-viewport { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: #000; }
   .bs-stage { position: relative; width: min(100vw, calc(100vh * 4 / 3)); height: min(100vh, calc(100vw * 3 / 4)); aspect-ratio: 4 / 3; outline: none; background: #000; }

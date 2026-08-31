@@ -20,6 +20,10 @@ export class GameEngine {
     this.interpreterTraceEnabled = new URLSearchParams(globalThis.location?.search ?? '').get('bsTrace') === '1';
     this.modalStack = [];
     this.modalSequence = 0;
+    this.fixedStepMs = 1000 / 60;
+    this.maxFrameDeltaMs = 250;
+    this.accumulatorMs = 0;
+    this.lastLoopAt = null;
   }
 
   async initialize() {
@@ -36,7 +40,7 @@ export class GameEngine {
       renderer: { scene: this.renderer.stats.scene, mapId: this.renderer.stats.mapId, frames: this.renderer.stats.frames },
       state: { scene: this.state?.scene, mapId: this.state?.mapId, loadingMap: this.state?.loadingMap },
     }));
-    this.hasSave = await this.saves.has(1).catch((error) => { this.recordDiagnostic({ type: 'save-probe-failed', error: error.message }); return false; });
+    this.hasSave = await (this.saves.any?.() ?? this.saves.has(1)).catch((error) => { this.recordDiagnostic({ type: 'save-probe-failed', error: error.message }); return false; });
     await this.enterTitle();
     this.running = true;
     this.loop();
@@ -49,10 +53,14 @@ export class GameEngine {
       actors: Object.fromEntries(this.database.actors.filter(Boolean).map((actor) => [actor.id, { name: actor.name }])),
     };
     return {
-      schema: 'black-souls-st-state-v1', scene, mapId: this.database.system.start_map_id,
-      x: this.database.system.start_x, y: this.database.system.start_y, direction: 2, pattern: 1, steps: 0,
+      schema: 'black-souls-st-state-v2', scene, mapId: this.database.system.start_map_id,
+      x: this.database.system.start_x, y: this.database.system.start_y,
+      realX: this.database.system.start_x, realY: this.database.system.start_y,
+      direction: 2, pattern: 1, originalPattern: 1, animationCount: 0, steps: 0, moveSpeed: 4, dash: false,
       switches: {}, variables: {}, selfSwitches: {}, transparent: false, opacity: 255, message: null,
       ...partyState, choice: null, pictures: {}, screenTone: null, screenFlash: null, screenShake: null, weather: null, battle: null, eventOverrides: {},
+      system: { saveDisabled: false, menuDisabled: false, encounterDisabled: false, formationDisabled: false, playtimeSeconds: 0, startedAt: Date.now(), saveCount: 0 },
+      timer: { working: false, count: 0 }, pluginState: {}, difficulty: 0, ngPlus: 0,
     };
   }
 
@@ -82,6 +90,7 @@ export class GameEngine {
   async newGame() {
     await this.audio.unlock();
     this.state = this.initialState('PLAYING');
+    this.state.system.startedAt = Date.now();
     this.notifyScene();
     await this.loadMap(this.state.mapId);
     this.status(`New game: map ${this.state.mapId} (${this.state.x}, ${this.state.y})`);
@@ -96,13 +105,16 @@ export class GameEngine {
       const map = await this.loader.map(mapId);
       const tileset = this.database.tilesets[map.tileset_id];
       const collision = new CollisionMap(map, tileset);
-      const actorId = this.database.system.party_members?.[0] ?? 1;
+      const actorId = this.state.party?.members?.[0] ?? this.database.system.party_members?.[0] ?? 1;
       const actor = this.database.actors[actorId];
       const actorState = this.state.actors[actorId];
       const playerGraphic = { character_name: actorState?.characterName ?? actor?.character_name ?? '', character_index: actorState?.characterIndex ?? actor?.character_index ?? 0 };
       await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId, x: this.state.x, y: this.state.y });
       this.map = map;
       this.collision = collision;
+      this.state.mapName = String(map.display_name ?? '').normalize('NFC');
+      this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+      this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
       await this.audio.applyMapAudio(map);
       const transition = this.prefetch?.markMapVisible?.(mapId, { x: this.state.x, y: this.state.y }) ?? null;
       this.onTransitionState({ state: 'visible', mapId, transition, streaming: this.prefetch?.getStatus?.() ?? null });
@@ -116,10 +128,10 @@ export class GameEngine {
   }
 
   async transfer(mapId, x, y, direction = 0) {
-    const previous = { mapId: this.state.mapId, x: this.state.x, y: this.state.y, direction: this.state.direction };
+    const previous = { mapId: this.state.mapId, x: this.state.x, y: this.state.y, realX: this.state.realX, realY: this.state.realY, direction: this.state.direction };
     this.state.mapId = mapId;
-    this.state.x = x;
-    this.state.y = y;
+    this.state.x = this.state.realX = x;
+    this.state.y = this.state.realY = y;
     if (direction) this.state.direction = direction;
     try {
       await this.loadMap(mapId);
@@ -141,7 +153,7 @@ export class GameEngine {
   async runAutorunEvents() {
     for (const event of Object.values(this.map?.events ?? {})) {
       const page = this.activePage(event);
-      if (page?.trigger === 3) await this.interpreter.run(page.list, { eventId: event.id });
+      if (page?.trigger === 3 || page?.trigger === 4) await this.interpreter.run(page.list, { eventId: event.id, trigger: page.trigger });
     }
   }
 
@@ -166,10 +178,19 @@ export class GameEngine {
     return true;
   }
 
-  loop = () => {
+  loop = (now = performance.now()) => {
     if (!this.running) return;
     try {
-      this.update();
+      if (this.lastLoopAt == null) this.lastLoopAt = now;
+      const elapsed = Math.min(this.maxFrameDeltaMs, Math.max(0, now - this.lastLoopAt));
+      this.lastLoopAt = now;
+      this.accumulatorMs += elapsed;
+      let updates = 0;
+      while (this.accumulatorMs >= this.fixedStepMs && updates < 15) {
+        this.update(this.fixedStepMs / 1000);
+        this.accumulatorMs -= this.fixedStepMs;
+        updates += 1;
+      }
       this.renderer.render(this.state, this.currentRenderableEvents());
       this.lastRenderError = null;
     } catch (error) {
@@ -182,19 +203,30 @@ export class GameEngine {
     this.frame = requestAnimationFrame(this.loop);
   };
 
-  update() {
+  update(deltaSeconds = 1 / 60) {
     if (this.paused) return;
+    this.updatePlaytime(deltaSeconds);
+    this.updateMovement(deltaSeconds);
     this.interpreter?.updateWatchdog?.();
     if (this.input.takeInteraction()) void this.audio.unlock();
     if (this.state.scene === 'TITLE') { this.updateTitle(); return; }
     if (this.state.scene === 'BATTLE') { this.updateBattle(); return; }
-    if (['MENU', 'END', 'ITEM', 'EQUIP', 'STATUS', 'SYNTHESIS', 'SHOP'].includes(this.state.scene)) { this.updateMenu(); return; }
+    if (['MENU', 'END', 'ITEM', 'SKILL', 'EQUIP', 'STATUS', 'SYNTHESIS', 'SHOP', 'FILE_SAVE', 'FILE_LOAD'].includes(this.state.scene)) { this.updateMenu(); return; }
     if (this.state.choice) {
       const movement = this.input.takeDirection();
       if (movement?.[1]) this.state.choice.selected = (this.state.choice.selected + Math.sign(movement[1]) + this.state.choice.options.length) % this.state.choice.options.length;
       if (this.input.takeConfirm()) {
         const selected = this.state.choice.selected;
         this.state.choice = null;
+        if (this.state.message?.choiceAttached) this.state.message = null;
+        this.choiceResolve?.(selected);
+        this.choiceResolve = null;
+        return;
+      }
+      if (this.input.takeCancel() && this.state.choice.cancelType >= 0) {
+        const selected = this.state.choice.cancelType;
+        this.state.choice = null;
+        if (this.state.message?.choiceAttached) this.state.message = null;
         this.choiceResolve?.(selected);
         this.choiceResolve = null;
       }
@@ -209,12 +241,13 @@ export class GameEngine {
       return;
     }
     if (this.interpreter.running) return;
+    if (this.isMoving()) return;
     if (this.input.takeCancel()) { this.openMenu(); return; }
     if (this.input.takeConfirm()) {
       this.triggerActionEvent();
       return;
     }
-    const movement = this.input.takeDirection();
+    const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
     if (!movement || !this.map) return;
     this.move(...movement);
   }
@@ -228,12 +261,14 @@ export class GameEngine {
     if (!command.enabled) { this.status('Không có dữ liệu lưu.'); return; }
     if (command.symbol === 'shutdown') { this.onExitRequest({ reason: 'title-shutdown', scene: 'TITLE' }); return; }
     this.transitioning = true;
-    const task = command.symbol === 'new_game' ? this.newGame() : this.load(1);
+    const task = command.symbol === 'new_game' ? this.newGame() : this.openLoadMenu();
     Promise.resolve(task).catch((error) => { this.recordDiagnostic({ type: 'scene-transition-failed', error: error.message }); this.status(error.message); }).finally(() => { this.transitioning = false; });
   }
 
   updateMenu() {
+    if (this.state.scene === 'FILE_SAVE' || this.state.scene === 'FILE_LOAD') { this.updateFileMenu(); return; }
     if (this.state.scene === 'ITEM') { this.updateItemMenu(); return; }
+    if (this.state.scene === 'SKILL') { if (this.input.takeCancel()) this.openMenu(); return; }
     if (this.state.scene === 'EQUIP') { this.updateEquipMenu(); return; }
     if (this.state.scene === 'STATUS') { if (this.input.takeCancel() || this.input.takeConfirm()) this.openMenu(); return; }
     if (this.state.scene === 'SYNTHESIS') { this.updateSynthesisMenu(); return; }
@@ -254,21 +289,25 @@ export class GameEngine {
       if (command.symbol === 'cancel') this.openMenu();
       return;
     }
-    if (command.symbol === 'save') void this.save(1);
+    if (command.symbol === 'save') void this.openSaveMenu();
     if (command.symbol === 'game_end') this.openEndMenu();
     if (command.symbol === 'item') this.openItemMenu();
+    if (command.symbol === 'skill') this.openSkillMenu();
     if (command.symbol === 'equip') this.openEquipMenu();
     if (command.symbol === 'status') this.openStatusMenu();
   }
 
   openMenu() {
     const labels = this.database.system.terms.commands;
+    const members = this.state.party?.members ?? [];
     this.state.menu = {
       kind: 'menu', selected: 0,
+      actorStatus: Object.fromEntries(members.map((actorId) => [actorId, this.party.parameters(this.state, actorId)])),
       commands: [
-        { symbol: 'item', label: labels[4], enabled: true }, { symbol: 'skill', label: labels[5], enabled: false },
+        { symbol: 'item', label: labels[4], enabled: true }, { symbol: 'skill', label: labels[5], enabled: true },
         { symbol: 'equip', label: labels[6], enabled: true }, { symbol: 'status', label: labels[7], enabled: true },
-        { symbol: 'save', label: labels[9], enabled: true }, { symbol: 'game_end', label: labels[10], enabled: true },
+        { symbol: 'formation', label: labels[8], enabled: members.length >= 2 && !this.state.system?.formationDisabled },
+        { symbol: 'save', label: labels[9], enabled: !this.state.system?.saveDisabled }, { symbol: 'game_end', label: labels[10], enabled: true },
       ],
     };
     this.setScene('MENU');
@@ -299,33 +338,84 @@ export class GameEngine {
   }
 
   openItemMenu() {
-    const entries = this.party.inventoryEntries(this.state, ['item']);
-    this.state.menu = { kind: 'item', selected: 0, entries };
+    const labels = this.database.system.terms.commands;
+    this.state.menu = {
+      kind: 'item', mode: 'category', categorySelected: 0, selected: 0,
+      categories: [
+        { symbol: 'item', label: labels[4] }, { symbol: 'weapon', label: labels[12] },
+        { symbol: 'armor', label: labels[13] }, { symbol: 'key_item', label: labels[14] },
+      ],
+      entries: this.itemEntriesForCategory('item'),
+    };
     this.setScene('ITEM');
   }
 
   updateItemMenu() {
     const menu = this.state.menu;
-    if (this.input.takeCancel()) { this.openMenu(); return; }
-    const movement = this.input.takeDirection();
-    if (movement?.[1] && menu.entries.length) menu.selected = cycle(menu.selected, Math.sign(movement[1]), menu.entries.length);
+    if (menu.mode === 'category') {
+      if (this.input.takeCancel()) { this.openMenu(); return; }
+      const movement = this.input.takeDirection();
+      if (movement?.[0]) {
+        menu.categorySelected = cycle(menu.categorySelected, Math.sign(movement[0]), menu.categories.length);
+        menu.entries = this.itemEntriesForCategory(menu.categories[menu.categorySelected].symbol);
+        menu.selected = 0;
+      }
+      if (this.input.takeConfirm()) menu.mode = 'items';
+      return;
+    }
+    if (this.input.takeCancel()) { menu.mode = 'category'; return; }
+    if (this.isMoving()) return;
+    const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
+    if (movement && menu.entries.length) {
+      const delta = movement[1] ? Math.sign(movement[1]) * 2 : Math.sign(movement[0]);
+      if (delta) menu.selected = cycle(menu.selected, delta, menu.entries.length);
+    }
     if (!this.input.takeConfirm() || !menu.entries.length) return;
     const entry = menu.entries[menu.selected];
+    if (entry.kind !== 'item') return;
     const result = this.party.useItem(this.state, entry.id, this.state.party.members[0]);
     if (result.used) this.status(`Used ${entry.data.name}.`);
-    menu.entries = this.party.inventoryEntries(this.state, ['item']);
+    menu.entries = this.itemEntriesForCategory(menu.categories[menu.categorySelected].symbol);
     menu.selected = Math.max(0, Math.min(menu.selected, menu.entries.length - 1));
+  }
+
+  itemEntriesForCategory(category) {
+    if (category === 'weapon' || category === 'armor') return this.party.inventoryEntries(this.state, [category]);
+    return this.party.inventoryEntries(this.state, ['item']).filter((entry) => (Number(entry.data?.itype_id ?? 1) === 2) === (category === 'key_item'));
+  }
+
+  openSkillMenu() {
+    const actorId = this.state.party.members[0];
+    const actor = this.state.actors[actorId];
+    this.state.menu = { kind: 'skill', actorId, selected: 0, entries: (actor?.skills ?? []).map((id) => ({ id, data: this.database.skills[id] })).filter((entry) => entry.data) };
+    this.setScene('SKILL');
   }
 
   openEquipMenu() {
     const actorId = this.state.party.members[0];
-    this.state.menu = { kind: 'equip', mode: 'slots', actorId, selected: 0, choices: [], choiceSelected: 0 };
+    const labels = this.database.system.terms.commands;
+    this.state.menu = {
+      kind: 'equip', mode: 'command', actorId, commandSelected: 0,
+      commands: [{ symbol: 'equip', label: labels[15] }, { symbol: 'optimize', label: labels[16] }, { symbol: 'clear', label: labels[17] }],
+      selected: 0, choices: [], choiceSelected: 0,
+    };
     this.decorateEquipMenu(this.state.menu);
     this.setScene('EQUIP');
   }
 
   updateEquipMenu() {
     const menu = this.state.menu; const actor = this.state.actors[menu.actorId];
+    if (menu.mode === 'command') {
+      if (this.input.takeCancel()) { this.openMenu(); return; }
+      const movement = this.input.takeDirection();
+      if (movement?.[0]) menu.commandSelected = cycle(menu.commandSelected, Math.sign(movement[0]), menu.commands.length);
+      if (!this.input.takeConfirm()) return;
+      const symbol = menu.commands[menu.commandSelected].symbol;
+      if (symbol === 'equip') menu.mode = 'slots';
+      if (symbol === 'clear') { this.clearActorEquipment(menu.actorId); this.decorateEquipMenu(menu); }
+      if (symbol === 'optimize') { this.optimizeActorEquipment(menu.actorId); this.decorateEquipMenu(menu); }
+      return;
+    }
     if (menu.mode === 'choices') {
       if (this.input.takeCancel()) { menu.mode = 'slots'; return; }
       const movement = this.input.takeDirection();
@@ -336,8 +426,8 @@ export class GameEngine {
       if (result.equipped) this.status(selected.id ? `Equipped ${this.party.data(selected.kind, selected.id)?.name}.` : 'Unequipped.');
       menu.mode = 'slots'; this.decorateEquipMenu(menu); return;
     }
-    if (this.input.takeCancel()) { this.openMenu(); return; }
-    const movement = this.input.takeDirection();
+    if (this.input.takeCancel()) { menu.mode = 'command'; return; }
+    const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
     if (movement?.[1] && actor.equips.length) menu.selected = cycle(menu.selected, Math.sign(movement[1]), actor.equips.length);
     if (!this.input.takeConfirm()) return;
     const current = actor.equips[menu.selected];
@@ -347,12 +437,90 @@ export class GameEngine {
 
   decorateEquipMenu(menu) {
     menu.slotEntries = (this.state.actors[menu.actorId]?.equips ?? []).map((slot) => ({ ...slot, data: slot.id ? this.party.data(slot.kind, slot.id) : null }));
+    menu.parameters = this.party.parameters(this.state, menu.actorId);
+  }
+
+  clearActorEquipment(actorId) {
+    const actor = this.state.actors[actorId];
+    for (let index = 0; index < (actor?.equips?.length ?? 0); index += 1) {
+      const slot = actor.equips[index];
+      if (slot.id) this.party.equip(this.state, actorId, index, slot.kind, 0);
+    }
+  }
+
+  optimizeActorEquipment(actorId) {
+    this.clearActorEquipment(actorId);
+    const actor = this.state.actors[actorId];
+    for (let index = 0; index < (actor?.equips?.length ?? 0); index += 1) {
+      const candidates = this.party.inventoryEntries(this.state, ['weapon', 'armor'])
+        .filter((entry) => this.party.canEquip(this.state, actorId, entry.kind, entry.id, index))
+        .sort((a, b) => sumParams(b.data?.params) - sumParams(a.data?.params));
+      const best = candidates[0];
+      if (best) this.party.equip(this.state, actorId, index, best.kind, best.id);
+    }
   }
 
   openStatusMenu() {
     const actorId = this.state.party.members[0];
-    this.state.menu = { kind: 'status', actorId, parameters: this.party.parameters(this.state, actorId) };
+    const actor = this.state.actors[actorId];
+    this.state.menu = {
+      kind: 'status', actorId, parameters: this.party.parameters(this.state, actorId),
+      className: this.database.classes[actor?.classId]?.name ?? '',
+      expCurrent: actor?.exp ?? 0,
+      expNext: Math.max(0, this.party.expForLevel(actor?.classId, (actor?.level ?? 1) + 1) - (actor?.exp ?? 0)),
+      equipment: (actor?.equips ?? []).map((slot) => slot.id ? this.party.data(slot.kind, slot.id) : null),
+      paramLabels: this.database.system.terms.params,
+    };
     this.setScene('STATUS');
+  }
+
+  async openLoadMenu() {
+    const slots = await this.saves.list();
+    const graphics = slots.flatMap((slot) => (slot.partyCharacters ?? []).map((entry) => ({ graphic: { character_name: entry.characterName, character_index: entry.characterIndex } })));
+    await Promise.resolve(this.renderer.ensureEventGraphics?.(graphics))
+      .catch((error) => this.recordDiagnostic({ type: 'save-character-warm-failed', error: error.message }));
+    const latest = await this.saves.latestSlot();
+    this.state.menu = { kind: 'file', mode: 'load', help: 'Mở tệp nào?', selected: Math.max(0, latest - 1), topIndex: Math.max(0, Math.min(12, latest - 3)), slots };
+    this.setScene('FILE_LOAD');
+  }
+
+  async openSaveMenu() {
+    if (this.state.system?.saveDisabled) { this.status('Không thể lưu tại đây.'); return; }
+    const slots = await this.saves.list();
+    const graphics = slots.flatMap((slot) => (slot.partyCharacters ?? []).map((entry) => ({ graphic: { character_name: entry.characterName, character_index: entry.characterIndex } })));
+    await Promise.resolve(this.renderer.ensureEventGraphics?.(graphics))
+      .catch((error) => this.recordDiagnostic({ type: 'save-character-warm-failed', error: error.message }));
+    const selected = Math.max(0, Math.min(15, Number(this.lastSaveSlot ?? 1) - 1));
+    this.state.menu = { kind: 'file', mode: 'save', help: 'Lưu vào đâu?', selected, topIndex: Math.max(0, Math.min(12, selected - 1)), slots };
+    this.setScene('FILE_SAVE');
+  }
+
+  updateFileMenu() {
+    const menu = this.state.menu;
+    if (!menu || this.transitioning) return;
+    if (this.input.takeCancel()) {
+      if (menu.mode === 'load') void this.enterTitle();
+      else this.openMenu();
+      return;
+    }
+    const movement = this.input.takeDirection();
+    if (movement?.[1]) {
+      menu.selected = cycle(menu.selected, Math.sign(movement[1]), menu.slots.length);
+      if (menu.selected < menu.topIndex) menu.topIndex = menu.selected;
+      if (menu.selected > menu.topIndex + 3) menu.topIndex = menu.selected - 3;
+    }
+    if (!this.input.takeConfirm()) return;
+    const slot = menu.selected + 1;
+    const entry = menu.slots[menu.selected];
+    if (menu.mode === 'load' && entry.empty) { this.status('Tệp này không có dữ liệu.'); return; }
+    this.transitioning = true;
+    const task = menu.mode === 'save'
+      ? this.save(slot).then(() => this.openMenu())
+      : this.load(slot);
+    Promise.resolve(task).catch((error) => {
+      this.recordDiagnostic({ type: 'save-scene-failed', mode: menu.mode, slot, error: error.message });
+      this.status(error.message);
+    }).finally(() => { this.transitioning = false; });
   }
 
   openSynthesisMenu() {
@@ -469,6 +637,28 @@ export class GameEngine {
     if (operation === 0 && !actor.skills.includes(skillId)) actor.skills.push(skillId);
     if (operation === 1) actor.skills = actor.skills.filter((id) => id !== skillId);
   }
+  changeActorClass(actorId, classId, keepExp = false) {
+    const actor = this.state.actors[actorId]; if (!actor || !this.database.classes[classId]) return;
+    actor.classId = Number(classId);
+    if (!keepExp) actor.exp = 0;
+    actor.skills = this.party.initialSkills(actor.classId, actor.level);
+    const parameters = this.party.parameters(this.state, actorId);
+    actor.hp = Math.min(actor.hp, parameters.mhp); actor.mp = Math.min(actor.mp, parameters.mmp);
+  }
+  async changePartyMember(actorId, operation, initialize = false) {
+    const members = this.state.party.members;
+    if (operation === 0 && !members.includes(actorId)) {
+      if (initialize) this.state.actors[actorId] = this.party.createActor(this.database.actors[actorId]);
+      members.push(actorId);
+    }
+    if (operation === 1) this.state.party.members = members.filter((id) => id !== actorId);
+    const leaderId = this.state.party.members[0];
+    const leader = this.state.actors[leaderId];
+    if (leader) {
+      this.renderer.playerGraphic = { character_name: leader.characterName ?? '', character_index: leader.characterIndex ?? 0 };
+      await this.renderer.ensureEventGraphics?.([{ graphic: this.renderer.playerGraphic }]);
+    }
+  }
   async setActorGraphic(actorId, characterName, characterIndex, faceName, faceIndex) {
     const actor = this.state.actors[actorId]; if (!actor) return;
     Object.assign(actor, { characterName: String(characterName ?? ''), characterIndex: Number(characterIndex) || 0, faceName: String(faceName ?? ''), faceIndex: Number(faceIndex) || 0 });
@@ -506,6 +696,65 @@ export class GameEngine {
     await this.refreshCurrentMapVisuals('move-route-graphic');
   }
 
+  waitFrames(frames) { return new Promise((resolve) => setTimeout(resolve, Math.max(0, Number(frames) || 0) * 1000 / 60)); }
+
+  async moveRouteStep(target, dx, dy, direction, eventId = 0) {
+    if (target === -1) {
+      this.ensureRealPosition();
+      const speed = Number(this.state.moveSpeed ?? 4);
+      this.state.routeForcing = true;
+      this.state.x += dx; this.state.y += dy;
+      if (direction % 2 === 0) this.state.direction = direction;
+      else {
+        const horizontal = dx < 0 ? 4 : 6; const vertical = dy < 0 ? 8 : 2;
+        if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
+        if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
+      }
+      this.advanceStep();
+      await this.waitFrames(256 / 2 ** speed);
+      this.state.realX = this.state.x; this.state.realY = this.state.y;
+      this.state.routeForcing = false;
+      return;
+    }
+    const override = this.routeOverride(target, eventId);
+    const speed = Number(override.moveSpeed ?? 3);
+    const fromX = Number(override.x); const fromY = Number(override.y);
+    override.x = fromX + dx; override.y = fromY + dy;
+    if (direction % 2 === 0) override.direction = direction;
+    override.motion = { fromX, fromY, toX: override.x, toY: override.y, began: performance.now(), durationMs: (256 / 2 ** speed) * 1000 / 60 };
+    await this.waitFrames(256 / 2 ** speed);
+    delete override.motion;
+  }
+
+  setRouteDirection(target, direction, eventId = 0) {
+    if (target === -1) this.state.direction = direction;
+    else this.routeOverride(target, eventId).direction = direction;
+  }
+
+  setRouteProperty(target, property, value, eventId = 0) {
+    if (target === -1) {
+      if (property === 'transparent') this.state.transparent = Boolean(value);
+      else if (property === 'opacity') this.state.opacity = Number(value);
+      else this.state[property] = value;
+      return;
+    }
+    this.routeOverride(target, eventId)[property] = value;
+  }
+
+  routeOverride(target, eventId = 0) {
+    const resolvedId = target === 0 ? eventId : target;
+    const event = this.map?.events?.[resolvedId];
+    const page = event ? this.activePage(event) : null;
+    const key = `${this.state.mapId},${resolvedId}`;
+    const override = this.state.eventOverrides[key] ??= {};
+    override.x ??= event?.x ?? 0; override.y ??= event?.y ?? 0;
+    override.direction ??= page?.graphic?.direction ?? 2;
+    override.pattern ??= page?.graphic?.pattern ?? 1;
+    override.moveSpeed ??= page?.move_speed ?? 3;
+    override.moveFrequency ??= page?.move_frequency ?? 3;
+    return override;
+  }
+
   setScene(scene) {
     this.state.scene = scene;
     if (scene === 'PLAYING') this.state.menu = null;
@@ -522,10 +771,11 @@ export class GameEngine {
         && this.canStep(this.state.x, this.state.y, vertical)
         && this.canStep(this.state.x, this.state.y + dy, horizontal);
       if (strict) {
+        this.ensureRealPosition();
         this.state.x += dx; this.state.y += dy;
         if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
         if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
-        this.advancePattern(); return;
+        this.advanceStep(); return true;
       }
       const fallback = this.state.direction === horizontal ? [vertical, horizontal] : this.state.direction === vertical ? [horizontal, vertical] : [];
       for (const candidate of fallback) if (this.moveCardinal(candidate)) return;
@@ -538,7 +788,8 @@ export class GameEngine {
     const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
     this.state.direction = direction;
     if (!this.canStep(this.state.x, this.state.y, direction)) return false;
-    this.state.x += dx; this.state.y += dy; this.advancePattern(); return true;
+    this.ensureRealPosition();
+    this.state.x += dx; this.state.y += dy; this.advanceStep(); return true;
   }
 
   canStep(x, y, direction) {
@@ -546,19 +797,61 @@ export class GameEngine {
     return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
   }
 
-  advancePattern() {
-    this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4];
+  advanceStep() {
     this.state.steps = (this.state.steps ?? 0) + 1;
     this.prefetch?.prefetchLikelyDestinations(this.state.mapId, { x: this.state.x, y: this.state.y });
   }
 
-  showMessage(text) {
-    this.state.message = this.expandText(text);
+  ensureRealPosition() {
+    if (!Number.isFinite(this.state.realX)) this.state.realX = this.state.x;
+    if (!Number.isFinite(this.state.realY)) this.state.realY = this.state.y;
+  }
+
+  isMoving() {
+    this.ensureRealPosition();
+    return Math.abs(this.state.realX - this.state.x) > 1e-6 || Math.abs(this.state.realY - this.state.y) > 1e-6;
+  }
+
+  realMoveSpeed() {
+    const dashAllowed = !this.map?.disable_dashing && !this.state.switches?.[0];
+    const dash = !this.state.routeForcing && dashAllowed && Boolean(this.input?.isDashPressed?.());
+    this.state.dash = dash;
+    return Number(this.state.moveSpeed ?? 4) + (dash ? 1 : 0);
+  }
+
+  updateMovement(deltaSeconds = 1 / 60) {
+    if (!this.state || this.state.scene !== 'PLAYING') return;
+    this.ensureRealPosition();
+    if (!this.isMoving()) return;
+    const speed = this.realMoveSpeed();
+    const distance = (2 ** speed / 256) * Math.max(0, deltaSeconds * 60);
+    this.state.realX = approach(this.state.realX, this.state.x, distance);
+    this.state.realY = approach(this.state.realY, this.state.y, distance);
+    this.state.animationCount = Number(this.state.animationCount ?? 0) + 1.5 * Math.max(0, deltaSeconds * 60);
+    if (this.state.animationCount > 18 - speed * 2) {
+      this.state.pattern = (Number(this.state.pattern ?? 1) + 1) % 4;
+      this.state.animationCount = 0;
+    }
+    if (!this.isMoving()) this.state.pattern = this.state.originalPattern ?? 1;
+  }
+
+  updatePlaytime(deltaSeconds = 1 / 60) {
+    if (!this.state?.system || this.state.scene === 'TITLE') return;
+    this.state.system.playtimeSeconds = Number(this.state.system.playtimeSeconds ?? 0) + Math.max(0, deltaSeconds);
+    if (this.state.timer?.working) this.state.timer.count = Math.max(0, Number(this.state.timer.count ?? 0) - Math.max(0, deltaSeconds * 60));
+  }
+
+  async showMessage(text, options = {}) {
+    if (options.face) await Promise.resolve(this.renderer.prepareFace?.(String(options.face)))
+      .catch((error) => this.recordDiagnostic({ type: 'message-face-failed', face: options.face, error: error.message }));
+    this.state.message = { text: this.expandText(text), face: String(options.face ?? ''), faceIndex: Number(options.faceIndex) || 0, background: Number(options.background) || 0, position: Number(options.position ?? 2), choiceAttached: Boolean(options.choiceAttached) };
+    if (options.choiceAttached) return;
     return new Promise((resolve) => { this.messageResolve = resolve; });
   }
 
-  showChoice(options) {
-    this.state.choice = { options: options.map((item) => this.expandText(item)), selected: 0 };
+  showChoice(options, { cancelType = -1, defaultType = 0 } = {}) {
+    const resolvedCancel = Number(cancelType) >= 0 && Number(cancelType) < options.length ? Number(cancelType) : -1;
+    this.state.choice = { options: options.map((item) => this.expandText(item)), selected: clampIndex(defaultType, options.length), cancelType: resolvedCancel };
     return new Promise((resolve) => { this.choiceResolve = resolve; });
   }
 
@@ -609,11 +902,11 @@ export class GameEngine {
 
   setActorName(actorId, name) {
     this.state.actors[actorId] ??= {};
-    this.state.actors[actorId].name = name;
+    this.state.actors[actorId].name = String(name ?? '').normalize('NFC');
   }
 
   expandText(text) {
-    return String(text).replace(/\\[Nn]\[(\d+)\]/g, (_, id) => this.state.actors[id]?.name ?? '').replace(/\\[Cc]\[\d+\]|\\[.!|{}^><]/g, '');
+    return String(text).normalize('NFC').replace(/\\[Nn]\[(\d+)\]/g, (_, id) => this.state.actors[id]?.name ?? '').replace(/\\[Cc]\[\d+\]|\\[.!|{}^><]/g, '').normalize('NFC');
   }
 
   triggerActionEvent() {
@@ -643,8 +936,9 @@ export class GameEngine {
       const page = this.activePage(event);
       const override = this.state.eventOverrides?.[`${this.state.mapId},${event.id}`] ?? {};
       const graphic = override.graphic ?? page?.graphic;
-      if (!graphic?.character_name) return [];
-      return [{ id: event.id, x: override.x ?? event.x, y: override.y ?? event.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, page: { ...page, graphic } }];
+      if (!graphic?.character_name || override.transparent) return [];
+      const position = routePosition(override, event);
+      return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
     });
   }
 
@@ -709,12 +1003,28 @@ export class GameEngine {
   }
 
   snapshot() { return structuredClone(this.state); }
-  async save(slot) { await this.saves.save(slot, this.snapshot()); this.hasSave = true; this.status(`Đã lưu vào slot ${slot}.`); }
+  async save(slot) {
+    this.state.system ??= {};
+    this.state.system.saveCount = Number(this.state.system.saveCount ?? 0) + 1;
+    const metadata = await this.saves.save(slot, this.snapshot(), { location: this.state.mapName });
+    this.lastSaveSlot = Number(slot);
+    this.hasSave = true;
+    this.status(`Đã lưu vào tệp ${slot}.`);
+    this.recordDiagnostic({ type: 'save-db-ready', operation: 'save', slot, metadata });
+    return metadata;
+  }
   async load(slot) {
     const state = await this.saves.load(slot);
     if (!state) throw new Error(`Save slot ${slot} is empty.`);
     this.state = state;
     this.party.normalizeState(this.state);
+    this.state.schema = 'black-souls-st-state-v2';
+    this.state.system ??= { saveDisabled: false, menuDisabled: false, encounterDisabled: false, formationDisabled: false, playtimeSeconds: 0, startedAt: Date.now(), saveCount: 0 };
+    this.state.timer ??= { working: false, count: 0 };
+    this.state.pluginState ??= {};
+    this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+    this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+    this.state.moveSpeed ??= 4; this.state.pattern ??= 1; this.state.originalPattern ??= 1; this.state.animationCount ??= 0;
     this.state.eventOverrides ??= {}; this.state.pictures ??= {}; this.state.battle = null;
     this.state.scene = 'PLAYING'; this.state.menu = null;
     await this.loadMap(state.mapId);
@@ -723,8 +1033,19 @@ export class GameEngine {
     if (this.state.screenFlash) void this.renderer.flashScreen?.(this.state.screenFlash.color, this.state.screenFlash.frames);
     if (this.state.screenShake) void this.renderer.shakeScreen?.(this.state.screenShake.power, this.state.screenShake.speed, this.state.screenShake.frames);
     if (this.state.weather) void this.renderer.setWeather?.(this.state.weather.type, this.state.weather.power, 0);
+    this.lastSaveSlot = Number(slot);
+    this.hasSave = true;
     this.notifyScene();
-    this.status(`Đã tải slot ${slot}.`);
+    this.status(`Đã tải tệp ${slot}.`);
+    this.recordDiagnostic({ type: 'save-db-ready', operation: 'load', slot });
+  }
+
+  async exportSave(slot = null) { return this.saves.export(slot ?? this.lastSaveSlot ?? await this.saves.latestSlot()); }
+  async importSave(serialized, targetSlot = null) {
+    const metadata = await this.saves.import(serialized, targetSlot);
+    this.hasSave = true;
+    if (this.state.scene === 'TITLE') await this.enterTitle();
+    return metadata;
   }
 
   pause() { this.paused = true; this.input?.clear(); }
@@ -741,6 +1062,15 @@ export class GameEngine {
 
 function cycle(value, delta, length) { return (value + delta + length) % length; }
 function reverse(direction) { return 10 - direction; }
+function clampIndex(value, length) { return length ? Math.max(0, Math.min(length - 1, Number(value) || 0)) : 0; }
+function approach(current, target, distance) { return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target; }
+function sumParams(values = []) { return values.reduce((sum, value) => sum + Number(value || 0), 0); }
+function routePosition(override, event) {
+  const motion = override.motion;
+  if (!motion) return { x: override.x ?? event.x, y: override.y ?? event.y };
+  const progress = Math.max(0, Math.min(1, (performance.now() - motion.began) / Math.max(1, motion.durationMs)));
+  return { x: motion.fromX + (motion.toX - motion.fromX) * progress, y: motion.fromY + (motion.toY - motion.fromY) * progress };
+}
 function nextFrame() {
   return new Promise((resolve) => {
     if (typeof globalThis.requestAnimationFrame === 'function') globalThis.requestAnimationFrame(() => resolve());
