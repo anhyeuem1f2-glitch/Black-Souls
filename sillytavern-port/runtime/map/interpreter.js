@@ -184,8 +184,9 @@ export class EventInterpreter {
         case 251: this.engine.stopSe?.(); break;
         case 281: this.engine.state.mapNameDisplay = parameters[0] === 0; break;
         case 301: {
-          if (parameters[0] !== 0) { this.engine.noteUnsupported(301, 'variable/random troop'); break; }
-          const outcome = await this.suspend('battle', this.engine.startBattle(parameters[1], parameters[2], parameters[3]), { troopId: parameters[1] });
+          const troopId = this.engine.resolveBattleTroop?.(parameters) ?? (parameters[0] === 0 ? Number(parameters[1]) : 0);
+          if (!troopId) { this.engine.noteUnsupported(301, 'no eligible troop'); break; }
+          const outcome = await this.suspend('battle', this.engine.startBattle(troopId, parameters[2], parameters[3]), { troopId });
           const boundary = findBattleBoundary(list, index, command.indent, end);
           const marker = ({ victory: 601, escape: 602, lose: 603, gameover: 603 })[outcome];
           const branch = boundary.branches.find((item) => item.code === marker);

@@ -1,0 +1,9 @@
+# Event Movement Compatibility
+
+`GameEventSystem` is a current-map-only `Game_Event` compatibility layer backed by save-persistent `eventOverrides`. Page refresh uses the original last-valid-page rule and switch, variable, self-switch, item, and actor conditions. A page setup refreshes graphic direction/pattern, move type/speed/frequency/route, walk/step animation, direction fix, through, priority, trigger, and list behavior without resetting a moved event's map position.
+
+Each fixed 60 Hz update runs movement interpolation and the original stop threshold `30 * (5 - move_frequency)`. Move type 0 is fixed; type 1 uses the original random/forward/wait 2:3:1 distribution; type 2 uses the original near-player random/toward/forward distribution and a 20-tile cutoff; type 3 consumes repeating/skippable custom routes. Route support covers straight/diagonal/random/toward/away/forward/backward/jump, waits, all turn modes, switches, speed/frequency, animation flags, direction fix, through, transparency, graphics, opacity, blend, SE, and compatibility scripts. `<uninhibited>` preserves script 116's off-screen opt-in; otherwise events use the original near-screen gate.
+
+Passability checks both source and destination tile flags. Normal-priority non-through events block the player; through or below/above-priority events do not. Events collide with every non-through event, and normal-priority events collide with the player and visible followers. A failed player step checks player-touch/event-touch at the front tile; a failed event step into the party checks trigger 2. Action trigger 0 uses runtime event coordinates rather than static editor coordinates. Only one starting event/resource barrier owns the map interpreter at a time.
+
+Regression coverage includes speed/frequency thresholds, page refresh and precedence, runtime positions, through/priority blocking, failed-step touch start, symbol event movement, command-301 entry, and real Map98 collision data.

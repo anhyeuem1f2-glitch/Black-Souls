@@ -26,7 +26,7 @@ export class CombatSystem {
     this.diagnostic = diagnostic;
   }
 
-  createBattle(state, troopId, { canEscape = false, canLose = false, battleback1 = '', battleback2 = '' } = {}) {
+  createBattle(state, troopId, { canEscape = false, canLose = false, battleback1 = '', battleback2 = '', preemptive = false, surprise = false, encounter = null } = {}) {
     const troop = this.database.troops[troopId];
     if (!troop) throw new Error(`Unknown troop ${troopId}.`);
     const actors = state.party.members.map((actorId, index) => {
@@ -50,11 +50,14 @@ export class CombatSystem {
         ap: Math.floor(MAX_AP * 0.40), chant: null, guarding: false,
       };
     });
+    if (preemptive) for (const enemy of enemies) enemy.ap = 0;
+    if (surprise) for (const actor of actors) actor.ap = 0;
     return {
       troopId, troopName: troop.name, canEscape, canLose, battleback1, battleback2,
+      preemptive: Boolean(preemptive), surprise: Boolean(surprise), encounter: encounter ? structuredClone(encounter) : null,
       phase: 'running', actors, enemies, selectedCommand: 0, selectedTarget: 0, commands: ['Attack', 'Skills', 'Items', 'Defend', 'Escape'],
       log: [`${troop.name} appeared.`], frames: 0, escapeAttempts: 0, result: null, rngSeed: (0x9e3779b9 ^ troopId ^ (difficulty << 16)) >>> 0,
-      difficulty, compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, smartEnemyAi: true, casting: true, castInterruption: true, difficultyVariable: DIFFICULTY_VARIABLE_ID },
+      difficulty, compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, smartEnemyAi: true, casting: true, castInterruption: true, difficultyVariable: DIFFICULTY_VARIABLE_ID, symbolContactCondition: true },
     };
   }
 

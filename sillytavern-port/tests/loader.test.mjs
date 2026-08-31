@@ -16,7 +16,7 @@ const bundleBytes = new TextEncoder().encode('window.BlackSoulsRuntime={mount(){
 const bundleHash = createHash('sha256').update(bundleBytes).digest('hex').toUpperCase();
 
 test('versioned runtime build manifest validates', () => {
-  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.7.0');
+  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.8.0');
 });
 
 test('missing runtime entry is rejected', () => {
@@ -105,7 +105,7 @@ test('retry performs a fresh source selection after an earlier failure', async (
 test('card export verification requires successful primary and fallback sources', () => {
   const valid = {
     schema: 'black-souls-verified-runtime-v1', verified: true, ref: 'c'.repeat(40),
-    entrySha256: 'D'.repeat(64), runtimeVersion: '0.7.0',
+    entrySha256: 'D'.repeat(64), runtimeVersion: '0.8.0',
     sources: [{ role: 'primary', ok: true }, { role: 'fallback', ok: true }],
   };
   assert.equal(validateVerification(valid).ref, 'c'.repeat(40));
@@ -139,7 +139,7 @@ test('unavailable IndexedDB falls back to session-memory save/load', async () =>
 });
 
 test('save system exposes exactly 16 slots and round-trips full-state export/import', async () => {
-  const saves = new SaveStore({ runtimeVersion: '0.7.0', dataVersion: 'test-data' });
+  const saves = new SaveStore({ runtimeVersion: '0.8.0', dataVersion: 'test-data' });
   const state = {
     schema: 'black-souls-st-state-v2', mapId: 98, mapName: 'Phòng mở đầu', x: 55, y: 5,
     party: { members: [2], gold: 123, inventory: { items: { 47: 1 }, weapons: {}, armors: {} } },
@@ -167,7 +167,7 @@ function candidate(overrides = {}) {
 
 function buildManifest(overrides = {}) {
   return {
-    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.7.0', sourceCommit: '1'.repeat(40),
+    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.8.0', sourceCommit: '1'.repeat(40),
     builtAt: '2026-08-31T00:00:00Z', entry: 'black-souls-runtime.bundle.js', entrySha256: bundleHash,
     entryBytes: bundleBytes.byteLength, runtimeManifest: '../manifest.json',
     dataVersion: 'black-souls-normalized-data-v1', dependencyIndexVersion: 'black-souls-game-dependency-index-v1',

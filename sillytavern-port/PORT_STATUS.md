@@ -1,13 +1,13 @@
 # BLACK SOULS SillyTavern Port Status
 
-Release **0.7.0** is pinned to verified runtime commit `188bf2be16f87b4e531e9bd7526b0395d5fb6e23` with bundle SHA-256 `C7366CD06CC3E17930A9B3B1535161D08216D99FD246E3FA8A324176821B971A`.
+Release **0.8.0** is pinned by `release/verified-runtime.json`; the final card is generated only after the immutable remote runtime passes multi-CDN validation.
 
 This release restores the source-defined Map 7 → Map 97 opening and both final branches: skip to Map 10 `(15,16)` and no-skip to Map 98 `(55,5)`. Class choice performs real party replacement (actor 2/3/4), copies the entered name, applies class variables/switches/gifts, and renders the actual party leader.
 
-VX Ace-styled title, menu, item, skill, equipment, status, file, message/choice, and battle windows use the original Window skin/IconSet at 640×480. Save schema v2 provides exactly 16 IndexedDB slots, metadata, title Continue → load selection, full state restore, and JSON export/import. Movement is fixed at 60 Hz with the original `2 ** real_move_speed / 256.0` formula, dash +1 speed, and unnormalized diagonal travel.
+VX Ace-styled title, menu, item, skill, equipment, status, file, message/choice, and battle windows use the original Window skin/IconSet at 640×480. Save schema v2 provides exactly 16 IndexedDB slots, metadata, title Continue → load selection, full state restore, and JSON export/import. Player and current-map event movement is fixed at 60 Hz with source page setup, autonomous movement, priority/through collision, and Script 145 symbol encounters.
 
-Streaming pins global UI/title resources, warms Map 7/97/10/98, deduplicates in-flight fetch/decode work, gates map visibility on decoded critical resources, and instruments queues/caches/transitions. The authoritative RTP subset completes Map98 without replacing custom game assets.
+Streaming pins global UI/title resources, warms Map 7/97/10/98, deduplicates in-flight fetch/decode work, gates map visibility on decoded critical resources, and instruments queues/caches/transitions. Active symbol chase issues HIGH-priority battle resource prefetch. The renderer uses an offscreen frame buffer and integer tile windows, so fractional camera motion cannot expose the dark clear color.
 
-The browser acceptance run completed the unskipped Map98 cutscene, opened the original menu, scrolled to and saved slot 16, returned to title, confirmed Continue opened the load-file scene, and reloaded Map98 with `Grim`, actor 2, item 47, and no unsupported commands. Original `Data/`, `Graphics/`, `Audio/`, `System/`, `Game.exe`, and `Game.ini` have no Git diff.
+Browser acceptance exercised 35 seconds of real input over Map98 with horizontal, vertical, diagonal, normal, and dash movement: 1,650 presented frames, 225 camera positions, zero invalid tile lookups, zero missing-tile samples, and zero black-hole frames. A separate real-data fixture placed the player at `(7,19)` and hostile Event 16 at `(4,19)`; the enemy detected, chased two tiles, contacted the player, and entered troop 3 `Lợn Đồ Tể`, whose enemy completed a real attack after Guard. Original `Data/`, `Graphics/`, `Audio/`, `System/`, `Game.exe`, and `Game.ini` have no Git diff.
 
-The compatibility boundary remains documented in `KNOWN_DIFFERENCES.md`, `EVENT_COMMAND_COVERAGE.md`, and `CUSTOM_SCRIPT_COVERAGE.md`.
+The compatibility boundary remains documented in `KNOWN_DIFFERENCES.md`, `EVENT_COMMAND_COVERAGE.md`, `CUSTOM_SCRIPT_COVERAGE.md`, and the release 0.8 compatibility notes.

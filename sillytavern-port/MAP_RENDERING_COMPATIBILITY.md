@@ -1,0 +1,9 @@
+# Map Rendering Compatibility
+
+The movement-only black flash had one exact cause: the renderer derived `cameraX/cameraY` directly from interpolated player coordinates and then used those fractional values as map-array indices. While the player was between tiles, expressions such as `data[mapX + mapY * width + ...]` addressed non-integer JavaScript properties, returned zero, and rendered the dark clear color across most of the viewport. Stationary frames returned to integer indices, explaining the transient flash. There was no asynchronous chunk race.
+
+Release 0.8.0 makes `state.displayX/displayY` the authoritative logical camera. It uses the VX Ace centers (9.5 tiles horizontally, 7 vertically), clamps to the map, rounds once to logical pixels, and derives a stable camera from that pixel coordinate. Tile sampling now iterates only integer map coordinates. A two-tile margin surrounds the 640×480 viewport; tiles, shadows, characters, balloons, and animations share the same snapped camera.
+
+The visible canvas is never cleared in isolation. A complete frame is drawn to a private 640×480 backbuffer and atomically presented with one full-canvas draw. If frame construction throws, the prior visible frame remains. Diagnostics retain 240 frames and expose logical/pixel camera coordinates, integer visible range, viewport chunk ID, ready/pending/dirty state, clear calls, tile samples/draws, invalid lookups, missing samples, present/retain state, and frame timings.
+
+The live browser stress ran 35.075 seconds on original Map98 data with normal and dash movement and horizontal, vertical, and diagonal inputs. It presented 1,650/1,650 sampled frames across 225 camera positions (X 432–1280 px, Y 0–128 px): zero invalid tile lookups, zero missing samples, zero zero-tile-draw map frames, and zero retained fallbacks. Maximum observed frame construction time was 63.1 ms; normal frames continued without a black flash.

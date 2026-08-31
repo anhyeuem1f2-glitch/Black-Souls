@@ -5,6 +5,7 @@ import { AudioManager } from '../audio/audio-manager.js';
 import { cancelScene } from './lifecycle.js';
 import { PartySystem } from '../game/party-system.js';
 import { CombatSystem } from '../game/combat-system.js';
+import { GameEventSystem } from '../map/event-system.js';
 
 export class GameEngine {
   constructor({ loader, renderer, saves, status, onSceneChange = () => {}, onExitRequest = () => {}, onTransitionState = () => {} }) {
@@ -33,6 +34,7 @@ export class GameEngine {
     this.prefetch = this.loader.prefetch;
     this.input = new InputController(this.renderer.stage);
     this.interpreter = new EventInterpreter(this);
+    this.events = new GameEventSystem(this);
     this.audio = new AudioManager(this.loader, (entry) => this.recordDiagnostic(entry));
     this.state = this.initialState('LOADING');
     this.prefetch.setContextProvider(() => ({
@@ -57,6 +59,7 @@ export class GameEngine {
       x: this.database.system.start_x, y: this.database.system.start_y,
       realX: this.database.system.start_x, realY: this.database.system.start_y,
       direction: 2, pattern: 1, originalPattern: 1, animationCount: 0, steps: 0, moveSpeed: 4, dash: false,
+      displayX: 0, displayY: 0, originOpacity: 255, stealthCount: 0,
       switches: {}, variables: {}, selfSwitches: {}, transparent: false, opacity: 255, message: null,
       ...partyState, choice: null, pictures: {}, screenTone: null, screenFlash: null, screenShake: null, weather: null, battle: null, eventOverrides: {},
       system: { saveDisabled: false, menuDisabled: false, encounterDisabled: false, formationDisabled: false, playtimeSeconds: 0, startedAt: Date.now(), saveCount: 0 },
@@ -98,6 +101,7 @@ export class GameEngine {
   }
 
   async loadMap(mapId) {
+    this.events ??= new GameEventSystem(this);
     this.state.loadingMap = true;
     this.onTransitionState({ state: 'loading', mapId, streaming: this.prefetch?.getStatus?.() ?? null });
     try {
@@ -109,12 +113,14 @@ export class GameEngine {
       const actor = this.database.actors[actorId];
       const actorState = this.state.actors[actorId];
       const playerGraphic = { character_name: actorState?.characterName ?? actor?.character_name ?? '', character_index: actorState?.characterIndex ?? actor?.character_index ?? 0 };
+      this.events.setupMap(map, mapId);
       await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId, x: this.state.x, y: this.state.y });
       this.map = map;
       this.collision = collision;
       this.state.mapName = String(map.display_name ?? '').normalize('NFC');
       this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
       this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+      this.updateCamera();
       await this.audio.applyMapAudio(map);
       const transition = this.prefetch?.markMapVisible?.(mapId, { x: this.state.x, y: this.state.y }) ?? null;
       this.onTransitionState({ state: 'visible', mapId, transition, streaming: this.prefetch?.getStatus?.() ?? null });
@@ -207,6 +213,8 @@ export class GameEngine {
     if (this.paused) return;
     this.updatePlaytime(deltaSeconds);
     this.updateMovement(deltaSeconds);
+    this.updateCamera();
+    this.events?.update(deltaSeconds);
     this.interpreter?.updateWatchdog?.();
     if (this.input.takeInteraction()) void this.audio.unlock();
     if (this.state.scene === 'TITLE') { this.updateTitle(); return; }
@@ -240,7 +248,7 @@ export class GameEngine {
       }
       return;
     }
-    if (this.interpreter.running) return;
+    if (this.interpreter.running || this.events?.busy) return;
     if (this.isMoving()) return;
     if (this.input.takeCancel()) { this.openMenu(); return; }
     if (this.input.takeConfirm()) {
@@ -569,14 +577,34 @@ export class GameEngine {
   async startBattle(troopId, canEscape = false, canLose = false) {
     const paths = this.database.prefetchManifest?.battles?.[troopId]?.assets ?? [];
     await this.prefetch?.prefetchAssets?.(paths, { priority: 0, reason: `battle:${troopId}` });
+    const encounter = this.events?.battleContext?.() ?? null;
     const battle = this.combat.createBattle(this.state, troopId, {
       canEscape, canLose, battleback1: this.state.nextBattleback1 ?? this.map?.battleback1_name ?? '', battleback2: this.state.nextBattleback2 ?? this.map?.battleback2_name ?? '',
+      preemptive: Boolean(encounter?.preemptive), surprise: Boolean(encounter?.surprise), encounter,
     });
+    this.state.system.battleCount = Number(this.state.system.battleCount ?? 0) + 1;
     this.state.battle = battle;
     await this.renderer.setBattle?.(battle);
     void this.audio.playLoop('bgm', this.state.battleBgm ?? this.database.system.battle_bgm);
     this.setScene('BATTLE');
+    this.recordDiagnostic({ type: 'symbol-battle-entered', troopId, encounter, assets: paths.length, scene: this.state.scene });
     return new Promise((resolve) => { this.battleResolve = resolve; });
+  }
+
+  resolveBattleTroop(parameters = []) {
+    const designation = Number(parameters[0]);
+    if (designation === 0) return Number(parameters[1]);
+    if (designation === 1) return Number(this.state.variables?.[parameters[1]] ?? 0);
+    const region = this.collision?.regionId?.(this.state.x, this.state.y) ?? 0;
+    const candidates = (this.map?.encounter_list ?? []).filter((entry) => !(entry.region_set?.length) || entry.region_set.includes(region));
+    const total = candidates.reduce((sum, entry) => sum + Math.max(0, Number(entry.weight) || 0), 0);
+    if (!total) return 0;
+    let roll = this.events?.randomInt?.(total) ?? 0;
+    for (const entry of candidates) {
+      roll -= Math.max(0, Number(entry.weight) || 0);
+      if (roll < 0) return Number(entry.troop_id);
+    }
+    return Number(candidates.at(-1)?.troop_id ?? 0);
   }
 
   updateBattle() {
@@ -719,11 +747,16 @@ export class GameEngine {
     const override = this.routeOverride(target, eventId);
     const speed = Number(override.moveSpeed ?? 3);
     const fromX = Number(override.x); const fromY = Number(override.y);
+    const resolvedId = target === 0 ? eventId : target;
+    const event = this.map?.events?.[resolvedId];
+    if (!override.through && event && !this.events?.eventPassable?.(resolvedId, fromX, fromY, fromX + dx, fromY + dy, direction)) return false;
     override.x = fromX + dx; override.y = fromY + dy;
     if (direction % 2 === 0) override.direction = direction;
     override.motion = { fromX, fromY, toX: override.x, toY: override.y, began: performance.now(), durationMs: (256 / 2 ** speed) * 1000 / 60 };
     await this.waitFrames(256 / 2 ** speed);
+    override.realX = override.x; override.realY = override.y;
     delete override.motion;
+    return true;
   }
 
   setRouteDirection(target, direction, eventId = 0) {
@@ -748,6 +781,7 @@ export class GameEngine {
     const key = `${this.state.mapId},${resolvedId}`;
     const override = this.state.eventOverrides[key] ??= {};
     override.x ??= event?.x ?? 0; override.y ??= event?.y ?? 0;
+    override.realX ??= override.x; override.realY ??= override.y;
     override.direction ??= page?.graphic?.direction ?? 2;
     override.pattern ??= page?.graphic?.pattern ?? 1;
     override.moveSpeed ??= page?.move_speed ?? 3;
@@ -775,7 +809,7 @@ export class GameEngine {
         this.state.x += dx; this.state.y += dy;
         if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
         if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
-        this.advanceStep(); return true;
+        this.advanceStep(); this.events?.playerTouch?.(this.state.x, this.state.y, 'player-touch-arrival'); return true;
       }
       const fallback = this.state.direction === horizontal ? [vertical, horizontal] : this.state.direction === vertical ? [horizontal, vertical] : [];
       for (const candidate of fallback) if (this.moveCardinal(candidate)) return;
@@ -787,18 +821,26 @@ export class GameEngine {
   moveCardinal(direction) {
     const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
     this.state.direction = direction;
-    if (!this.canStep(this.state.x, this.state.y, direction)) return false;
+    if (!this.canStep(this.state.x, this.state.y, direction)) {
+      this.events?.playerTouch?.(this.state.x + dx, this.state.y + dy, 'player-touch-front');
+      return false;
+    }
     this.ensureRealPosition();
-    this.state.x += dx; this.state.y += dy; this.advanceStep(); return true;
+    this.state.x += dx; this.state.y += dy; this.advanceStep();
+    this.events?.playerTouch?.(this.state.x, this.state.y, 'player-touch-arrival');
+    return true;
   }
 
   canStep(x, y, direction) {
     const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
-    return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
+    const targetX = x + dx; const targetY = y + dy;
+    return this.collision.passable(x, y, direction) && this.collision.passable(targetX, targetY, reverse(direction))
+      && !this.events?.blocksPlayer?.(targetX, targetY);
   }
 
   advanceStep() {
     this.state.steps = (this.state.steps ?? 0) + 1;
+    if (Number(this.state.stealthCount ?? 0) !== 0) this.state.stealthCount -= 1;
     this.prefetch?.prefetchLikelyDestinations(this.state.mapId, { x: this.state.x, y: this.state.y });
   }
 
@@ -833,6 +875,14 @@ export class GameEngine {
       this.state.animationCount = 0;
     }
     if (!this.isMoving()) this.state.pattern = this.state.originalPattern ?? 1;
+  }
+
+  updateCamera() {
+    if (!this.map || !this.state) return;
+    const realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+    const realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+    this.state.displayX = clamp(realX - 9.5, 0, Math.max(0, Number(this.map.width) - 20));
+    this.state.displayY = clamp(realY - 7, 0, Math.max(0, Number(this.map.height) - 15));
   }
 
   updatePlaytime(deltaSeconds = 1 / 60) {
@@ -910,24 +960,22 @@ export class GameEngine {
   }
 
   triggerActionEvent() {
-    const vectors = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1], 1: [-1, 1], 3: [1, 1], 7: [-1, -1], 9: [1, -1] };
-    const [dx, dy] = vectors[this.state.direction] ?? [0, 1];
-    const candidates = Object.values(this.map?.events ?? {}).filter((event) => (event.x === this.state.x && event.y === this.state.y) || (event.x === this.state.x + dx && event.y === this.state.y + dy));
-    const event = candidates.find((candidate) => this.activePage(candidate)?.trigger === 0);
-    if (event) this.interpreter.run(this.activePage(event).list, { eventId: event.id });
+    this.events?.actionTrigger?.();
   }
 
   playSe(audio) { return this.audio.playSe(audio); }
 
   showAnimation(targetId, animationId) {
     const event = targetId === -1 ? null : this.map?.events?.[targetId];
-    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+    const runtime = event ? this.events?.runtime?.(targetId, event) : null;
+    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: runtime?.realX ?? event?.x ?? this.state.x, y: runtime?.realY ?? event?.y ?? this.state.y };
     return this.renderer.showAnimation(target, this.database.animations[animationId]);
   }
 
   showBalloon(targetId, balloonId) {
     const event = targetId === -1 ? null : this.map?.events?.[targetId];
-    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+    const runtime = event ? this.events?.runtime?.(targetId, event) : null;
+    const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: runtime?.realX ?? event?.x ?? this.state.x, y: runtime?.realY ?? event?.y ?? this.state.y };
     return this.renderer.showBalloon(target, balloonId);
   }
 
@@ -938,11 +986,11 @@ export class GameEngine {
       const graphic = override.graphic ?? page?.graphic;
       if (!graphic?.character_name || override.transparent) return [];
       const position = routePosition(override, event);
-      return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
+      return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, blendType: override.blendType ?? 0, priority: override.priority ?? page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
     });
   }
 
-  runRubyCompatibility(source) {
+  runRubyCompatibility(source, context = {}) {
     if (String(source).trim() === 'recipe_all_switch_on') { this.party.unlockAllRecipes(this.state); return; }
     if (/^SceneManager\.call\(Scene_ItemSynthesis\)$/.test(String(source).trim())) { this.openSynthesisMenu(); return; }
     const recipe = /^([iwa])_recipe_switch_on\((\d+)\)$/.exec(String(source).trim());
@@ -956,7 +1004,13 @@ export class GameEngine {
       return;
     }
     if (source === '$game_party.steps = 0') { this.state.steps = 0; return; }
-    if (source === 'reset_stealth') { this.state.stealth = false; return; }
+    if (source === 'reset_stealth') { this.state.stealth = false; this.state.stealthCount = 0; return; }
+    const symbol = /^enable_symbol_encount\((\d+)\)$/.exec(String(source).trim());
+    if (symbol && context.eventId) {
+      const runtime = this.events?.runtime?.(context.eventId);
+      if (runtime) runtime.symbolId = Number(symbol[1]);
+      return;
+    }
     this.noteUnsupported(355, source);
   }
 
@@ -990,12 +1044,14 @@ export class GameEngine {
       party: { members: [...(this.state.party?.members ?? [])], gold: this.state.party?.gold ?? 0, inventory: structuredClone(this.state.party?.inventory ?? {}) },
       battle: this.state.battle ? {
         troopId: this.state.battle.troopId, phase: this.state.battle.phase, result: this.state.battle.result,
+        preemptive: this.state.battle.preemptive, surprise: this.state.battle.surprise, encounter: this.state.battle.encounter,
         difficulty: this.state.battle.difficulty, frames: this.state.battle.frames,
         actors: this.state.battle.actors.map(({ name, hp, mp, tp, ap, chant, states }) => ({ name, hp, mp, tp, ap, chant, states })),
         enemies: this.state.battle.enemies.map(({ enemyId, name, hp, mp, tp, ap, chant, states }) => ({ enemyId, name, hp, mp, tp, ap, chant, states })),
         rewards: this.state.battle.rewards ?? null, log: this.state.battle.log.slice(-12),
       } : null,
       interpreter: this.interpreter?.diagnostics(), modals: this.modalStack.map((entry) => ({ ...entry })),
+      events: this.events?.diagnostics?.() ?? null,
       streaming: this.prefetch?.getStatus(),
       assets: this.loader.diagnostics(), audio: this.audio?.diagnostics(), renderer: this.renderer.diagnostics(),
       unsupported: [...this.unsupported], log: [...this.diagnosticsLog],
@@ -1025,6 +1081,7 @@ export class GameEngine {
     this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
     this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
     this.state.moveSpeed ??= 4; this.state.pattern ??= 1; this.state.originalPattern ??= 1; this.state.animationCount ??= 0;
+    this.state.displayX ??= 0; this.state.displayY ??= 0; this.state.originOpacity ??= 255; this.state.stealthCount ??= 0;
     this.state.eventOverrides ??= {}; this.state.pictures ??= {}; this.state.battle = null;
     this.state.scene = 'PLAYING'; this.state.menu = null;
     await this.loadMap(state.mapId);
@@ -1063,11 +1120,12 @@ export class GameEngine {
 function cycle(value, delta, length) { return (value + delta + length) % length; }
 function reverse(direction) { return 10 - direction; }
 function clampIndex(value, length) { return length ? Math.max(0, Math.min(length - 1, Number(value) || 0)) : 0; }
+function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
 function approach(current, target, distance) { return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target; }
 function sumParams(values = []) { return values.reduce((sum, value) => sum + Number(value || 0), 0); }
 function routePosition(override, event) {
   const motion = override.motion;
-  if (!motion) return { x: override.x ?? event.x, y: override.y ?? event.y };
+  if (!motion) return { x: override.realX ?? override.x ?? event.x, y: override.realY ?? override.y ?? event.y };
   const progress = Math.max(0, Math.min(1, (performance.now() - motion.began) / Math.max(1, motion.durationMs)));
   return { x: motion.fromX + (motion.toX - motion.fromX) * progress, y: motion.fromY + (motion.toY - motion.fromY) * progress };
 }

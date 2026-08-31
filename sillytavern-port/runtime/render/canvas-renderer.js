@@ -5,12 +5,15 @@ export class CanvasRenderer {
     this.stage = stage; this.loader = loader;
     this.width = engineConfig.logicalWidth; this.height = engineConfig.logicalHeight; this.tileSize = engineConfig.tileSize;
     this.canvas = document.createElement('canvas'); this.canvas.width = this.width; this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d'); this.context.imageSmoothingEnabled = false; stage.append(this.canvas);
+    this.displayContext = this.canvas.getContext('2d'); this.displayContext.imageSmoothingEnabled = false;
+    this.frameCanvas = document.createElement('canvas'); this.frameCanvas.width = this.width; this.frameCanvas.height = this.height;
+    this.context = this.frameCanvas.getContext('2d'); this.context.imageSmoothingEnabled = false; stage.append(this.canvas);
     this.fade = 0; this.characterImages = new Map(); this.faceImages = new Map(); this.animations = []; this.balloons = []; this.pictures = new Map();
     this.screenTone = null; this.screenFlash = null; this.screenShake = null; this.weather = null; this.battleGraphics = null;
     this.animationSheetFailures = new Map();
     this.characterSheetFailures = new Map();
-    this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [], fontReadyMs: 0, font: 'Arial' };
+    this.frameHistory = [];
+    this.stats = { frames: 0, presentedFrames: 0, retainedFrames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [], fontReadyMs: 0, font: 'Arial', backbuffer: { width: this.width, height: this.height, atomicPresent: true }, chunks: [] };
   }
 
   async setTitle(system) {
@@ -57,6 +60,7 @@ export class CanvasRenderer {
     const fog = await this.loadFog(map.note);
     this.map = map; this.tileset = tileset; this.sheets = sheets; this.characterImages = characterImages; this.fog = fog; this.playerGraphic = playerGraphic;
     this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null; this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.stats.characters = [...this.characterImages.keys()]; this.stats.missingCharacters = missingCharacters;
+    this.stats.chunks = [{ id: `map:${mapId}:viewport`, ready: true, pending: false, dirty: false, mode: 'synchronous-integer-tile-window', marginTiles: 2 }];
     void this.streamCharacterGraphics(deferredEvents, loadToken);
   }
 
@@ -132,37 +136,57 @@ export class CanvasRenderer {
   }
 
   render(state, events = []) {
-    const began = performance.now(); const context = this.context; context.fillStyle = '#080709'; context.fillRect(0, 0, this.width, this.height);
+    const began = performance.now();
+    const telemetry = { frame: this.stats.frames + 1, scene: state.scene ?? 'PLAYING', mapId: state.mapId ?? this.stats.mapId, began, presented: false, retainedPreviousFrame: false, clearCalls: 0, drawCalls: 0, invalidTileLookups: 0, missingTileSamples: 0, tileSamples: 0, tileDraws: 0, tilesetReady: Boolean(this.sheets), autotileCacheReady: Boolean(this.sheets?.slice(0, 4).every((sheet, index) => !this.tileset?.tileset_names?.[index] || sheet)), offscreenCanvas: { width: this.frameCanvas.width, height: this.frameCanvas.height }, camera: null, visibleRange: null, chunkIds: this.stats.chunks.map((entry) => entry.id), pendingChunks: this.stats.chunks.filter((entry) => entry.pending).map((entry) => entry.id), dirtyChunks: this.stats.chunks.filter((entry) => entry.dirty).map((entry) => entry.id) };
+    this.activeFrame = telemetry;
+    try {
+      this.renderFrame(state, events);
+      // Present only after the full logical frame is ready. No visible-canvas
+      // clear occurs, so a failed frame leaves the last known-good image intact.
+      this.displayContext.drawImage(this.frameCanvas, 0, 0);
+      telemetry.presented = true;
+      this.stats.presentedFrames += 1;
+    } catch (error) {
+      telemetry.retainedPreviousFrame = true;
+      telemetry.error = error.message;
+      this.stats.retainedFrames += 1;
+      throw error;
+    } finally {
+      this.finishFrame(began, telemetry);
+      this.activeFrame = null;
+    }
+  }
+
+  renderFrame(state, events = []) {
+    const context = this.context; context.fillStyle = '#080709'; context.fillRect(0, 0, this.width, this.height);
     this.stats.scene = state.scene ?? 'PLAYING';
     if (state.scene === 'TITLE') {
       this.drawTitle(state.title);
-      this.finishFrame(began);
       return;
     }
     if (state.scene === 'BATTLE') {
       this.drawBattle(state.battle);
       this.drawPictures();
       this.drawScreenEffects();
-      this.finishFrame(began);
       return;
     }
     if (state.scene === 'FILE_LOAD') {
       this.drawFileMenu(state.menu);
-      this.finishFrame(began);
       return;
     }
-    if (!this.map || !this.sheets) { this.finishFrame(began); return; }
-    const visibleX = Math.ceil(this.width / this.tileSize) + 1; const visibleY = Math.ceil(this.height / this.tileSize) + 1;
+    if (!this.map || !this.sheets) return;
     const playerX = Number.isFinite(state.realX) ? state.realX : state.x; const playerY = Number.isFinite(state.realY) ? state.realY : state.y;
-    const cameraX = clamp(playerX - Math.floor(visibleX / 2), 0, Math.max(0, this.map.width - visibleX));
-    const cameraY = clamp(playerY - Math.floor(visibleY / 2), 0, Math.max(0, this.map.height - visibleY)); this.camera = { x: cameraX, y: cameraY };
+    const window = computeTileWindow({ displayX: state.displayX, displayY: state.displayY, playerX, playerY, mapWidth: this.map.width, mapHeight: this.map.height, width: this.width, height: this.height, tileSize: this.tileSize, margin: 2 });
+    const cameraX = window.cameraX; const cameraY = window.cameraY;
+    this.camera = { x: cameraX, y: cameraY, logicalX: window.logicalX, logicalY: window.logicalY, pixelX: window.pixelX, pixelY: window.pixelY };
+    if (this.activeFrame) { this.activeFrame.camera = { ...this.camera }; this.activeFrame.visibleRange = { startX: window.startX, endX: window.endX, startY: window.startY, endY: window.endY, marginTiles: window.margin }; }
     const upper = [];
-    for (let z = 0; z < 3; z += 1) for (let y = 0; y < visibleY; y += 1) for (let x = 0; x < visibleX; x += 1) {
-      const mapX = x + cameraX; const mapY = y + cameraY; if (mapX >= this.map.width || mapY >= this.map.height) continue;
-      const tileId = this.tileAt(mapX, mapY, z); const args = [tileId, x * this.tileSize, y * this.tileSize];
+    for (let z = 0; z < 3; z += 1) for (let mapY = window.startY; mapY <= window.endY; mapY += 1) for (let mapX = window.startX; mapX <= window.endX; mapX += 1) {
+      const dx = mapX * this.tileSize - window.pixelX; const dy = mapY * this.tileSize - window.pixelY;
+      const tileId = this.tileAt(mapX, mapY, z); const args = [tileId, dx, dy];
       if (this.isUpper(tileId)) upper.push(args); else this.drawTile(...args);
     }
-    this.drawShadows(cameraX, cameraY, visibleX, visibleY);
+    this.drawShadows(window);
     const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: 'event' }));
     if (!state.transparent) sprites.push({ x: playerX, y: playerY, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: 'player' });
     sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === 'event' ? -1 : 1));
@@ -179,11 +203,17 @@ export class CanvasRenderer {
     this.drawMessage(state.message); this.drawChoice(state.choice);
     if (['MENU', 'END', 'ITEM', 'SKILL', 'EQUIP', 'STATUS', 'SYNTHESIS', 'SHOP', 'FILE_SAVE', 'FILE_LOAD'].includes(state.scene)) this.drawGameMenu(state.menu, state);
     if (this.fade > 0) { context.fillStyle = `rgba(0,0,0,${this.fade})`; context.fillRect(0, 0, this.width, this.height); }
-    this.finishFrame(began);
   }
 
-  finishFrame(began) {
+  finishFrame(began, telemetry = this.activeFrame) {
     const elapsed = performance.now() - began; this.stats.frames += 1; this.stats.lastFrameMs = Math.round(elapsed * 100) / 100; this.stats.maxFrameMs = Math.max(this.stats.maxFrameMs, this.stats.lastFrameMs);
+    if (telemetry) {
+      telemetry.elapsedMs = this.stats.lastFrameMs;
+      telemetry.ended = performance.now();
+      this.frameHistory.push(telemetry);
+      this.frameHistory = this.frameHistory.slice(-240);
+      this.stats.lastFrame = telemetry;
+    }
   }
 
   drawTitle(title) {
@@ -486,9 +516,19 @@ export class CanvasRenderer {
     this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, x - frame.width / 2, y - frame.height, frame.width, frame.height);
   }
 
-  tileAt(x, y, z) { return this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height] ?? 0; }
+  tileAt(x, y, z) {
+    if (this.activeFrame) this.activeFrame.tileSamples += 1;
+    if (!Number.isInteger(x) || !Number.isInteger(y) || !Number.isInteger(z)) {
+      if (this.activeFrame) this.activeFrame.invalidTileLookups += 1;
+      return 0;
+    }
+    if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) return 0;
+    const value = this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height];
+    if (value == null && this.activeFrame) this.activeFrame.missingTileSamples += 1;
+    return value ?? 0;
+  }
   isUpper(tileId) { return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 0x10); }
-  drawTile(tileId, dx, dy) { if (tileId <= 0) return; if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy); if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5); this.drawAutotile(tileId, dx, dy); }
+  drawTile(tileId, dx, dy) { if (tileId <= 0) return; if (this.activeFrame) { this.activeFrame.tileDraws += 1; this.activeFrame.drawCalls += 1; } if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy); if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5); this.drawAutotile(tileId, dx, dy); }
   drawNormalTile(tileId, dx, dy, forcedSheet, base = 0) {
     const sheetIndex = forcedSheet ?? (5 + Math.floor(tileId / 256)); const localId = forcedSheet == null ? tileId % 256 : tileId - base; const sheet = this.sheets[sheetIndex]; if (!sheet) return;
     this.context.drawImage(sheet, (localId % 8) * 32, Math.floor(localId / 8) * 32, 32, 32, dx, dy, 32, 32);
@@ -509,9 +549,9 @@ export class CanvasRenderer {
     for (let index = 0; index < 4; index += 1) { const [qsx, qsy] = quarters[index]; this.context.drawImage(sheet, (bx + qsx) * 16, (by + qsy) * 16, 16, 16, dx + (index % 2) * 16, dy + Math.floor(index / 2) * 16, 16, 16); }
   }
 
-  drawShadows(cameraX, cameraY, width, height) {
+  drawShadows(window) {
     const offset = this.map.width * this.map.height * 3; this.context.fillStyle = 'rgba(0,0,0,.42)';
-    for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) { const mx = x + cameraX; const my = y + cameraY; const bits = (this.map.data.data[mx + my * this.map.width + offset] ?? 0) & 0x0f; for (let q = 0; q < 4; q += 1) if (bits & (1 << q)) this.context.fillRect(x * 32 + (q % 2) * 16, y * 32 + Math.floor(q / 2) * 16, 16, 16); }
+    for (let my = window.startY; my <= window.endY; my += 1) for (let mx = window.startX; mx <= window.endX; mx += 1) { const bits = (this.map.data.data[mx + my * this.map.width + offset] ?? 0) & 0x0f; const dx = mx * this.tileSize - window.pixelX; const dy = my * this.tileSize - window.pixelY; for (let q = 0; q < 4; q += 1) if (bits & (1 << q)) this.context.fillRect(dx + (q % 2) * 16, dy + Math.floor(q / 2) * 16, 16, 16); }
   }
 
   drawCharacter(sprite, cameraX, cameraY) {
@@ -519,7 +559,7 @@ export class CanvasRenderer {
     const frame = characterFrame(image, graphic.character_name, graphic.character_index ?? 0, sprite.direction ?? graphic.direction ?? 2, sprite.pattern ?? graphic.pattern ?? 1);
     const x = (sprite.x - cameraX) * 32 + 16; const y = (sprite.y - cameraY + 1) * 32; const shift = graphic.character_name.startsWith('!') ? 0 : 4;
     const dx = Math.round(x - frame.width / 2); const dy = Math.round(y - frame.height - shift); const opacity = clamp(Number(sprite.opacity ?? 255) / 255, 0, 1);
-    this.context.save(); this.context.globalAlpha = opacity;
+    this.context.save(); this.context.globalAlpha = opacity; this.context.globalCompositeOperation = Number(sprite.blendType) === 1 ? 'lighter' : Number(sprite.blendType) === 2 ? 'multiply' : 'source-over';
     if (this.isBush(Math.round(sprite.x), Math.round(sprite.y)) && frame.height >= 24) {
       const bushHeight = Math.min(12, frame.height / 2); const topHeight = frame.height - bushHeight;
       this.context.drawImage(image, frame.sx, frame.sy, frame.width, topHeight, dx, dy, frame.width, topHeight);
@@ -631,12 +671,28 @@ export class CanvasRenderer {
   diagnostics() {
     return {
       ...this.stats, camera: this.camera, activeAnimations: this.animations.length, activeBalloons: this.balloons.length,
+      frameHistory: this.frameHistory.slice(-120),
       fog: Boolean(this.fog), pictures: [...this.pictures.values()].map(({ id, name, x, y, opacity, angle }) => ({ id, name, x, y, opacity, angle })),
       battle: this.battleGraphics ? { battleback1: this.battleGraphics.battleback1Path, battleback2: this.battleGraphics.battleback2Path, enemies: [...this.battleGraphics.enemies.keys()] } : null,
       screenEffects: { tone: this.screenTone, flash: this.screenFlash, shake: this.screenShake, weather: this.weather },
       failedCharacterSheets: [...this.characterSheetFailures].map(([path, error]) => ({ path, error })),
     };
   }
+}
+
+export function computeTileWindow({ displayX, displayY, playerX = 0, playerY = 0, mapWidth, mapHeight, width = 640, height = 480, tileSize = 32, margin = 2 }) {
+  const viewportTilesX = width / tileSize; const viewportTilesY = height / tileSize;
+  const logicalX = clamp(Number.isFinite(displayX) ? displayX : playerX - (viewportTilesX - 1) / 2, 0, Math.max(0, mapWidth - viewportTilesX));
+  const logicalY = clamp(Number.isFinite(displayY) ? displayY : playerY - (viewportTilesY - 1) / 2, 0, Math.max(0, mapHeight - viewportTilesY));
+  const pixelX = Math.round(logicalX * tileSize); const pixelY = Math.round(logicalY * tileSize);
+  const cameraX = pixelX / tileSize; const cameraY = pixelY / tileSize;
+  return {
+    logicalX, logicalY, pixelX, pixelY, cameraX, cameraY, margin,
+    startX: Math.max(0, Math.floor(pixelX / tileSize) - margin),
+    endX: Math.min(mapWidth - 1, Math.ceil((pixelX + width) / tileSize) + margin),
+    startY: Math.max(0, Math.floor(pixelY / tileSize) - margin),
+    endY: Math.min(mapHeight - 1, Math.ceil((pixelY + height) / tileSize) + margin),
+  };
 }
 
 export function characterFrame(image, name, index, direction, pattern) {

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLACK SOULS movement acceptance</title></head>
+<body>
+<main id="mount"></main>
+<pre id="acceptance" aria-label="Acceptance status">{"phase":"booting"}</pre>
+<script type="module">
+  import { mount } from './runtime/bootstrap.js';
+  import { runMovementAcceptance } from './tests/browser-acceptance.js';
+  const output = document.querySelector('#acceptance');
+  try {
+    const host = await mount({ target: document.querySelector('#mount'), codeBaseUrl: new URL('./runtime/', location.href).href, assetDevelopmentBaseUrl: new URL('../', location.href).href });
+    await runMovementAcceptance(host, (value) => { output.textContent = JSON.stringify(value, null, 2); });
+  } catch (error) {
+    output.textContent = JSON.stringify({ phase: 'failed', error: error.stack || error.message }, null, 2);
+  }
+</script>
+</body>
+</html>

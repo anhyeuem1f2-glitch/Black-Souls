@@ -45,7 +45,7 @@ Generated from the decompressed `Data/Scripts.rvdata2` archive.
 | 142 | 遠景床 | 54 | 2687 | 0 | not ported |
 | 143 | 歩数リセット | 3 | 58 | 0 | not ported |
 | 144 | 名前入力 | 1053 | 42509 | 0 | not ported |
-| 145 | シンボル | 680 | 29739 | 0 | not ported |
+| 145 | シンボル | 680 | 29739 | 0 | complete for current-map ordinary enemies: profiles, detect/chase/flee, visibility/stealth, follower contact, initiative, command 301 binding |
 | 146 | 自動蘇生 | 555 | 17978 | 0 | not ported |
 | 147 | HP回復反転 | 281 | 9853 | 0 | not ported |
 | 148 | リージョン通行 | 340 | 14654 | 0 | not ported |
