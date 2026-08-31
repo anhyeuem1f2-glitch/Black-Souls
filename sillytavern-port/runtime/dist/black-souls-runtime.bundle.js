@@ -1,4 +1,4 @@
-/* BLACK SOULS browser runtime 0.7.0; source 6527019cf04d15c77a8b0bfac1d85881b0e5f62a */
+/* BLACK SOULS browser runtime 0.8.0; source 7a810cc47ec820116c0700210729377126184a69 */
 (() => {
   // runtime/core/input.js
   var axes = /* @__PURE__ */ new Map([
@@ -445,11 +445,12 @@
             this.engine.state.mapNameDisplay = parameters[0] === 0;
             break;
           case 301: {
-            if (parameters[0] !== 0) {
-              this.engine.noteUnsupported(301, "variable/random troop");
+            const troopId = this.engine.resolveBattleTroop?.(parameters) ?? (parameters[0] === 0 ? Number(parameters[1]) : 0);
+            if (!troopId) {
+              this.engine.noteUnsupported(301, "no eligible troop");
               break;
             }
-            const outcome = await this.suspend("battle", this.engine.startBattle(parameters[1], parameters[2], parameters[3]), { troopId: parameters[1] });
+            const outcome = await this.suspend("battle", this.engine.startBattle(troopId, parameters[2], parameters[3]), { troopId });
             const boundary = findBattleBoundary(list, index, command.indent, end);
             const marker = { victory: 601, escape: 602, lose: 603, gameover: 603 }[outcome];
             const branch = boundary.branches.find((item) => item.code === marker);
@@ -1158,7 +1159,7 @@
       this.party = partySystem;
       this.diagnostic = diagnostic;
     }
-    createBattle(state, troopId, { canEscape = false, canLose = false, battleback1 = "", battleback2 = "" } = {}) {
+    createBattle(state, troopId, { canEscape = false, canLose = false, battleback1 = "", battleback2 = "", preemptive = false, surprise = false, encounter = null } = {}) {
       const troop = this.database.troops[troopId];
       if (!troop) throw new Error(`Unknown troop ${troopId}.`);
       const actors = state.party.members.map((actorId, index) => {
@@ -1207,6 +1208,8 @@
           guarding: false
         };
       });
+      if (preemptive) for (const enemy of enemies) enemy.ap = 0;
+      if (surprise) for (const actor of actors) actor.ap = 0;
       return {
         troopId,
         troopName: troop.name,
@@ -1214,6 +1217,9 @@
         canLose,
         battleback1,
         battleback2,
+        preemptive: Boolean(preemptive),
+        surprise: Boolean(surprise),
+        encounter: encounter ? structuredClone(encounter) : null,
         phase: "running",
         actors,
         enemies,
@@ -1226,7 +1232,7 @@
         result: null,
         rngSeed: (2654435769 ^ troopId ^ difficulty << 16) >>> 0,
         difficulty,
-        compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, smartEnemyAi: true, casting: true, castInterruption: true, difficultyVariable: DIFFICULTY_VARIABLE_ID }
+        compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, smartEnemyAi: true, casting: true, castInterruption: true, difficultyVariable: DIFFICULTY_VARIABLE_ID, symbolContactCondition: true }
       };
     }
     update(state, frames = 1) {
@@ -1524,6 +1530,545 @@
     return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
   }
 
+  // runtime/map/event-system.js
+  var DIRECTIONS = Object.freeze({
+    1: [-1, 1],
+    2: [0, 1],
+    3: [1, 1],
+    4: [-1, 0],
+    6: [1, 0],
+    7: [-1, -1],
+    8: [0, -1],
+    9: [1, -1]
+  });
+  var SYMBOL_SETTINGS = Object.freeze({
+    0: Object.freeze({ awayLevel: 0, awayLevelType: 1, reactionDistance: 3, dashDistance: 5, idleType: 0, visibilityDistance: 5, beforeSpeed: 2, afterSpeed: 4, beforeFrequency: 5, afterFrequency: 5, balloonId: 1, blockedRegions: [1, 3] }),
+    1: Object.freeze({ awayLevel: 0, awayLevelType: 1, reactionDistance: 3, dashDistance: 4, idleType: 1, visibilityDistance: 0, beforeSpeed: 0, afterSpeed: 4, beforeFrequency: 0, afterFrequency: 5, balloonId: 1, blockedRegions: [] }),
+    2: Object.freeze({ awayLevel: 0, awayLevelType: 1, reactionDistance: 0, dashDistance: 0, idleType: 0, visibilityDistance: 0, beforeSpeed: 0, afterSpeed: 0, beforeFrequency: 0, afterFrequency: 0, balloonId: 0, blockedRegions: [] }),
+    3: Object.freeze({ awayLevel: 0, awayLevelType: 1, reactionDistance: 0, dashDistance: 0, idleType: 0, visibilityDistance: 0, beforeSpeed: 0, afterSpeed: 0, beforeFrequency: 0, afterFrequency: 0, balloonId: 0, blockedRegions: [] })
+  });
+  var GameEventSystem = class {
+    constructor(engine) {
+      this.engine = engine;
+      this.map = null;
+      this.mapId = 0;
+      this.busy = false;
+      this.lastCollision = null;
+      this.lastEncounter = null;
+      this.chaseTrace = [];
+      this.pageRefreshes = [];
+      this.prefetches = /* @__PURE__ */ new Map();
+    }
+    setupMap(map, mapId = this.engine.state.mapId) {
+      this.map = map;
+      this.mapId = Number(mapId);
+      this.busy = false;
+      this.activeEventId = null;
+      for (const event of Object.values(map?.events ?? {})) if (event) this.refresh(event, true);
+    }
+    update(deltaSeconds = 1 / 60) {
+      if (!this.map || this.engine.state.scene !== "PLAYING") return;
+      const interpreterBusy = Boolean(this.engine.interpreter?.running || this.busy);
+      this.updateStealthOpacity(interpreterBusy);
+      for (const event of Object.values(this.map.events ?? {})) {
+        if (!event) continue;
+        const runtime = this.refresh(event);
+        if (!runtime || runtime.erased || runtime.pageIndex < 0) continue;
+        this.updateMotion(runtime, deltaSeconds);
+        this.updateSymbolReaction(event, runtime, interpreterBusy);
+        if (runtime.motion || this.moving(runtime) || runtime.routeWait > 0) {
+          runtime.routeWait = Math.max(0, Number(runtime.routeWait ?? 0) - 1);
+          continue;
+        }
+        runtime.stopCount = Number(runtime.stopCount ?? 0) + Math.max(0, deltaSeconds * 60);
+        if (interpreterBusy || runtime.starting || runtime.locked) continue;
+        if (runtime.stopCount <= stopCountThreshold(runtime.moveFrequency)) continue;
+        if (!runtime.uninhibited && !this.nearScreen(runtime)) continue;
+        if (runtime.symbolId != null) this.updateSymbolMovement(event, runtime);
+        else this.updateAutonomousMovement(event, runtime);
+      }
+    }
+    refresh(event, force = false) {
+      const runtime = this.runtime(event.id, event);
+      const pageIndex = activePageIndex(this.engine, event);
+      if (!force && runtime.pageIndex === pageIndex) return pageIndex >= 0 ? runtime : null;
+      const previous = runtime.pageIndex;
+      runtime.pageIndex = pageIndex;
+      runtime.stopCount = 0;
+      runtime.routeIndex = 0;
+      runtime.routeWait = 0;
+      runtime.starting = false;
+      runtime.locked = false;
+      runtime.symbolForming = false;
+      runtime.symbolId = null;
+      if (pageIndex < 0) {
+        Object.assign(runtime, { through: true, trigger: null, priority: 0, transparent: true });
+        return null;
+      }
+      const page = event.pages[pageIndex];
+      const graphic = page.graphic ?? {};
+      if (runtime.originalDirection == null || runtime.originalDirection !== graphic.direction) {
+        runtime.direction = Number(graphic.direction) || 2;
+        runtime.originalDirection = runtime.direction;
+        runtime.prelockDirection = 0;
+      }
+      if (runtime.originalPattern == null || runtime.originalPattern !== graphic.pattern) {
+        runtime.pattern = Number(graphic.pattern) || 0;
+        runtime.originalPattern = runtime.pattern;
+      }
+      Object.assign(runtime, {
+        moveType: Number(page.move_type) || 0,
+        moveSpeed: Number(page.move_speed) || 0,
+        moveFrequency: Number(page.move_frequency) || 0,
+        walkAnime: Boolean(page.walk_anime),
+        stepAnime: Boolean(page.step_anime),
+        directionFix: Boolean(page.direction_fix),
+        through: Boolean(page.through),
+        priority: Number(page.priority_type) || 0,
+        trigger: Number(page.trigger),
+        transparent: false,
+        moveRoute: page.move_route ?? null,
+        uninhibited: isUninhibited(event, page),
+        originOpacity: Number(runtime.originOpacity ?? runtime.opacity ?? 255)
+      });
+      const symbolId = symbolIdFromPage(page);
+      if (symbolId != null && SYMBOL_SETTINGS[symbolId]) {
+        runtime.symbolId = symbolId;
+        runtime.moveSpeed = SYMBOL_SETTINGS[symbolId].beforeSpeed;
+        runtime.moveFrequency = SYMBOL_SETTINGS[symbolId].beforeFrequency;
+      }
+      this.pageRefreshes.push({ at: Date.now(), mapId: this.mapId, eventId: event.id, previous, pageIndex });
+      this.pageRefreshes = this.pageRefreshes.slice(-30);
+      return runtime;
+    }
+    runtime(eventId, event = this.map?.events?.[eventId]) {
+      const key = `${this.mapId},${eventId}`;
+      const runtime = this.engine.state.eventOverrides[key] ??= {};
+      runtime.x ??= Number(event?.x) || 0;
+      runtime.y ??= Number(event?.y) || 0;
+      runtime.realX ??= runtime.x;
+      runtime.realY ??= runtime.y;
+      runtime.opacity ??= 255;
+      runtime.pageIndex ??= -2;
+      return runtime;
+    }
+    updateMotion(runtime, deltaSeconds) {
+      if (runtime.motion) return;
+      if (!this.moving(runtime)) {
+        if (runtime.walkAnime || runtime.stepAnime) this.updatePattern(runtime, deltaSeconds);
+        return;
+      }
+      const distance = 2 ** Number(runtime.moveSpeed ?? 3) / 256 * Math.max(0, deltaSeconds * 60);
+      runtime.realX = approach(runtime.realX, runtime.x, distance);
+      runtime.realY = approach(runtime.realY, runtime.y, distance);
+      runtime.stopCount = 0;
+      if (runtime.walkAnime) this.updatePattern(runtime, deltaSeconds);
+      if (!this.moving(runtime) && !runtime.stepAnime) runtime.pattern = runtime.originalPattern ?? 1;
+    }
+    updatePattern(runtime, deltaSeconds) {
+      runtime.animationCount = Number(runtime.animationCount ?? 0) + 1.5 * Math.max(0, deltaSeconds * 60);
+      if (runtime.animationCount > 18 - Number(runtime.moveSpeed ?? 3) * 2) {
+        runtime.pattern = (Number(runtime.pattern ?? 1) + 1) % 4;
+        runtime.animationCount = 0;
+      }
+    }
+    updateAutonomousMovement(event, runtime) {
+      if (runtime.moveType === 1) {
+        const roll = this.randomInt(6);
+        if (roll <= 1) this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)]);
+        else if (roll <= 4) this.tryMove(event, runtime, runtime.direction);
+        else runtime.stopCount = 0;
+      } else if (runtime.moveType === 2) {
+        this.moveTypeTowardPlayer(event, runtime);
+      } else if (runtime.moveType === 3) this.updateCustomRoute(event, runtime);
+    }
+    updateCustomRoute(event, runtime) {
+      const route = runtime.moveRoute;
+      const list = route?.list ?? [];
+      if (!list.length) return;
+      let command = list[runtime.routeIndex] ?? list[0];
+      if (command.code === 0) {
+        if (!route.repeat) return;
+        runtime.routeIndex = 0;
+        command = list[0];
+        if (command?.code === 0) return;
+      }
+      const parameters = command.parameters ?? [];
+      let moved = true;
+      if (command.code >= 1 && command.code <= 8) moved = this.tryMove(event, runtime, { 1: 2, 2: 4, 3: 6, 4: 8, 5: 1, 6: 3, 7: 7, 8: 9 }[command.code]);
+      else if (command.code === 9) moved = this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)]);
+      else if (command.code === 10) moved = this.moveTowardPlayer(event, runtime);
+      else if (command.code === 11) moved = this.moveAwayFromPlayer(event, runtime);
+      else if (command.code === 12) moved = this.tryMove(event, runtime, runtime.direction);
+      else if (command.code === 13) moved = this.tryMove(event, runtime, reverse(runtime.direction), { changeDirection: false });
+      else if (command.code === 14) {
+        const dx = Number(parameters[0]) || 0;
+        const dy = Number(parameters[1]) || 0;
+        if (!runtime.directionFix) runtime.direction = Math.abs(dx) > Math.abs(dy) ? dx < 0 ? 4 : 6 : dy < 0 ? 8 : 2;
+        runtime.x += dx;
+        runtime.y += dy;
+        runtime.stopCount = 0;
+      } else if (command.code === 15) runtime.routeWait = Math.max(0, Number(parameters[0]) - 1);
+      else if (command.code >= 16 && command.code <= 19 && !runtime.directionFix) runtime.direction = { 16: 2, 17: 4, 18: 6, 19: 8 }[command.code];
+      else if (command.code === 20 && !runtime.directionFix) runtime.direction = { 2: 4, 4: 8, 6: 2, 8: 6 }[runtime.direction] ?? runtime.direction;
+      else if (command.code === 21 && !runtime.directionFix) runtime.direction = { 2: 6, 4: 2, 6: 8, 8: 4 }[runtime.direction] ?? runtime.direction;
+      else if (command.code === 22 && !runtime.directionFix) runtime.direction = reverse(runtime.direction);
+      else if (command.code === 23 && !runtime.directionFix) runtime.direction = (this.randomInt(2) === 0 ? { 2: 4, 4: 8, 6: 2, 8: 6 } : { 2: 6, 4: 2, 6: 8, 8: 4 })[runtime.direction] ?? runtime.direction;
+      else if (command.code === 24 && !runtime.directionFix) runtime.direction = [2, 4, 6, 8][this.randomInt(4)];
+      else if (command.code === 25 && !runtime.directionFix) runtime.direction = directionToward(runtime.x, runtime.y, this.engine.state.x, this.engine.state.y, runtime.direction);
+      else if (command.code === 26 && !runtime.directionFix) runtime.direction = reverse(directionToward(runtime.x, runtime.y, this.engine.state.x, this.engine.state.y, reverse(runtime.direction)));
+      else if (command.code === 27) this.engine.state.switches[parameters[0]] = true;
+      else if (command.code === 28) this.engine.state.switches[parameters[0]] = false;
+      else if (command.code === 29) runtime.moveSpeed = Number(parameters[0]);
+      else if (command.code === 30) runtime.moveFrequency = Number(parameters[0]);
+      else if (command.code === 31) runtime.walkAnime = true;
+      else if (command.code === 32) runtime.walkAnime = false;
+      else if (command.code === 33) runtime.stepAnime = true;
+      else if (command.code === 34) runtime.stepAnime = false;
+      else if (command.code === 35) runtime.directionFix = true;
+      else if (command.code === 36) runtime.directionFix = false;
+      else if (command.code === 37) runtime.through = true;
+      else if (command.code === 38) runtime.through = false;
+      else if (command.code === 39) runtime.transparent = true;
+      else if (command.code === 40) runtime.transparent = false;
+      else if (command.code === 41) void this.engine.changeCharacterGraphic?.(event.id, parameters[0], parameters[1], event.id);
+      else if (command.code === 42) runtime.opacity = runtime.originOpacity = Number(parameters[0]);
+      else if (command.code === 43) runtime.blendType = Number(parameters[0]);
+      else if (command.code === 44) void this.engine.playSe?.(parameters[0]);
+      else if (command.code === 45) this.engine.runRubyCompatibility?.(String(parameters[0] ?? ""), { eventId: event.id });
+      if (moved || route.skippable) runtime.routeIndex += 1;
+      runtime.stopCount = 0;
+    }
+    updateSymbolReaction(event, runtime, inactive) {
+      if (runtime.symbolId == null) return;
+      const setting = SYMBOL_SETTINGS[runtime.symbolId];
+      const stealth = this.stealthActive();
+      if (inactive) {
+      } else if (runtime.erased || stealth) {
+        runtime.symbolForming = false;
+      } else {
+        const distance = this.distanceToPlayer(runtime);
+        const threshold = runtime.symbolForming ? setting.dashDistance + 1 : this.engine.state.dash && this.engine.isMoving?.() ? setting.dashDistance : setting.reactionDistance;
+        const reacting = distance <= threshold;
+        if (!runtime.symbolForming && reacting) this.startForming(event, runtime, setting);
+        else if (runtime.symbolForming && !reacting) this.endForming(event, runtime, setting, "distance");
+        runtime.symbolForming = reacting;
+      }
+      runtime.opacity = setting.visibilityDistance === 0 ? runtime.originOpacity : clamp2(runtime.originOpacity - 50 * (this.distanceToPlayer(runtime) - setting.visibilityDistance), 0, 255);
+    }
+    updateSymbolMovement(event, runtime) {
+      const setting = SYMBOL_SETTINGS[runtime.symbolId];
+      if (runtime.symbolForming && !this.stealthActive()) {
+        runtime.moveSpeed = setting.afterSpeed;
+        runtime.moveFrequency = setting.afterFrequency;
+        if (setting.awayLevel > 0 && this.playerLevel(setting.awayLevelType) > setting.awayLevel) this.moveAwayFromPlayer(event, runtime, setting.blockedRegions);
+        else this.moveTypeTowardPlayer(event, runtime, setting.blockedRegions);
+      } else {
+        runtime.moveSpeed = setting.beforeSpeed;
+        runtime.moveFrequency = setting.beforeFrequency;
+        if (setting.idleType === 0) {
+          const roll = this.randomInt(6);
+          if (roll <= 1) this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)], { blockedRegions: setting.blockedRegions });
+          else if (roll <= 4) this.tryMove(event, runtime, runtime.direction, { blockedRegions: setting.blockedRegions });
+          else runtime.stopCount = 0;
+        } else runtime.stopCount = 0;
+      }
+    }
+    startForming(event, runtime, setting) {
+      runtime.moveSpeed = setting.afterSpeed;
+      runtime.moveFrequency = setting.afterFrequency;
+      this.traceChase("detected", event, runtime, { distance: this.distanceToPlayer(runtime) });
+      if (setting.balloonId) {
+        void this.engine.playSe?.({ name: "Decision1", volume: 50, pitch: 150 });
+        void this.engine.renderer.showBalloon?.({ x: runtime.realX, y: runtime.realY }, setting.balloonId);
+      }
+      const troopIds = battleTroopIds(this.engine, event.pages[runtime.pageIndex]?.list ?? []);
+      for (const troopId of troopIds) this.prefetchBattle(event.id, troopId);
+    }
+    endForming(event, runtime, setting, reason) {
+      runtime.moveSpeed = setting.beforeSpeed;
+      runtime.moveFrequency = setting.beforeFrequency;
+      this.traceChase("lost", event, runtime, { reason, distance: this.distanceToPlayer(runtime) });
+    }
+    prefetchBattle(eventId, troopId) {
+      const key = `${this.mapId},${eventId}:${troopId}`;
+      if (this.prefetches.has(key)) return this.prefetches.get(key).promise;
+      const paths = this.engine.database.prefetchManifest?.battles?.[troopId]?.assets ?? [];
+      const status = { key, eventId, troopId, priority: "HIGH", state: "pending", assets: paths.length, requestedAt: Date.now() };
+      const promise = Promise.resolve(this.engine.prefetch?.prefetchAssets?.(paths, { priority: 1, reason: `symbol-chase:${this.mapId}:${eventId}:${troopId}` })).then((result) => {
+        status.state = "ready";
+        status.readyAt = Date.now();
+        return result;
+      }, (error) => {
+        status.state = "failed";
+        status.error = error.message;
+        throw error;
+      });
+      status.promise = promise;
+      this.prefetches.set(key, status);
+      return promise;
+    }
+    tryMove(event, runtime, direction, { changeDirection = true, blockedRegions = runtime.symbolId == null ? [] : SYMBOL_SETTINGS[runtime.symbolId].blockedRegions } = {}) {
+      const vector = DIRECTIONS[direction];
+      if (!vector) {
+        runtime.stopCount = 0;
+        return false;
+      }
+      if (changeDirection && direction % 2 === 0 && !runtime.directionFix) runtime.direction = direction;
+      const [dx, dy] = vector;
+      const targetX = runtime.x + dx;
+      const targetY = runtime.y + dy;
+      const passable = runtime.through || this.eventPassable(event.id, runtime.x, runtime.y, targetX, targetY, direction, blockedRegions);
+      if (!passable) {
+        runtime.stopCount = 0;
+        this.lastCollision = { at: Date.now(), mapId: this.mapId, mover: `event:${event.id}`, from: [runtime.x, runtime.y], target: [targetX, targetY], direction };
+        if (runtime.trigger === 2 && this.playerCharacterAt(targetX, targetY)) this.startEvent(event, "event-touch", this.contactIndexAt(targetX, targetY));
+        return false;
+      }
+      runtime.x = targetX;
+      runtime.y = targetY;
+      runtime.stopCount = 0;
+      this.traceChase(runtime.symbolForming ? "step" : "autonomous-step", event, runtime, { direction });
+      if (runtime.trigger === 2 && this.playerCharacterAt(targetX, targetY)) this.startEvent(event, "event-touch", this.contactIndexAt(targetX, targetY));
+      return true;
+    }
+    eventPassable(eventId, x, y, targetX, targetY, direction, blockedRegions = []) {
+      if (direction % 2 === 1) {
+        const dx = targetX - x;
+        const dy = targetY - y;
+        const horizontal = dx < 0 ? 4 : 6;
+        const vertical = dy < 0 ? 8 : 2;
+        return this.eventCardinalPassable(eventId, x, y, x + dx, y, horizontal, blockedRegions) && this.eventCardinalPassable(eventId, x + dx, y, targetX, targetY, vertical, blockedRegions) || this.eventCardinalPassable(eventId, x, y, x, y + dy, vertical, blockedRegions) && this.eventCardinalPassable(eventId, x, y + dy, targetX, targetY, horizontal, blockedRegions);
+      }
+      return this.eventCardinalPassable(eventId, x, y, targetX, targetY, direction, blockedRegions);
+    }
+    eventCardinalPassable(eventId, x, y, targetX, targetY, direction, blockedRegions = []) {
+      if (!this.engine.collision?.passable(x, y, direction) || !this.engine.collision?.passable(targetX, targetY, reverse(direction))) return false;
+      if (blockedRegions.includes(this.engine.collision.regionId(targetX, targetY))) return false;
+      if (this.eventAt(targetX, targetY, { excludeId: eventId, anyPriority: true, nonThrough: true })) return false;
+      if (this.playerCharacterAt(targetX, targetY)) return false;
+      return true;
+    }
+    moveTowardPlayer(event, runtime, blockedRegions = []) {
+      const sx = runtime.x - this.engine.state.x;
+      const sy = runtime.y - this.engine.state.y;
+      const horizontal = sx > 0 ? 4 : sx < 0 ? 6 : 0;
+      const vertical = sy > 0 ? 8 : sy < 0 ? 2 : 0;
+      const first = Math.abs(sx) > Math.abs(sy) ? horizontal : vertical;
+      const second = first === horizontal ? vertical : horizontal;
+      return first && this.tryMove(event, runtime, first, { blockedRegions }) || second && this.tryMove(event, runtime, second, { blockedRegions }) || false;
+    }
+    moveTypeTowardPlayer(event, runtime, blockedRegions = []) {
+      if (this.distanceToPlayer(runtime) < 20) {
+        const roll = this.randomInt(6);
+        if (roll <= 3) return this.moveTowardPlayer(event, runtime, blockedRegions);
+        if (roll === 4) return this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)], { blockedRegions });
+        return this.tryMove(event, runtime, runtime.direction, { blockedRegions });
+      }
+      return this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)], { blockedRegions });
+    }
+    moveAwayFromPlayer(event, runtime, blockedRegions = []) {
+      const sx = runtime.x - this.engine.state.x;
+      const sy = runtime.y - this.engine.state.y;
+      const horizontal = sx > 0 ? 6 : sx < 0 ? 4 : 0;
+      const vertical = sy > 0 ? 2 : sy < 0 ? 8 : 0;
+      const first = Math.abs(sx) > Math.abs(sy) ? horizontal : vertical;
+      const second = first === horizontal ? vertical : horizontal;
+      return first && this.tryMove(event, runtime, first, { blockedRegions }) || second && this.tryMove(event, runtime, second, { blockedRegions }) || false;
+    }
+    eventAt(x, y, { excludeId = 0, anyPriority = false, nonThrough = false } = {}) {
+      for (const event of Object.values(this.map?.events ?? {})) {
+        if (!event || event.id === excludeId) continue;
+        const runtime = this.refresh(event);
+        if (!runtime || runtime.erased || runtime.transparent) continue;
+        if (nonThrough && runtime.through) continue;
+        if (!anyPriority && runtime.priority !== 1) continue;
+        if (runtime.x === x && runtime.y === y) return { event, runtime };
+      }
+      return null;
+    }
+    blocksPlayer(x, y) {
+      return Boolean(this.eventAt(x, y, { nonThrough: true }));
+    }
+    playerTouch(x, y, reason = "player-touch") {
+      const candidates = [];
+      for (const event of Object.values(this.map?.events ?? {})) {
+        if (!event) continue;
+        const runtime = this.refresh(event);
+        if (runtime && runtime.x === x && runtime.y === y && [1, 2].includes(runtime.trigger)) candidates.push({ event, runtime });
+      }
+      const candidate = candidates.find(({ runtime }) => runtime.priority === 1) ?? candidates[0];
+      if (candidate) return this.startEvent(candidate.event, reason, 0);
+      return false;
+    }
+    actionTrigger() {
+      const [dx, dy] = DIRECTIONS[this.engine.state.direction] ?? [0, 1];
+      const positions = [[this.engine.state.x, this.engine.state.y], [this.engine.state.x + dx, this.engine.state.y + dy]];
+      for (const [x, y] of positions) {
+        const found = this.eventAt(x, y, { anyPriority: true });
+        if (found?.runtime.trigger === 0 && this.startEvent(found.event, "action", 0)) return true;
+      }
+      return false;
+    }
+    startEvent(event, reason, contactIndex = 0) {
+      const runtime = this.refresh(event);
+      if (!runtime || runtime.starting || this.busy || this.engine.interpreter.running || this.engine.state.scene !== "PLAYING") return false;
+      runtime.starting = true;
+      runtime.locked = true;
+      runtime.prelockDirection = runtime.direction;
+      if (runtime.symbolId == null && !runtime.directionFix) runtime.direction = directionToward(runtime.x, runtime.y, this.engine.state.x, this.engine.state.y, runtime.direction);
+      const contactCondition = runtime.symbolId == null ? 0 : this.contactCondition(runtime, contactIndex);
+      this.activeEventId = event.id;
+      this.lastEncounter = { at: Date.now(), mapId: this.mapId, eventId: event.id, reason, contactIndex, contactCondition, symbolId: runtime.symbolId, phase: "resource-barrier" };
+      this.traceChase("contact", event, runtime, { reason, contactIndex, contactCondition });
+      this.busy = true;
+      void this.runEvent(event, runtime).catch((error) => this.engine.handleInterpreterFailure?.(error)).finally(() => {
+        runtime.starting = false;
+        runtime.locked = false;
+        if (!runtime.directionFix && runtime.prelockDirection) runtime.direction = runtime.prelockDirection;
+        this.busy = false;
+        this.activeEventId = null;
+      });
+      return true;
+    }
+    async runEvent(event, runtime) {
+      const renderable = this.engine.currentRenderableEvents(this.map).filter((entry) => entry.id === event.id);
+      await this.engine.renderer.ensureEventGraphics?.(renderable);
+      if (this.lastEncounter?.eventId === event.id) this.lastEncounter.phase = "interpreter";
+      await this.engine.interpreter.run(event.pages[runtime.pageIndex]?.list ?? [], { eventId: event.id, trigger: runtime.trigger, encounter: this.lastEncounter });
+      if (this.lastEncounter?.eventId === event.id) this.lastEncounter.phase = "complete";
+    }
+    contactCondition(runtime, contactIndex = 0) {
+      if (contactIndex > 0) {
+        const visible = this.visibleFollowers();
+        return contactIndex === visible.length ? 2 : 0;
+      }
+      const px = Number(this.engine.state.realX ?? this.engine.state.x);
+      const py = Number(this.engine.state.realY ?? this.engine.state.y);
+      const ex = Number(runtime.realX ?? runtime.x);
+      const ey = Number(runtime.realY ?? runtime.y);
+      let position = -1;
+      if (px === ex) position = py > ey ? 1 : 0;
+      else if (py === ey) position = px > ex ? 2 : 3;
+      if (position < 0 || runtime.direction !== this.engine.state.direction) return 0;
+      if (runtime.direction === 2) return position === 0 ? 1 : 2;
+      if (runtime.direction === 4) return position === 2 ? 1 : 2;
+      if (runtime.direction === 6) return position === 3 ? 1 : 2;
+      if (runtime.direction === 8) return position === 1 ? 1 : 2;
+      return 0;
+    }
+    battleContext() {
+      if (!this.activeEventId || !this.lastEncounter) return null;
+      return { eventId: this.activeEventId, contactCondition: this.lastEncounter.contactCondition, preemptive: this.lastEncounter.contactCondition === 1, surprise: this.lastEncounter.contactCondition === 2 };
+    }
+    playerCharacterAt(x, y) {
+      if (this.engine.state.x === x && this.engine.state.y === y) return true;
+      return this.visibleFollowers().some((follower) => follower.x === x && follower.y === y);
+    }
+    contactIndexAt(x, y) {
+      if (this.engine.state.x === x && this.engine.state.y === y) return 0;
+      const index = this.visibleFollowers().findIndex((follower) => follower.x === x && follower.y === y);
+      return index < 0 ? 0 : index + 1;
+    }
+    visibleFollowers() {
+      return (this.engine.state.followers ?? []).filter((entry) => entry && entry.visible !== false);
+    }
+    distanceToPlayer(runtime) {
+      return Math.abs(runtime.x - this.engine.state.x) + Math.abs(runtime.y - this.engine.state.y);
+    }
+    moving(runtime) {
+      return Math.abs(Number(runtime.realX) - Number(runtime.x)) > 1e-6 || Math.abs(Number(runtime.realY) - Number(runtime.y)) > 1e-6;
+    }
+    nearScreen(runtime) {
+      const centerX = Number(this.engine.state.displayX ?? 0) + 10;
+      const centerY = Number(this.engine.state.displayY ?? 0) + 7.5;
+      return Math.abs(Number(runtime.realX) - centerX) <= 12 && Math.abs(Number(runtime.realY) - centerY) <= 8;
+    }
+    stealthActive() {
+      return Number(this.engine.state.stealthCount ?? 0) !== 0 || Boolean(this.engine.state.stealth);
+    }
+    updateStealthOpacity(interpreterBusy) {
+      if (this.stealthActive() && !interpreterBusy) this.engine.state.opacity = 128;
+      else if (this.engine.state.opacity === 128) this.engine.state.opacity = Number(this.engine.state.originOpacity ?? 255);
+    }
+    playerLevel(type) {
+      const levels = (this.engine.state.party?.members ?? []).map((id) => Number(this.engine.state.actors?.[id]?.level ?? 1));
+      if (!levels.length) return 1;
+      if (type === 1) return Math.max(...levels);
+      if (type === 2) return levels[0];
+      return levels.reduce((sum, level) => sum + level, 0) / levels.length;
+    }
+    randomInt(max) {
+      let seed = Number(this.engine.state.mapRngSeed ?? 1831565813 ^ this.mapId) >>> 0;
+      seed ^= seed << 13;
+      seed ^= seed >>> 17;
+      seed ^= seed << 5;
+      this.engine.state.mapRngSeed = seed >>> 0;
+      return Math.floor(this.engine.state.mapRngSeed / 4294967296 * max);
+    }
+    traceChase(type, event, runtime, detail = {}) {
+      this.chaseTrace.push({ at: Date.now(), type, mapId: this.mapId, eventId: event.id, x: runtime.x, y: runtime.y, playerX: this.engine.state.x, playerY: this.engine.state.y, ...detail });
+      this.chaseTrace = this.chaseTrace.slice(-120);
+    }
+    diagnostics() {
+      const current = Object.values(this.map?.events ?? {}).flatMap((event) => {
+        if (!event) return [];
+        const runtime = this.runtime(event.id, event);
+        return [{ id: event.id, pageIndex: runtime.pageIndex, x: runtime.x, y: runtime.y, realX: runtime.realX, realY: runtime.realY, moveType: runtime.moveType, speed: runtime.moveSpeed, frequency: runtime.moveFrequency, trigger: runtime.trigger, priority: runtime.priority, through: runtime.through, symbolId: runtime.symbolId, forming: runtime.symbolForming, starting: runtime.starting }];
+      });
+      return { mapId: this.mapId, busy: this.busy, activeEventId: this.activeEventId ?? null, lastCollision: this.lastCollision, lastEncounter: this.lastEncounter, chaseTrace: [...this.chaseTrace], pageRefreshes: [...this.pageRefreshes], battlePrefetch: [...this.prefetches.values()].map(({ promise, ...entry }) => entry), events: current };
+    }
+  };
+  function stopCountThreshold(moveFrequency) {
+    return 30 * (5 - Number(moveFrequency ?? 3));
+  }
+  function symbolIdFromPage(page) {
+    for (const command of page?.move_route?.list ?? []) {
+      if (command.code !== 45) continue;
+      const match = /(?:^|\s)enable_symbol_encount\((\d+)\)/.exec(String(command.parameters?.[0] ?? ""));
+      if (match) return Number(match[1]);
+    }
+    return null;
+  }
+  function activePageIndex(engine, event) {
+    for (let index = (event.pages?.length ?? 0) - 1; index >= 0; index -= 1) if (engine.conditionsMet(event.pages[index].condition, event.id)) return index;
+    return -1;
+  }
+  function isUninhibited(event, page) {
+    if (/<uninhibited>/i.test(String(event.name ?? ""))) return true;
+    return (page.list ?? []).filter((command) => command.code === 108 || command.code === 408).some((command) => /<uninhibited>/i.test(String(command.parameters?.[0] ?? "")));
+  }
+  function battleTroopIds(engine, list, depth = 2, seen = /* @__PURE__ */ new Set()) {
+    const ids = [];
+    for (const command of list ?? []) {
+      const parameters = command.parameters ?? [];
+      if (command.code === 301) {
+        if (parameters[0] === 0) ids.push(Number(parameters[1]));
+        else if (parameters[0] === 1) ids.push(Number(engine.state.variables?.[parameters[1]] ?? 0));
+      }
+      if (command.code === 117 && depth > 0 && !seen.has(parameters[0])) {
+        seen.add(parameters[0]);
+        ids.push(...battleTroopIds(engine, engine.database.commonEvents?.[parameters[0]]?.list, depth - 1, seen));
+      }
+    }
+    return [...new Set(ids.filter((id) => id > 0))];
+  }
+  function directionToward(x, y, targetX, targetY, fallback = 2) {
+    const sx = x - targetX;
+    const sy = y - targetY;
+    if (Math.abs(sx) > Math.abs(sy)) return sx > 0 ? 4 : sx < 0 ? 6 : fallback;
+    return sy > 0 ? 8 : sy < 0 ? 2 : fallback;
+  }
+  function reverse(direction) {
+    return 10 - Number(direction);
+  }
+  function approach(current, target, distance) {
+    return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target;
+  }
+  function clamp2(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   // runtime/core/game-engine.js
   var GameEngine = class {
     constructor({ loader, renderer, saves, status, onSceneChange = () => {
@@ -1554,6 +2099,7 @@
       this.prefetch = this.loader.prefetch;
       this.input = new InputController(this.renderer.stage);
       this.interpreter = new EventInterpreter(this);
+      this.events = new GameEventSystem(this);
       this.audio = new AudioManager(this.loader, (entry) => this.recordDiagnostic(entry));
       this.state = this.initialState("LOADING");
       this.prefetch.setContextProvider(() => ({
@@ -1590,6 +2136,10 @@
         steps: 0,
         moveSpeed: 4,
         dash: false,
+        displayX: 0,
+        displayY: 0,
+        originOpacity: 255,
+        stealthCount: 0,
         switches: {},
         variables: {},
         selfSwitches: {},
@@ -1644,6 +2194,7 @@
       void this.runAutorunEvents().catch((error) => this.handleInterpreterFailure(error));
     }
     async loadMap(mapId) {
+      this.events ??= new GameEventSystem(this);
       this.state.loadingMap = true;
       this.onTransitionState({ state: "loading", mapId, streaming: this.prefetch?.getStatus?.() ?? null });
       try {
@@ -1655,12 +2206,14 @@
         const actor = this.database.actors[actorId];
         const actorState = this.state.actors[actorId];
         const playerGraphic = { character_name: actorState?.characterName ?? actor?.character_name ?? "", character_index: actorState?.characterIndex ?? actor?.character_index ?? 0 };
+        this.events.setupMap(map, mapId);
         await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId, x: this.state.x, y: this.state.y });
         this.map = map;
         this.collision = collision;
         this.state.mapName = String(map.display_name ?? "").normalize("NFC");
         this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
         this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+        this.updateCamera();
         await this.audio.applyMapAudio(map);
         const transition = this.prefetch?.markMapVisible?.(mapId, { x: this.state.x, y: this.state.y }) ?? null;
         this.onTransitionState({ state: "visible", mapId, transition, streaming: this.prefetch?.getStatus?.() ?? null });
@@ -1745,6 +2298,8 @@
       if (this.paused) return;
       this.updatePlaytime(deltaSeconds);
       this.updateMovement(deltaSeconds);
+      this.updateCamera();
+      this.events?.update(deltaSeconds);
       this.interpreter?.updateWatchdog?.();
       if (this.input.takeInteraction()) void this.audio.unlock();
       if (this.state.scene === "TITLE") {
@@ -1787,7 +2342,7 @@
         }
         return;
       }
-      if (this.interpreter.running) return;
+      if (this.interpreter.running || this.events?.busy) return;
       if (this.isMoving()) return;
       if (this.input.takeCancel()) {
         this.openMenu();
@@ -2195,19 +2750,40 @@
     async startBattle(troopId, canEscape = false, canLose = false) {
       const paths = this.database.prefetchManifest?.battles?.[troopId]?.assets ?? [];
       await this.prefetch?.prefetchAssets?.(paths, { priority: 0, reason: `battle:${troopId}` });
+      const encounter = this.events?.battleContext?.() ?? null;
       const battle = this.combat.createBattle(this.state, troopId, {
         canEscape,
         canLose,
         battleback1: this.state.nextBattleback1 ?? this.map?.battleback1_name ?? "",
-        battleback2: this.state.nextBattleback2 ?? this.map?.battleback2_name ?? ""
+        battleback2: this.state.nextBattleback2 ?? this.map?.battleback2_name ?? "",
+        preemptive: Boolean(encounter?.preemptive),
+        surprise: Boolean(encounter?.surprise),
+        encounter
       });
+      this.state.system.battleCount = Number(this.state.system.battleCount ?? 0) + 1;
       this.state.battle = battle;
       await this.renderer.setBattle?.(battle);
       void this.audio.playLoop("bgm", this.state.battleBgm ?? this.database.system.battle_bgm);
       this.setScene("BATTLE");
+      this.recordDiagnostic({ type: "symbol-battle-entered", troopId, encounter, assets: paths.length, scene: this.state.scene });
       return new Promise((resolve) => {
         this.battleResolve = resolve;
       });
+    }
+    resolveBattleTroop(parameters = []) {
+      const designation = Number(parameters[0]);
+      if (designation === 0) return Number(parameters[1]);
+      if (designation === 1) return Number(this.state.variables?.[parameters[1]] ?? 0);
+      const region = this.collision?.regionId?.(this.state.x, this.state.y) ?? 0;
+      const candidates = (this.map?.encounter_list ?? []).filter((entry) => !entry.region_set?.length || entry.region_set.includes(region));
+      const total = candidates.reduce((sum, entry) => sum + Math.max(0, Number(entry.weight) || 0), 0);
+      if (!total) return 0;
+      let roll = this.events?.randomInt?.(total) ?? 0;
+      for (const entry of candidates) {
+        roll -= Math.max(0, Number(entry.weight) || 0);
+        if (roll < 0) return Number(entry.troop_id);
+      }
+      return Number(candidates.at(-1)?.troop_id ?? 0);
     }
     updateBattle() {
       const battle = this.state.battle;
@@ -2393,8 +2969,8 @@
         else {
           const horizontal = dx < 0 ? 4 : 6;
           const vertical = dy < 0 ? 8 : 2;
-          if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
-          if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
+          if (this.state.direction === reverse2(horizontal)) this.state.direction = horizontal;
+          if (this.state.direction === reverse2(vertical)) this.state.direction = vertical;
         }
         this.advanceStep();
         await this.waitFrames(256 / 2 ** speed2);
@@ -2407,12 +2983,18 @@
       const speed = Number(override.moveSpeed ?? 3);
       const fromX = Number(override.x);
       const fromY = Number(override.y);
+      const resolvedId = target === 0 ? eventId : target;
+      const event = this.map?.events?.[resolvedId];
+      if (!override.through && event && !this.events?.eventPassable?.(resolvedId, fromX, fromY, fromX + dx, fromY + dy, direction)) return false;
       override.x = fromX + dx;
       override.y = fromY + dy;
       if (direction % 2 === 0) override.direction = direction;
       override.motion = { fromX, fromY, toX: override.x, toY: override.y, began: performance.now(), durationMs: 256 / 2 ** speed * 1e3 / 60 };
       await this.waitFrames(256 / 2 ** speed);
+      override.realX = override.x;
+      override.realY = override.y;
       delete override.motion;
+      return true;
     }
     setRouteDirection(target, direction, eventId = 0) {
       if (target === -1) this.state.direction = direction;
@@ -2435,6 +3017,8 @@
       const override = this.state.eventOverrides[key] ??= {};
       override.x ??= event?.x ?? 0;
       override.y ??= event?.y ?? 0;
+      override.realX ??= override.x;
+      override.realY ??= override.y;
       override.direction ??= page?.graphic?.direction ?? 2;
       override.pattern ??= page?.graphic?.pattern ?? 1;
       override.moveSpeed ??= page?.move_speed ?? 3;
@@ -2458,9 +3042,10 @@
           this.ensureRealPosition();
           this.state.x += dx;
           this.state.y += dy;
-          if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
-          if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
+          if (this.state.direction === reverse2(horizontal)) this.state.direction = horizontal;
+          if (this.state.direction === reverse2(vertical)) this.state.direction = vertical;
           this.advanceStep();
+          this.events?.playerTouch?.(this.state.x, this.state.y, "player-touch-arrival");
           return true;
         }
         const fallback = this.state.direction === horizontal ? [vertical, horizontal] : this.state.direction === vertical ? [horizontal, vertical] : [];
@@ -2472,19 +3057,26 @@
     moveCardinal(direction) {
       const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
       this.state.direction = direction;
-      if (!this.canStep(this.state.x, this.state.y, direction)) return false;
+      if (!this.canStep(this.state.x, this.state.y, direction)) {
+        this.events?.playerTouch?.(this.state.x + dx, this.state.y + dy, "player-touch-front");
+        return false;
+      }
       this.ensureRealPosition();
       this.state.x += dx;
       this.state.y += dy;
       this.advanceStep();
+      this.events?.playerTouch?.(this.state.x, this.state.y, "player-touch-arrival");
       return true;
     }
     canStep(x, y, direction) {
       const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
-      return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
+      const targetX = x + dx;
+      const targetY = y + dy;
+      return this.collision.passable(x, y, direction) && this.collision.passable(targetX, targetY, reverse2(direction)) && !this.events?.blocksPlayer?.(targetX, targetY);
     }
     advanceStep() {
       this.state.steps = (this.state.steps ?? 0) + 1;
+      if (Number(this.state.stealthCount ?? 0) !== 0) this.state.stealthCount -= 1;
       this.prefetch?.prefetchLikelyDestinations(this.state.mapId, { x: this.state.x, y: this.state.y });
     }
     ensureRealPosition() {
@@ -2507,14 +3099,21 @@
       if (!this.isMoving()) return;
       const speed = this.realMoveSpeed();
       const distance = 2 ** speed / 256 * Math.max(0, deltaSeconds * 60);
-      this.state.realX = approach(this.state.realX, this.state.x, distance);
-      this.state.realY = approach(this.state.realY, this.state.y, distance);
+      this.state.realX = approach2(this.state.realX, this.state.x, distance);
+      this.state.realY = approach2(this.state.realY, this.state.y, distance);
       this.state.animationCount = Number(this.state.animationCount ?? 0) + 1.5 * Math.max(0, deltaSeconds * 60);
       if (this.state.animationCount > 18 - speed * 2) {
         this.state.pattern = (Number(this.state.pattern ?? 1) + 1) % 4;
         this.state.animationCount = 0;
       }
       if (!this.isMoving()) this.state.pattern = this.state.originalPattern ?? 1;
+    }
+    updateCamera() {
+      if (!this.map || !this.state) return;
+      const realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+      const realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+      this.state.displayX = clamp3(realX - 9.5, 0, Math.max(0, Number(this.map.width) - 20));
+      this.state.displayY = clamp3(realY - 7, 0, Math.max(0, Number(this.map.height) - 15));
     }
     updatePlaytime(deltaSeconds = 1 / 60) {
       if (!this.state?.system || this.state.scene === "TITLE") return;
@@ -2615,23 +3214,21 @@
       return String(text).normalize("NFC").replace(/\\[Nn]\[(\d+)\]/g, (_, id) => this.state.actors[id]?.name ?? "").replace(/\\[Cc]\[\d+\]|\\[.!|{}^><]/g, "").normalize("NFC");
     }
     triggerActionEvent() {
-      const vectors = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1], 1: [-1, 1], 3: [1, 1], 7: [-1, -1], 9: [1, -1] };
-      const [dx, dy] = vectors[this.state.direction] ?? [0, 1];
-      const candidates = Object.values(this.map?.events ?? {}).filter((event2) => event2.x === this.state.x && event2.y === this.state.y || event2.x === this.state.x + dx && event2.y === this.state.y + dy);
-      const event = candidates.find((candidate) => this.activePage(candidate)?.trigger === 0);
-      if (event) this.interpreter.run(this.activePage(event).list, { eventId: event.id });
+      this.events?.actionTrigger?.();
     }
     playSe(audio) {
       return this.audio.playSe(audio);
     }
     showAnimation(targetId, animationId) {
       const event = targetId === -1 ? null : this.map?.events?.[targetId];
-      const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+      const runtime = event ? this.events?.runtime?.(targetId, event) : null;
+      const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: runtime?.realX ?? event?.x ?? this.state.x, y: runtime?.realY ?? event?.y ?? this.state.y };
       return this.renderer.showAnimation(target, this.database.animations[animationId]);
     }
     showBalloon(targetId, balloonId) {
       const event = targetId === -1 ? null : this.map?.events?.[targetId];
-      const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: event?.x ?? this.state.x, y: event?.y ?? this.state.y };
+      const runtime = event ? this.events?.runtime?.(targetId, event) : null;
+      const target = targetId === -1 ? { x: this.state.x, y: this.state.y } : { x: runtime?.realX ?? event?.x ?? this.state.x, y: runtime?.realY ?? event?.y ?? this.state.y };
       return this.renderer.showBalloon(target, balloonId);
     }
     currentRenderableEvents(map = this.map) {
@@ -2641,10 +3238,10 @@
         const graphic = override.graphic ?? page?.graphic;
         if (!graphic?.character_name || override.transparent) return [];
         const position = routePosition(override, event);
-        return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
+        return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, blendType: override.blendType ?? 0, priority: override.priority ?? page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
       });
     }
-    runRubyCompatibility(source) {
+    runRubyCompatibility(source, context = {}) {
       if (String(source).trim() === "recipe_all_switch_on") {
         this.party.unlockAllRecipes(this.state);
         return;
@@ -2676,6 +3273,13 @@
       }
       if (source === "reset_stealth") {
         this.state.stealth = false;
+        this.state.stealthCount = 0;
+        return;
+      }
+      const symbol = /^enable_symbol_encount\((\d+)\)$/.exec(String(source).trim());
+      if (symbol && context.eventId) {
+        const runtime = this.events?.runtime?.(context.eventId);
+        if (runtime) runtime.symbolId = Number(symbol[1]);
         return;
       }
       this.noteUnsupported(355, source);
@@ -2713,6 +3317,9 @@
           troopId: this.state.battle.troopId,
           phase: this.state.battle.phase,
           result: this.state.battle.result,
+          preemptive: this.state.battle.preemptive,
+          surprise: this.state.battle.surprise,
+          encounter: this.state.battle.encounter,
           difficulty: this.state.battle.difficulty,
           frames: this.state.battle.frames,
           actors: this.state.battle.actors.map(({ name, hp, mp, tp, ap, chant, states }) => ({ name, hp, mp, tp, ap, chant, states })),
@@ -2722,6 +3329,7 @@
         } : null,
         interpreter: this.interpreter?.diagnostics(),
         modals: this.modalStack.map((entry) => ({ ...entry })),
+        events: this.events?.diagnostics?.() ?? null,
         streaming: this.prefetch?.getStatus(),
         assets: this.loader.diagnostics(),
         audio: this.audio?.diagnostics(),
@@ -2758,6 +3366,10 @@
       this.state.pattern ??= 1;
       this.state.originalPattern ??= 1;
       this.state.animationCount ??= 0;
+      this.state.displayX ??= 0;
+      this.state.displayY ??= 0;
+      this.state.originOpacity ??= 255;
+      this.state.stealthCount ??= 0;
       this.state.eventOverrides ??= {};
       this.state.pictures ??= {};
       this.state.battle = null;
@@ -2803,13 +3415,16 @@
   function cycle(value, delta, length) {
     return (value + delta + length) % length;
   }
-  function reverse(direction) {
+  function reverse2(direction) {
     return 10 - direction;
   }
   function clampIndex(value, length) {
     return length ? Math.max(0, Math.min(length - 1, Number(value) || 0)) : 0;
   }
-  function approach(current, target, distance) {
+  function clamp3(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+  function approach2(current, target, distance) {
     return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target;
   }
   function sumParams(values = []) {
@@ -2817,7 +3432,7 @@
   }
   function routePosition(override, event) {
     const motion = override.motion;
-    if (!motion) return { x: override.x ?? event.x, y: override.y ?? event.y };
+    if (!motion) return { x: override.realX ?? override.x ?? event.x, y: override.realY ?? override.y ?? event.y };
     const progress = Math.max(0, Math.min(1, (performance.now() - motion.began) / Math.max(1, motion.durationMs)));
     return { x: motion.fromX + (motion.toX - motion.fromX) * progress, y: motion.fromY + (motion.toY - motion.fromY) * progress };
   }
@@ -3840,7 +4455,12 @@
       this.canvas = document.createElement("canvas");
       this.canvas.width = this.width;
       this.canvas.height = this.height;
-      this.context = this.canvas.getContext("2d");
+      this.displayContext = this.canvas.getContext("2d");
+      this.displayContext.imageSmoothingEnabled = false;
+      this.frameCanvas = document.createElement("canvas");
+      this.frameCanvas.width = this.width;
+      this.frameCanvas.height = this.height;
+      this.context = this.frameCanvas.getContext("2d");
       this.context.imageSmoothingEnabled = false;
       stage.append(this.canvas);
       this.fade = 0;
@@ -3856,7 +4476,8 @@
       this.battleGraphics = null;
       this.animationSheetFailures = /* @__PURE__ */ new Map();
       this.characterSheetFailures = /* @__PURE__ */ new Map();
-      this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: "LOADING", mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [], fontReadyMs: 0, font: "Arial" };
+      this.frameHistory = [];
+      this.stats = { frames: 0, presentedFrames: 0, retainedFrames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: "LOADING", mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [], fontReadyMs: 0, font: "Arial", backbuffer: { width: this.width, height: this.height, atomicPresent: true }, chunks: [] };
     }
     async setTitle(system) {
       const fontBegan = performance.now();
@@ -3915,6 +4536,7 @@
       this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean);
       this.stats.characters = [...this.characterImages.keys()];
       this.stats.missingCharacters = missingCharacters;
+      this.stats.chunks = [{ id: `map:${mapId}:viewport`, ready: true, pending: false, dirty: false, mode: "synchronous-integer-tile-window", marginTiles: 2 }];
       void this.streamCharacterGraphics(deferredEvents, loadToken);
     }
     async streamCharacterGraphics(events, loadToken = this.mapLoadToken) {
@@ -3985,49 +4607,63 @@
     }
     render(state, events = []) {
       const began = performance.now();
+      const telemetry = { frame: this.stats.frames + 1, scene: state.scene ?? "PLAYING", mapId: state.mapId ?? this.stats.mapId, began, presented: false, retainedPreviousFrame: false, clearCalls: 0, drawCalls: 0, invalidTileLookups: 0, missingTileSamples: 0, tileSamples: 0, tileDraws: 0, tilesetReady: Boolean(this.sheets), autotileCacheReady: Boolean(this.sheets?.slice(0, 4).every((sheet, index) => !this.tileset?.tileset_names?.[index] || sheet)), offscreenCanvas: { width: this.frameCanvas.width, height: this.frameCanvas.height }, camera: null, visibleRange: null, chunkIds: this.stats.chunks.map((entry) => entry.id), pendingChunks: this.stats.chunks.filter((entry) => entry.pending).map((entry) => entry.id), dirtyChunks: this.stats.chunks.filter((entry) => entry.dirty).map((entry) => entry.id) };
+      this.activeFrame = telemetry;
+      try {
+        this.renderFrame(state, events);
+        this.displayContext.drawImage(this.frameCanvas, 0, 0);
+        telemetry.presented = true;
+        this.stats.presentedFrames += 1;
+      } catch (error) {
+        telemetry.retainedPreviousFrame = true;
+        telemetry.error = error.message;
+        this.stats.retainedFrames += 1;
+        throw error;
+      } finally {
+        this.finishFrame(began, telemetry);
+        this.activeFrame = null;
+      }
+    }
+    renderFrame(state, events = []) {
       const context = this.context;
       context.fillStyle = "#080709";
       context.fillRect(0, 0, this.width, this.height);
       this.stats.scene = state.scene ?? "PLAYING";
       if (state.scene === "TITLE") {
         this.drawTitle(state.title);
-        this.finishFrame(began);
         return;
       }
       if (state.scene === "BATTLE") {
         this.drawBattle(state.battle);
         this.drawPictures();
         this.drawScreenEffects();
-        this.finishFrame(began);
         return;
       }
       if (state.scene === "FILE_LOAD") {
         this.drawFileMenu(state.menu);
-        this.finishFrame(began);
         return;
       }
-      if (!this.map || !this.sheets) {
-        this.finishFrame(began);
-        return;
-      }
-      const visibleX = Math.ceil(this.width / this.tileSize) + 1;
-      const visibleY = Math.ceil(this.height / this.tileSize) + 1;
+      if (!this.map || !this.sheets) return;
       const playerX = Number.isFinite(state.realX) ? state.realX : state.x;
       const playerY = Number.isFinite(state.realY) ? state.realY : state.y;
-      const cameraX = clamp2(playerX - Math.floor(visibleX / 2), 0, Math.max(0, this.map.width - visibleX));
-      const cameraY = clamp2(playerY - Math.floor(visibleY / 2), 0, Math.max(0, this.map.height - visibleY));
-      this.camera = { x: cameraX, y: cameraY };
+      const window2 = computeTileWindow({ displayX: state.displayX, displayY: state.displayY, playerX, playerY, mapWidth: this.map.width, mapHeight: this.map.height, width: this.width, height: this.height, tileSize: this.tileSize, margin: 2 });
+      const cameraX = window2.cameraX;
+      const cameraY = window2.cameraY;
+      this.camera = { x: cameraX, y: cameraY, logicalX: window2.logicalX, logicalY: window2.logicalY, pixelX: window2.pixelX, pixelY: window2.pixelY };
+      if (this.activeFrame) {
+        this.activeFrame.camera = { ...this.camera };
+        this.activeFrame.visibleRange = { startX: window2.startX, endX: window2.endX, startY: window2.startY, endY: window2.endY, marginTiles: window2.margin };
+      }
       const upper = [];
-      for (let z = 0; z < 3; z += 1) for (let y = 0; y < visibleY; y += 1) for (let x = 0; x < visibleX; x += 1) {
-        const mapX = x + cameraX;
-        const mapY = y + cameraY;
-        if (mapX >= this.map.width || mapY >= this.map.height) continue;
+      for (let z = 0; z < 3; z += 1) for (let mapY = window2.startY; mapY <= window2.endY; mapY += 1) for (let mapX = window2.startX; mapX <= window2.endX; mapX += 1) {
+        const dx = mapX * this.tileSize - window2.pixelX;
+        const dy = mapY * this.tileSize - window2.pixelY;
         const tileId = this.tileAt(mapX, mapY, z);
-        const args = [tileId, x * this.tileSize, y * this.tileSize];
+        const args = [tileId, dx, dy];
         if (this.isUpper(tileId)) upper.push(args);
         else this.drawTile(...args);
       }
-      this.drawShadows(cameraX, cameraY, visibleX, visibleY);
+      this.drawShadows(window2);
       const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: "event" }));
       if (!state.transparent) sprites.push({ x: playerX, y: playerY, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: "player" });
       sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === "event" ? -1 : 1));
@@ -4049,13 +4685,19 @@
         context.fillStyle = `rgba(0,0,0,${this.fade})`;
         context.fillRect(0, 0, this.width, this.height);
       }
-      this.finishFrame(began);
     }
-    finishFrame(began) {
+    finishFrame(began, telemetry = this.activeFrame) {
       const elapsed = performance.now() - began;
       this.stats.frames += 1;
       this.stats.lastFrameMs = Math.round(elapsed * 100) / 100;
       this.stats.maxFrameMs = Math.max(this.stats.maxFrameMs, this.stats.lastFrameMs);
+      if (telemetry) {
+        telemetry.elapsedMs = this.stats.lastFrameMs;
+        telemetry.ended = performance.now();
+        this.frameHistory.push(telemetry);
+        this.frameHistory = this.frameHistory.slice(-240);
+        this.stats.lastFrame = telemetry;
+      }
     }
     drawTitle(title) {
       const c = this.context;
@@ -4405,7 +5047,7 @@
         c.drawImage(picture.image, -width / 2, -height / 2, width, height);
         const tone = picture.tone;
         if (tone && (Number(tone.red ?? tone[0]) < 0 || Number(tone.green ?? tone[1]) < 0 || Number(tone.blue ?? tone[2]) < 0)) {
-          const darkness = clamp2(-(Number(tone.red ?? tone[0] ?? 0) + Number(tone.green ?? tone[1] ?? 0) + Number(tone.blue ?? tone[2] ?? 0)) / 765, 0, 1);
+          const darkness = clamp4(-(Number(tone.red ?? tone[0] ?? 0) + Number(tone.green ?? tone[1] ?? 0) + Number(tone.blue ?? tone[2] ?? 0)) / 765, 0, 1);
           c.globalCompositeOperation = "source-atop";
           c.fillStyle = `rgba(0,0,0,${darkness})`;
           c.fillRect(-width / 2, -height / 2, width, height);
@@ -4434,7 +5076,7 @@
       const now = performance.now();
       if (this.screenTone) {
         const tone = this.screenTone.tone ?? {};
-        const darkness = clamp2(-(Number(tone.red) + Number(tone.green) + Number(tone.blue)) / (255 * 3), 0, 1);
+        const darkness = clamp4(-(Number(tone.red) + Number(tone.green) + Number(tone.blue)) / (255 * 3), 0, 1);
         if (darkness > 0) {
           c.fillStyle = `rgba(0,0,0,${darkness})`;
           c.fillRect(0, 0, this.width, this.height);
@@ -4443,7 +5085,7 @@
       if (this.screenFlash) {
         const color = this.screenFlash.color ?? {};
         const duration = Math.max(1, this.screenFlash.until - this.screenFlash.began);
-        const alpha = clamp2((this.screenFlash.until - now) / duration, 0, 1) * (Number(color.alpha ?? 255) / 255);
+        const alpha = clamp4((this.screenFlash.until - now) / duration, 0, 1) * (Number(color.alpha ?? 255) / 255);
         if (alpha > 0) {
           c.fillStyle = `rgba(${color.red ?? 255},${color.green ?? 255},${color.blue ?? 255},${alpha})`;
           c.fillRect(0, 0, this.width, this.height);
@@ -4511,7 +5153,7 @@
       this.context.drawImage(this.iconSet, id % 16 * 24, Math.floor(id / 16) * 24, 24, 24, x, y, 24, 24);
     }
     drawGauge(x, y, width, height, value = 0, maximum = 1, color1 = "#fff", color2 = "#888") {
-      const ratio2 = clamp2(Number(value) / Math.max(1, Number(maximum)), 0, 1);
+      const ratio2 = clamp4(Number(value) / Math.max(1, Number(maximum)), 0, 1);
       const gradient = this.context.createLinearGradient(x, y, x + width, y);
       gradient.addColorStop(0, color2);
       gradient.addColorStop(1, color1);
@@ -4539,13 +5181,25 @@
       this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, x - frame.width / 2, y - frame.height, frame.width, frame.height);
     }
     tileAt(x, y, z) {
-      return this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height] ?? 0;
+      if (this.activeFrame) this.activeFrame.tileSamples += 1;
+      if (!Number.isInteger(x) || !Number.isInteger(y) || !Number.isInteger(z)) {
+        if (this.activeFrame) this.activeFrame.invalidTileLookups += 1;
+        return 0;
+      }
+      if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) return 0;
+      const value = this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height];
+      if (value == null && this.activeFrame) this.activeFrame.missingTileSamples += 1;
+      return value ?? 0;
     }
     isUpper(tileId) {
       return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 16);
     }
     drawTile(tileId, dx, dy) {
       if (tileId <= 0) return;
+      if (this.activeFrame) {
+        this.activeFrame.tileDraws += 1;
+        this.activeFrame.drawCalls += 1;
+      }
       if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy);
       if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5);
       this.drawAutotile(tileId, dx, dy);
@@ -4614,14 +5268,14 @@
         this.context.drawImage(sheet, (bx + qsx) * 16, (by + qsy) * 16, 16, 16, dx + index % 2 * 16, dy + Math.floor(index / 2) * 16, 16, 16);
       }
     }
-    drawShadows(cameraX, cameraY, width, height) {
+    drawShadows(window2) {
       const offset = this.map.width * this.map.height * 3;
       this.context.fillStyle = "rgba(0,0,0,.42)";
-      for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) {
-        const mx = x + cameraX;
-        const my = y + cameraY;
+      for (let my = window2.startY; my <= window2.endY; my += 1) for (let mx = window2.startX; mx <= window2.endX; mx += 1) {
         const bits = (this.map.data.data[mx + my * this.map.width + offset] ?? 0) & 15;
-        for (let q = 0; q < 4; q += 1) if (bits & 1 << q) this.context.fillRect(x * 32 + q % 2 * 16, y * 32 + Math.floor(q / 2) * 16, 16, 16);
+        const dx = mx * this.tileSize - window2.pixelX;
+        const dy = my * this.tileSize - window2.pixelY;
+        for (let q = 0; q < 4; q += 1) if (bits & 1 << q) this.context.fillRect(dx + q % 2 * 16, dy + Math.floor(q / 2) * 16, 16, 16);
       }
     }
     drawCharacter(sprite, cameraX, cameraY) {
@@ -4635,9 +5289,10 @@
       const shift = graphic.character_name.startsWith("!") ? 0 : 4;
       const dx = Math.round(x - frame.width / 2);
       const dy = Math.round(y - frame.height - shift);
-      const opacity = clamp2(Number(sprite.opacity ?? 255) / 255, 0, 1);
+      const opacity = clamp4(Number(sprite.opacity ?? 255) / 255, 0, 1);
       this.context.save();
       this.context.globalAlpha = opacity;
+      this.context.globalCompositeOperation = Number(sprite.blendType) === 1 ? "lighter" : Number(sprite.blendType) === 2 ? "multiply" : "source-over";
       if (this.isBush(Math.round(sprite.x), Math.round(sprite.y)) && frame.height >= 24) {
         const bushHeight = Math.min(12, frame.height / 2);
         const topHeight = frame.height - bushHeight;
@@ -4658,7 +5313,7 @@
       const width = image.width * scale;
       const height = image.height * scale;
       this.context.save();
-      this.context.globalAlpha = clamp2(opacity / 255, 0, 1);
+      this.context.globalAlpha = clamp4(opacity / 255, 0, 1);
       this.context.globalCompositeOperation = blend === 1 ? "lighter" : blend === 2 ? "multiply" : "source-over";
       for (let dx = x % width - width; dx < this.width; dx += width) for (let dy = y % height - height; dy < this.height; dy += height) this.context.drawImage(image, dx, dy, width, height);
       this.context.restore();
@@ -4825,6 +5480,7 @@
         camera: this.camera,
         activeAnimations: this.animations.length,
         activeBalloons: this.balloons.length,
+        frameHistory: this.frameHistory.slice(-120),
         fog: Boolean(this.fog),
         pictures: [...this.pictures.values()].map(({ id, name, x, y, opacity, angle }) => ({ id, name, x, y, opacity, angle })),
         battle: this.battleGraphics ? { battleback1: this.battleGraphics.battleback1Path, battleback2: this.battleGraphics.battleback2Path, enemies: [...this.battleGraphics.enemies.keys()] } : null,
@@ -4833,6 +5489,29 @@
       };
     }
   };
+  function computeTileWindow({ displayX, displayY, playerX = 0, playerY = 0, mapWidth, mapHeight, width = 640, height = 480, tileSize = 32, margin = 2 }) {
+    const viewportTilesX = width / tileSize;
+    const viewportTilesY = height / tileSize;
+    const logicalX = clamp4(Number.isFinite(displayX) ? displayX : playerX - (viewportTilesX - 1) / 2, 0, Math.max(0, mapWidth - viewportTilesX));
+    const logicalY = clamp4(Number.isFinite(displayY) ? displayY : playerY - (viewportTilesY - 1) / 2, 0, Math.max(0, mapHeight - viewportTilesY));
+    const pixelX = Math.round(logicalX * tileSize);
+    const pixelY = Math.round(logicalY * tileSize);
+    const cameraX = pixelX / tileSize;
+    const cameraY = pixelY / tileSize;
+    return {
+      logicalX,
+      logicalY,
+      pixelX,
+      pixelY,
+      cameraX,
+      cameraY,
+      margin,
+      startX: Math.max(0, Math.floor(pixelX / tileSize) - margin),
+      endX: Math.min(mapWidth - 1, Math.ceil((pixelX + width) / tileSize) + margin),
+      startY: Math.max(0, Math.floor(pixelY / tileSize) - margin),
+      endY: Math.min(mapHeight - 1, Math.ceil((pixelY + height) / tileSize) + margin)
+    };
+  }
   function characterFrame(image, name, index, direction, pattern) {
     const big = name.replace(/^!/, "").startsWith("$");
     const width = image.width / (big ? 3 : 12);
@@ -4841,7 +5520,7 @@
     const baseY = big ? 0 : Math.floor(index / 4) * 4;
     const cardinal = [2, 4, 6, 8].includes(direction) ? direction : direction < 5 ? 2 : 8;
     const row = { 2: 0, 4: 1, 6: 2, 8: 3 }[cardinal];
-    const renderedPattern = Number(pattern) < 3 ? clamp2(Number(pattern) || 0, 0, 2) : 1;
+    const renderedPattern = Number(pattern) < 3 ? clamp4(Number(pattern) || 0, 0, 2) : 1;
     return { sx: (baseX + renderedPattern) * width, sy: (baseY + row) * height, width, height };
   }
   var FLOOR_AUTOTILE_TABLE = [
@@ -4913,7 +5592,7 @@
     [[0, 0], [3, 0], [0, 3], [3, 3]]
   ];
   var WATERFALL_AUTOTILE_TABLE = [[[2, 0], [1, 0], [2, 1], [1, 1]], [[0, 0], [1, 0], [0, 1], [1, 1]], [[2, 0], [3, 0], [2, 1], [3, 1]], [[0, 0], [3, 0], [0, 1], [3, 1]]];
-  function clamp2(value, min, max) {
+  function clamp4(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
   function displayText(value) {
@@ -4959,7 +5638,7 @@
     const transition = picture.transition;
     if (!transition) return;
     const now = performance.now();
-    const progress = clamp2((now - transition.began) / Math.max(1, transition.until - transition.began), 0, 1);
+    const progress = clamp4((now - transition.began) / Math.max(1, transition.until - transition.began), 0, 1);
     for (const [key, target] of Object.entries(transition.target)) {
       const start = transition.from[key];
       picture[key] = Number.isFinite(Number(start)) && Number.isFinite(Number(target)) ? Number(start) + (Number(target) - Number(start)) * progress : progress >= 1 ? target : start;
