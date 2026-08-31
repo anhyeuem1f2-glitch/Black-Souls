@@ -1,6 +1,6 @@
 # BLACK SOULS SillyTavern Port Status
 
-Release **0.8.0** is pinned by `release/verified-runtime.json`; the final card is generated only after the immutable remote runtime passes multi-CDN validation.
+Release **0.8.0** is pinned to verified runtime commit `a8395c22f4427e3313f75ed5a5db61e40181a484` with bundle SHA-256 `1D1FC59EAE6FB1CD5C78A36024296E4A386C0F6D8260513D6D0679C7233DA31C`. The runtime was built from source commit `7a810cc47ec820116c0700210729377126184a69`.
 
 This release restores the source-defined Map 7 → Map 97 opening and both final branches: skip to Map 10 `(15,16)` and no-skip to Map 98 `(55,5)`. Class choice performs real party replacement (actor 2/3/4), copies the entered name, applies class variables/switches/gifts, and renders the actual party leader.
 

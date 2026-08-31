@@ -8,4 +8,6 @@ Browser acceptance used the in-app browser against the local runtime. A 35.075-s
 
 A real hostile fixture then loaded original Map98 Event 16 (`Monster1`, trigger 2, normal priority, `enable_symbol_encount(1)`) at `(4,19)` against the player at `(7,19)`. It detected the player, chased two steps, made contact with condition 2 (surprise), issued HIGH-priority battle prefetch, entered fixed troop 3 `Lợn Đồ Tể`, accepted Guard, and let the enemy complete a real Attack action.
 
-Release validation confirms origin fetch/push URLs, the pushed immutable runtime ref, GitHub availability, primary jsDelivr, testingcf fallback, Fastly fallback, all boot JSON, bundle MIME/body, and SHA-256 before card export.
+The generated `deliverables/Black_Souls_ST.json` also passed a production-loader browser smoke. Its embedded TavernHelper script fetched the runtime bundle from the exact jsDelivr URL for `a8395c22f4427e3313f75ed5a5db61e40181a484`, mounted `.black-souls-host`, reported `Ready`, and presented the 640×480 game canvas.
+
+Release validation confirmed both origin URLs as `https://github.com/anhyeuem1f2-glitch/Black-Souls.git`, remote main at `a8395c22f4427e3313f75ed5a5db61e40181a484`, primary jsDelivr, testingcf fallback, Fastly fallback, every boot JSON response, bundle MIME/body, and SHA-256 `1D1FC59EAE6FB1CD5C78A36024296E4A386C0F6D8260513D6D0679C7233DA31C` before card export.

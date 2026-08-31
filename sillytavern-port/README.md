@@ -4,7 +4,7 @@ This directory contains a deterministic browser port of the repository's RPG Mak
 
 Release 0.8.0 adds source-faithful current-map `Game_Event` page setup, autonomous movement, priority/through collision, Script 145 symbol detection/chase/contact, and command 301 battle entry. The renderer now presents complete offscreen frames atomically and derives integer tile windows from fractional camera coordinates, eliminating the movement black flash. See `ENEMY_EVENT_FORENSICS.md`, `EVENT_MOVEMENT_COMPATIBILITY.md`, `SYMBOL_ENCOUNTER_COMPATIBILITY.md`, and `MAP_RENDERING_COMPATIBILITY.md`.
 
-The production card is pinned by `release/verified-runtime.json`. The embedded loader preflights the immutable build manifest and required data, verifies SHA-256/SRI, and tries jsDelivr, testingcf, then Fastly before the visible last-known-good fallback.
+The production card is pinned to verified runtime commit `a8395c22f4427e3313f75ed5a5db61e40181a484`. Its 306,294-byte classic bundle has SHA-256 `1D1FC59EAE6FB1CD5C78A36024296E4A386C0F6D8260513D6D0679C7233DA31C`. The embedded loader preflights the immutable build manifest and required data, verifies SHA-256/SRI, and tries jsDelivr, testingcf, then Fastly before the visible last-known-good fallback.
 
 ## Import
 
