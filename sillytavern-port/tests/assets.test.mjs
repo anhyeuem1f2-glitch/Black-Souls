@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { AssetResolver, parseLfsPointer, validateMagic } from '../runtime/assets/asset-resolver.js';
 import { CanvasRenderer, characterFrame } from '../runtime/render/canvas-renderer.js';
+import { AudioManager } from '../runtime/audio/audio-manager.js';
 
 test('detects and rejects Git LFS pointer bytes before image decode', async () => {
   const pointer = new TextEncoder().encode('version https://git-lfs.github.com/spec/v1\noid sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsize 346411\n');
@@ -136,4 +137,29 @@ test('off-screen event sprites stream after the initial map bundle becomes visib
   resolveOffscreen({ width: 384, height: 256 });
   await new Promise((resolve) => setTimeout(resolve, 0));
   assert.equal(renderer.characterImages.has('FarAway'), true, 'the streamed sheet becomes available without another transition');
+});
+
+test('map audio prepares its validated URL without holding visibility on playback startup', async () => {
+  const OriginalAudio = globalThis.Audio;
+  let resolvePlayback;
+  const playback = new Promise((resolve) => { resolvePlayback = resolve; });
+  class FixtureAudio {
+    play() { return playback; }
+    pause() {}
+  }
+  globalThis.Audio = FixtureAudio;
+  try {
+    const manager = new AudioManager({
+      resolveEntry: () => ({ path: 'Audio/BGM/Map Theme.ogg' }),
+      audioUrl: async () => 'blob:prepared-map-audio',
+    });
+    manager.stats.unlocked = true;
+    await manager.applyMapAudio({ autoplay_bgm: true, bgm: { name: 'Map Theme', volume: 90, pitch: 100 }, autoplay_bgs: false });
+    assert.equal(manager.stats.bgm.state, 'loading');
+    resolvePlayback();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.equal(manager.stats.bgm.state, 'playing');
+  } finally {
+    globalThis.Audio = OriginalAudio;
+  }
 });

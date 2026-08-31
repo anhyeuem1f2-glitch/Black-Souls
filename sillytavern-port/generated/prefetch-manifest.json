@@ -1,6 +1,5 @@
 {
   "schema": "black-souls-prefetch-manifest-v1",
-  "generatedAt": "2026-08-31T04:12:55.198Z",
   "policy": {
     "graphDepth": 2,
     "eventLookahead": 48,

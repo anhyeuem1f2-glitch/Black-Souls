@@ -26,13 +26,13 @@ export class AudioManager {
   }
 
   async applyMapAudio(map) {
-    if (map?.autoplay_bgm && map.bgm?.name) await this.playLoop('bgm', map.bgm);
+    if (map?.autoplay_bgm && map.bgm?.name) await this.playLoop('bgm', map.bgm, { waitForPlayback: false });
     else if (!map?.autoplay_bgm) this.stop('bgm');
-    if (map?.autoplay_bgs && map.bgs?.name) await this.playLoop('bgs', map.bgs);
+    if (map?.autoplay_bgs && map.bgs?.name) await this.playLoop('bgs', map.bgs, { waitForPlayback: false });
     else if (!map?.autoplay_bgs) this.stop('bgs');
   }
 
-  async playLoop(channel, descriptor) {
+  async playLoop(channel, descriptor, { waitForPlayback = true } = {}) {
     if (this.stats[channel]?.name === descriptor.name) return;
     this.stop(channel);
     const path = this.findAudioPath(`Audio/${channel.toUpperCase()}/${descriptor.name}`);
@@ -49,9 +49,13 @@ export class AudioManager {
         this.onDiagnostic({ type: 'audio-awaiting-unlock', channel, path });
         return;
       }
-      await element.play();
-      this.stats[channel].state = 'playing';
-      this.onDiagnostic({ type: 'audio-playing', channel, path });
+      const playback = element.play().then(() => {
+        if (this.channels[channel] !== element) return;
+        this.stats[channel].state = 'playing';
+        this.onDiagnostic({ type: 'audio-playing', channel, path });
+      }).catch((error) => this.failure(channel, descriptor.name, error.message));
+      if (waitForPlayback) await playback;
+      else void playback;
     } catch (error) {
       this.failure(channel, descriptor.name, error.message);
     }

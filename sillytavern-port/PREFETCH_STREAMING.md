@@ -1,6 +1,6 @@
 # Predictive Prefetch and Streaming
 
-BLACK SOULS v0.4.0 uses one `PrefetchManager` for map JSON, repository assets, decoded images, parsed maps, request scheduling, retries, persistent caching, and transition measurements. Runtime code continues to address assets by their original VX Ace paths; the manager owns delivery policy and cache identity.
+BLACK SOULS v0.4.1 uses one `PrefetchManager` for map JSON, repository assets, decoded images, parsed maps, request scheduling, retries, persistent caching, and transition measurements. Runtime code continues to address assets by their original VX Ace paths; the manager owns delivery policy and cache identity.
 
 ## Dependency generation
 
@@ -51,7 +51,7 @@ Each candidate uses a kind-specific timeout: JSON 10 seconds, images/binary 18 s
 
 All timing uses browser-native `performance.now()` when available. Fetch wrappers record elapsed time, bytes, retry/fallback/timeout counts, and cache source; image decode records separate decode time. Every map transition records start-to-visible duration and whether it was already warm. Diagnostics expose average and p95 transition duration, prefetch hit rate, memory/decoded/persistent hits, duplicate requests avoided, active/queued requests, oldest request age, and current cache budgets.
 
-The deterministic integration benchmark simulates a cold Map B JSON plus critical image request. The reactive baseline is approximately 158–225 ms on the test runs; after predictive warming the same transition measured approximately 0.26–7.28 ms under different test-process load, with exactly two network fetches total and no duplicate transfer download. In the final browser harness run, cold opening work ran behind the title; the warmed Map 7 transition measured 5.5 ms and the warmed Map 97 transfer 8.0 ms. These are internal regression measurements, not universal network guarantees.
+The deterministic integration benchmark simulates a cold Map B JSON plus critical image request. The reactive baseline is approximately 158–358 ms on the test runs; after predictive warming the same transition measured approximately 0.26–8.61 ms under different test-process load, with exactly two network fetches total and no duplicate transfer download. In the final v0.4.1 local browser run, cold opening work ran behind the title; the warmed Map 7 transition measured 4.5 ms and the warmed Map 97 transfer 10.8 ms. These are internal regression measurements, not universal network guarantees.
 
 The optimized four-map opening warm set occupied about 25.2 MiB of validated byte cache and 23.9 MiB of decoded-image cache in the browser harness. It does not preload the roughly 600 MiB game tree.
 

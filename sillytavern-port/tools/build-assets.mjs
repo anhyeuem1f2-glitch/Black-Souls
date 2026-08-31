@@ -98,7 +98,7 @@ function scanCommands(commands = [], source) {
 const directReferences = [...requirements.values()].map((item) => ({ basePath: item.basePath, present: available.has(item.basePath.toLocaleLowerCase()), sources: [...item.sources].sort() })).sort((a, b) => a.basePath.localeCompare(b.basePath));
 const manifest = {
   schema: 'black-souls-asset-manifest-v2', generatedFrom: 'git HEAD LFS objects + normalized rvdata2 references + isolated browser RTP subset',
-  repository: { owner: 'anhyeuem1f2-glitch', name: 'Black-Souls', ref: 'streaming-v0.4.0' },
+  repository: { owner: 'anhyeuem1f2-glitch', name: 'Black-Souls', ref: 'streaming-v0.4.1' },
   deliveryPolicy: { lfs: 'github-media', bundledRtp: 'runtime-bundle', validation: 'magic-bytes-before-decode' },
   assets: assets.sort((a, b) => a.path.localeCompare(b.path)), directReferences, missingDirectReferences: directReferences.filter((item) => !item.present),
 };

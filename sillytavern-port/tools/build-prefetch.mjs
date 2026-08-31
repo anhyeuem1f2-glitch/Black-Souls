@@ -76,7 +76,6 @@ const startMapId = system.start_map_id;
 const openingMaps = routeFrom(startMapId, graph, 2);
 const output = {
   schema: 'black-souls-prefetch-manifest-v1',
-  generatedAt: new Date().toISOString(),
   policy: { graphDepth: 2, eventLookahead: 48, commonEventDepth: 2 },
   start: { mapId: startMapId, x: system.start_x, y: system.start_y },
   routes: { opening: openingMaps },
