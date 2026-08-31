@@ -1,6 +1,6 @@
 {
   "schema": "black-souls-st-runtime-manifest-v1",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "game": "BLACK SOULS",
   "mode": "game-only-no-ai",
   "runtime": {
@@ -24,7 +24,7 @@
     "repository": {
       "owner": "anhyeuem1f2-glitch",
       "name": "Black-Souls",
-      "ref": "direct-boot-v0.3.0"
+      "ref": "name-confirm-v0.3.1"
     },
     "delivery": {
       "lfs": "github-media",

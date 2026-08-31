@@ -7,7 +7,9 @@ export class CanvasRenderer {
     this.canvas = document.createElement('canvas'); this.canvas.width = this.width; this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d'); this.context.imageSmoothingEnabled = false; stage.append(this.canvas);
     this.fade = 0; this.characterImages = new Map(); this.animations = []; this.balloons = [];
-    this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], title: null };
+    this.animationSheetFailures = new Map();
+    this.characterSheetFailures = new Map();
+    this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [] };
   }
 
   async setTitle(system) {
@@ -29,10 +31,20 @@ export class CanvasRenderer {
     const sheets = await Promise.all((tileset?.tileset_names ?? []).map((name) => name ? this.loader.image(`Graphics/Tilesets/${name}.png`) : null));
     const graphics = [playerGraphic, ...events.map((event) => event.page?.graphic)].filter((graphic) => graphic?.character_name);
     const characterImages = new Map(this.characterImages);
-    await Promise.all([...new Set(graphics.map((graphic) => graphic.character_name))].map(async (name) => characterImages.set(name, await this.loader.image(`Graphics/Characters/${name}.png`))));
+    const missingCharacters = [];
+    await Promise.all([...new Set(graphics.map((graphic) => graphic.character_name))].map(async (name) => {
+      const path = `Graphics/Characters/${name}.png`;
+      if (this.characterSheetFailures.has(path)) { missingCharacters.push(name); return; }
+      const image = await this.loader.image(path, { optional: true });
+      if (image) characterImages.set(name, image);
+      else {
+        this.characterSheetFailures.set(path, 'unavailable');
+        missingCharacters.push(name);
+      }
+    }));
     const fog = await this.loadFog(map.note);
     this.map = map; this.tileset = tileset; this.sheets = sheets; this.characterImages = characterImages; this.fog = fog; this.playerGraphic = playerGraphic;
-    this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null; this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.stats.characters = [...this.characterImages.keys()];
+    this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null; this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.stats.characters = [...this.characterImages.keys()]; this.stats.missingCharacters = missingCharacters;
   }
 
   async loadFog(note = '') {
@@ -165,7 +177,20 @@ export class CanvasRenderer {
   }
 
   async showAnimation(target, animation) {
-    if (!animation) return; const sheets = await Promise.all([animation.animation1_name, animation.animation2_name].map((name) => name ? this.loader.image(`Graphics/Animations/${name}.png`) : null));
+    if (!animation) return;
+    const sheets = await Promise.all([animation.animation1_name, animation.animation2_name].map(async (name) => {
+      if (!name) return null;
+      const path = `Graphics/Animations/${name}.png`;
+      if (this.animationSheetFailures.has(path)) return null;
+      try {
+        return await this.loader.image(path);
+      } catch (error) {
+        this.animationSheetFailures.set(path, error.message);
+        this.stats.animationFailures = [...this.animationSheetFailures].map(([failedPath, message]) => ({ path: failedPath, error: message }));
+        console.warn(`[BLACK SOULS] Animation sheet unavailable; animation ${animation.id ?? '?'} will render without ${path}.`, error);
+        return null;
+      }
+    }));
     this.animations.push({ target, animation, sheets, began: performance.now() }); await new Promise((resolve) => setTimeout(resolve, Math.max(1, animation.frame_max) * 4 * 1000 / 60));
   }
   async showBalloon(target, balloonId) {
@@ -192,7 +217,29 @@ export class CanvasRenderer {
 
   drawMessage(message) { if (!message) return; const c = this.context; c.fillStyle = 'rgba(8,6,8,.92)'; c.fillRect(12, this.height - 132, this.width - 24, 120); c.strokeStyle = '#c5bda9'; c.strokeRect(12.5, this.height - 131.5, this.width - 25, 119); c.fillStyle = '#f1ede4'; c.font = '20px Georgia, serif'; wrapText(c, message, 30, this.height - 96, this.width - 60, 28); c.font = '13px ui-monospace, monospace'; c.fillStyle = '#aaa'; c.fillText('Enter / Space', this.width - 125, this.height - 24); }
   drawChoice(choice) { if (!choice) return; const c = this.context; const width = 280; const height = choice.options.length * 30 + 24; const x = this.width - width - 22; const y = this.height - 144 - height; c.fillStyle = 'rgba(8,6,8,.95)'; c.fillRect(x, y, width, height); c.strokeStyle = '#c5bda9'; c.strokeRect(x + .5, y + .5, width - 1, height - 1); c.font = '18px Georgia, serif'; choice.options.forEach((option, index) => { c.fillStyle = index === choice.selected ? '#fff' : '#aaa'; c.fillText(`${index === choice.selected ? '›' : ' '} ${option}`, x + 18, y + 30 + index * 30); }); }
-  promptText(label, maxLength, value = '') { return new Promise((resolve) => { const form = document.createElement('form'); form.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#000c;color:#eee;font:18px Georgia,serif'; form.innerHTML = `<label style="display:grid;gap:10px;width:min(360px,80%)">${label}<input maxlength="${Number(maxLength) || 12}" style="padding:10px;background:#100d0e;color:#fff;border:1px solid #866"><button style="padding:9px;background:#28181c;color:#fff;border:1px solid #744">Confirm</button></label>`; const input = form.querySelector('input'); input.value = value; form.addEventListener('submit', (event) => { event.preventDefault(); const result = input.value.trim(); form.remove(); this.stage.focus(); resolve(result); }); this.stage.append(form); input.focus(); }); }
+  promptText(label, maxLength, value = '') {
+    return new Promise((resolve) => {
+      const form = document.createElement('form');
+      form.dataset.bsModal = 'name-input';
+      form.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#000c;color:#eee;font:18px Georgia,serif';
+      form.innerHTML = `<label style="display:grid;gap:10px;width:min(360px,80%)">${label}<input maxlength="${Number(maxLength) || 12}" style="padding:10px;background:#100d0e;color:#fff;border:1px solid #866"><button style="padding:9px;background:#28181c;color:#fff;border:1px solid #744">Confirm</button></label>`;
+      const input = form.querySelector('input');
+      let settled = false;
+      input.value = value;
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (settled) return;
+        settled = true;
+        const result = input.value.trim();
+        form.remove();
+        this.stage.focus({ preventScroll: true });
+        resolve(result);
+      });
+      this.stage.append(form);
+      input.focus({ preventScroll: true });
+    });
+  }
   async fadeTo(target, duration = 280) { const start = this.fade; const began = performance.now(); await new Promise((resolve) => { const frame = (now) => { const progress = Math.min(1, (now - began) / duration); this.fade = start + (target - start) * progress; if (progress < 1) requestAnimationFrame(frame); else resolve(); }; requestAnimationFrame(frame); }); }
   diagnostics() { return { ...this.stats, camera: this.camera, activeAnimations: this.animations.length, activeBalloons: this.balloons.length, fog: Boolean(this.fog) }; }
 }

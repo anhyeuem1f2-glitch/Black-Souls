@@ -42,9 +42,9 @@ const snippets = new Map();
 const runtimeCoverage = new Map(Object.entries({
   0: ['complete', true], 101: ['partial', false], 108: ['complete', true], 121: ['complete', true],
   102: ['partial', true], 111: ['partial', true], 115: ['complete', false], 118: ['complete', false], 119: ['complete', false],
-  122: ['partial', false], 123: ['complete', false], 201: ['partial', true], 205: ['partial', true],
-  221: ['partial', true], 222: ['partial', true], 230: ['complete', false], 250: ['partial', true],
-  303: ['partial', true], 320: ['complete', false], 355: ['partial', false], 401: ['complete', true],
+  122: ['partial', false], 123: ['complete', true], 201: ['partial', true], 205: ['partial', true],
+  212: ['partial', true], 213: ['partial', true], 221: ['partial', true], 222: ['partial', true], 230: ['complete', false], 250: ['partial', true],
+  303: ['complete', true], 320: ['complete', false], 355: ['partial', false], 401: ['complete', true],
   402: ['complete', true], 403: ['complete', true], 404: ['complete', true], 408: ['complete', false],
   411: ['complete', true], 412: ['complete', true], 505: ['partial', true], 655: ['complete', false],
 }));
@@ -159,7 +159,7 @@ function matches(source, pattern) {
 function eventCoverageMarkdown(summary, commands, ruby) {
   const rows = commands.map((item) => `| ${item.code} | ${item.name} | ${item.count} | ${item.maps.length} | ${item.commonEvents.length} | ${item.implementation} | ${item.tested ? 'yes' : 'no'} |`).join('\n');
   const rubyRows = ruby.slice(0, 100).map((item) => `| \`${item.hash}\` | ${item.kind} | ${item.occurrences} | \`${escapeCell(item.source.split(/\r?\n/, 1)[0].slice(0, 100))}\` |`).join('\n');
-  return `# Event Command Coverage\n\nGenerated from all 150 maps and ${summary.commonEvents} common events. Unsupported commands remain explicit; this report does not imply compatibility.\n\n- Command instances: ${summary.eventCommands}\n- Distinct command codes: ${summary.eventCommandTypes}\n- Distinct embedded Ruby snippets: ${summary.embeddedRubySnippets}\n\n| Code | VX Ace command | Count | Maps | Common events | Implemented | Tested |\n|---:|---|---:|---:|---:|---|---|\n${rows}\n\n## Embedded Ruby inventory\n\nThe machine-readable complete inventory, including full source and locations, is in \`generated/audit/embedded-ruby.json\`.\n\n| Hash | Kind | Uses | First line |\n|---|---|---:|---|\n${rubyRows}\n`;
+  return `# Event Command Coverage\n\nGenerated from all 150 maps and ${summary.commonEvents} common events. Unsupported commands remain explicit; this report does not imply compatibility.\n\n- Command instances: ${summary.eventCommands}\n- Distinct command codes: ${summary.eventCommandTypes}\n- Distinct embedded Ruby snippets: ${summary.embeddedRubySnippets}\n\n| Code | VX Ace command | Count | Maps | Common events | Implemented | Tested |\n|---:|---|---:|---:|---:|---|---|\n${rows}\n\n## Opening continuation trace (v0.3.1)\n\nThe regression follows Map 97 Event 1 Page 0 on the original default path.\n\n| Index | Code | Operation | Verified continuation |\n|---:|---:|---|---|\n| 10 | 118 | Label \`2\` | enters original name loop |\n| 11 | 303 | Name Input, actor 1, max 6 | suspends on \`name_input\`; same interpreter resumes exactly once |\n| 12 | 111 | Self Switch A condition | next command after modal |\n| 51 | 101 | \`\\N[1]. XÁC NHẬN?\` | renders with the confirmed actor name |\n| 53 | 102 | \`Đúng\` / \`Không đúng\` | accepted branch continues |\n| 60 | 212 | Animation 109, sheet \`Light6\` | missing RTP sheet is diagnostic-only; event logic continues |\n| 61 | 101 | Post-name dialogue | renders after confirmation |\n| 251 | 201 | Transfer to Map 10 \`(15,16)\` | browser-verified |\n\nMap 10 Event 38 Page 0 then runs its 29-command autorun, shows the translation-credit message, sets Self Switch A at index 27, and ends with interpreter \`running=false\` and an empty wait mode. Missing optional event sprite \`Damage3\` is reported and omitted without aborting the map transfer.\n\n## Embedded Ruby inventory\n\nThe machine-readable complete inventory, including full source and locations, is in \`generated/audit/embedded-ruby.json\`.\n\n| Hash | Kind | Uses | First line |\n|---|---|---:|---|\n${rubyRows}\n`;
 }
 
 function scriptCoverageMarkdown(summary, allScripts) {

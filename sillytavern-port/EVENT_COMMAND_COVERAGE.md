@@ -22,7 +22,7 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | 119 | Jump to Label | 187 | 5 | 1 | complete | no |
 | 121 | Control Switches | 1994 | 98 | 164 | complete | yes |
 | 122 | Control Variables | 885 | 73 | 49 | partial | no |
-| 123 | Control Self Switch | 2903 | 113 | 0 | complete | no |
+| 123 | Control Self Switch | 2903 | 113 | 0 | complete | yes |
 | 124 | Control Timer | 9 | 9 | 0 | none | no |
 | 125 | Change Gold | 79 | 18 | 27 | none | no |
 | 126 | Change Items | 1474 | 95 | 16 | none | no |
@@ -39,8 +39,8 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | 205 | Set Move Route | 1742 | 102 | 9 | partial | yes |
 | 206 | Get On/Off Vehicle | 5 | 0 | 5 | none | no |
 | 211 | Change Transparency | 12 | 2 | 1 | none | no |
-| 212 | Show Animation | 311 | 23 | 15 | none | no |
-| 213 | Show Balloon Icon | 291 | 56 | 0 | none | no |
+| 212 | Show Animation | 311 | 23 | 15 | partial | yes |
+| 213 | Show Balloon Icon | 291 | 56 | 0 | partial | yes |
 | 221 | Fadeout Screen | 566 | 54 | 119 | partial | yes |
 | 222 | Fadein Screen | 567 | 54 | 118 | partial | yes |
 | 223 | Tint Screen | 253 | 42 | 12 | none | no |
@@ -64,7 +64,7 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | 283 | Change Battle Back | 50 | 7 | 2 | none | no |
 | 301 | Battle Processing | 765 | 96 | 0 | none | no |
 | 302 | Shop Processing | 33 | 9 | 2 | none | no |
-| 303 | Name Input Processing | 3 | 3 | 0 | partial | yes |
+| 303 | Name Input Processing | 3 | 3 | 0 | complete | yes |
 | 314 | Recover All | 44 | 1 | 42 | none | no |
 | 315 | Change EXP | 12 | 0 | 11 | none | no |
 | 316 | Change Level | 12 | 2 | 1 | none | no |
@@ -88,6 +88,23 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | 603 | Battle Lose | 763 | 95 | 0 | none | no |
 | 604 | Battle End | 764 | 96 | 0 | none | no |
 | 605 | Shop Goods | 186 | 7 | 2 | none | no |
+
+## Opening continuation trace (v0.3.1)
+
+The regression follows Map 97 Event 1 Page 0 on the original default path.
+
+| Index | Code | Operation | Verified continuation |
+|---:|---:|---|---|
+| 10 | 118 | Label `2` | enters original name loop |
+| 11 | 303 | Name Input, actor 1, max 6 | suspends on `name_input`; same interpreter resumes exactly once |
+| 12 | 111 | Self Switch A condition | next command after modal |
+| 51 | 101 | `\N[1]. XÁC NHẬN?` | renders with the confirmed actor name |
+| 53 | 102 | `Đúng` / `Không đúng` | accepted branch continues |
+| 60 | 212 | Animation 109, sheet `Light6` | missing RTP sheet is diagnostic-only; event logic continues |
+| 61 | 101 | Post-name dialogue | renders after confirmation |
+| 251 | 201 | Transfer to Map 10 `(15,16)` | browser-verified |
+
+Map 10 Event 38 Page 0 then runs its 29-command autorun, shows the translation-credit message, sets Self Switch A at index 27, and ends with interpreter `running=false` and an empty wait mode. Missing optional event sprite `Damage3` is reported and omitted without aborting the map transfer.
 
 ## Embedded Ruby inventory
 

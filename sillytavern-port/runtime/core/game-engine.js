@@ -14,6 +14,9 @@ export class GameEngine {
     this.onExitRequest = onExitRequest;
     this.unsupported = new Set();
     this.diagnosticsLog = [];
+    this.interpreterTraceEnabled = new URLSearchParams(globalThis.location?.search ?? '').get('bsTrace') === '1';
+    this.modalStack = [];
+    this.modalSequence = 0;
   }
 
   async initialize() {
@@ -66,7 +69,7 @@ export class GameEngine {
     this.notifyScene();
     await this.loadMap(this.state.mapId);
     this.status(`New game: map ${this.state.mapId} (${this.state.x}, ${this.state.y})`);
-    void this.runAutorunEvents().catch((error) => { this.recordDiagnostic({ type: 'autorun-failed', error: error.message }); this.status(error.message); });
+    void this.runAutorunEvents().catch((error) => this.handleInterpreterFailure(error));
   }
 
   async loadMap(mapId) {
@@ -88,11 +91,18 @@ export class GameEngine {
   }
 
   async transfer(mapId, x, y, direction = 0) {
+    const previous = { mapId: this.state.mapId, x: this.state.x, y: this.state.y, direction: this.state.direction };
     this.state.mapId = mapId;
     this.state.x = x;
     this.state.y = y;
     if (direction) this.state.direction = direction;
-    await this.loadMap(mapId);
+    try {
+      await this.loadMap(mapId);
+    } catch (error) {
+      Object.assign(this.state, previous);
+      this.recordDiagnostic({ type: 'transfer-rollback', requested: { mapId, x, y, direction }, restored: previous, error: error.message });
+      throw error;
+    }
     this.status(`Transferred to original map ${mapId} (${x}, ${y})`);
     this.pendingAutorun = true;
   }
@@ -108,6 +118,13 @@ export class GameEngine {
       const page = this.activePage(event);
       if (page?.trigger === 3) await this.interpreter.run(page.list, { eventId: event.id });
     }
+  }
+
+  handleInterpreterFailure(error, interpreter = this.interpreter?.snapshot()) {
+    const message = `Event stopped at map ${interpreter?.mapId ?? '?'} event ${interpreter?.eventId ?? '?'} index ${interpreter?.index ?? '?'} code ${interpreter?.code ?? '?'}: ${error.message}`;
+    this.recordDiagnostic({ type: 'autorun-failed', error: error.message, interpreter });
+    this.status(message);
+    console.error('[BLACK SOULS]', message, error);
   }
 
   activePage(event) {
@@ -140,6 +157,7 @@ export class GameEngine {
 
   update() {
     if (this.paused) return;
+    this.interpreter?.updateWatchdog?.();
     if (this.input.takeInteraction()) void this.audio.unlock();
     if (this.state.scene === 'TITLE') { this.updateTitle(); return; }
     if (this.state.scene === 'MENU' || this.state.scene === 'END') { this.updateMenu(); return; }
@@ -284,8 +302,47 @@ export class GameEngine {
 
   async nameInput(actorId, maxLength) {
     const current = this.state.actors[actorId]?.name ?? '';
-    const name = await this.renderer.promptText('Name', maxLength, current);
-    if (name) this.setActorName(actorId, name);
+    const modal = {
+      id: ++this.modalSequence,
+      kind: 'name_input',
+      actorId,
+      maxLength,
+      previousScene: this.state.scene,
+      openedAt: new Date().toISOString(),
+    };
+    this.modalStack.push(modal);
+    this.input.clear();
+    this.recordDiagnostic({
+      type: 'name-input-open', modal: { ...modal }, actorName: current,
+      interpreter: this.interpreter.snapshot(), sceneStack: [modal.previousScene, 'NAME_INPUT'],
+      playerInputLocked: true, messageBusy: Boolean(this.state.message || this.state.choice), focus: focusSnapshot(this.renderer.stage),
+    });
+    try {
+      const name = await this.renderer.promptText('Name', maxLength, current);
+      if (name) this.setActorName(actorId, name);
+      this.recordDiagnostic({
+        type: 'name-input-confirm', modalId: modal.id, actorId, actorName: this.state.actors[actorId]?.name ?? '',
+        interpreter: this.interpreter.snapshot(), sceneStack: [modal.previousScene, 'NAME_INPUT'],
+        modalPromiseResolved: true, commandPromisePending: true, playerInputLocked: true,
+        messageBusy: Boolean(this.state.message || this.state.choice), focus: focusSnapshot(this.renderer.stage),
+      });
+    } finally {
+      const index = this.modalStack.findIndex((entry) => entry.id === modal.id);
+      if (index >= 0) this.modalStack.splice(index, 1);
+      this.input.clear();
+      this.renderer.stage.focus({ preventScroll: true });
+      await nextFrame();
+      this.recordDiagnostic({
+        type: 'name-input-return-frame', modalId: modal.id, actorId, actorName: this.state.actors[actorId]?.name ?? '',
+        interpreter: this.interpreter.snapshot(), modalStack: this.modalStack.map((entry) => entry.kind), sceneStack: [modal.previousScene],
+        commandPromisePending: true, playerInputLocked: true, messageBusy: Boolean(this.state.message || this.state.choice), focus: focusSnapshot(this.renderer.stage),
+      });
+      if (this.interpreterTraceEnabled) setTimeout(() => this.recordDiagnostic({
+          type: 'name-input-return-250ms', modalId: modal.id, actorId, actorName: this.state.actors[actorId]?.name ?? '',
+          interpreter: this.interpreter.snapshot(), sceneStack: [this.state.scene], modalStack: this.modalStack.map((entry) => entry.kind),
+          playerInputLocked: this.interpreter.running, messageBusy: Boolean(this.state.message || this.state.choice), focus: focusSnapshot(this.renderer.stage),
+        }), 250);
+    }
   }
 
   setActorName(actorId, name) {
@@ -366,6 +423,7 @@ export class GameEngine {
         asset: this.renderer.stats.title?.title1?.path ? this.loader.assetDiagnostics(this.renderer.stats.title.title1.path) : null,
       },
       playerAsset: this.renderer.playerGraphic?.character_name ?? null,
+      interpreter: this.interpreter?.diagnostics(), modals: this.modalStack.map((entry) => ({ ...entry })),
       assets: this.loader.diagnostics(), audio: this.audio?.diagnostics(), renderer: this.renderer.diagnostics(),
       unsupported: [...this.unsupported], log: [...this.diagnosticsLog],
     };
@@ -397,3 +455,13 @@ export class GameEngine {
 
 function cycle(value, delta, length) { return (value + delta + length) % length; }
 function reverse(direction) { return 10 - direction; }
+function nextFrame() {
+  return new Promise((resolve) => {
+    if (typeof globalThis.requestAnimationFrame === 'function') globalThis.requestAnimationFrame(() => resolve());
+    else queueMicrotask(resolve);
+  });
+}
+function focusSnapshot(stage) {
+  const active = globalThis.document?.activeElement;
+  return { activeElement: active?.tagName ?? null, gameHasFocus: active === stage, inputCaptureEnabled: !active || !/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName) };
+}

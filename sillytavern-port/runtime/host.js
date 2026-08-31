@@ -80,7 +80,7 @@ export class BlackSoulsHost {
     this.onClick = async (event) => {
       const action = event.target.closest('[data-action]')?.dataset.action;
       if (!action) {
-        if (event.target.closest('.bs-stage')) this.focusGame();
+        if (event.target.closest('.bs-stage') && !event.target.closest('[data-bs-modal]')) this.focusGame();
         return;
       }
       try {
@@ -141,7 +141,7 @@ export class BlackSoulsHost {
   }
 
   focusGame() {
-    if (!this.stage || this.lifecycleState === HOST_STATES.PAUSED) return;
+    if (!this.stage || this.lifecycleState === HOST_STATES.PAUSED || this.stage.querySelector('[data-bs-modal]')) return;
     this.stage.focus({ preventScroll: true });
   }
 

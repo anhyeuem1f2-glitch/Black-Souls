@@ -20,12 +20,17 @@
 - [x] Explicit host states and recovery: `LOADING`, `TITLE`, `PLAYING`, `MENU`, `PAUSED`, `ERROR`, and `UNMOUNTED`; explicit Exit compacts the iframe into a persistent Resume control.
 - [x] VX Ace Cancel lifecycle: Escape/X opens or closes the in-game menu and never hides/unmounts the iframe; fullscreen changes preserve game scene/state.
 - [x] Map renderer commits map, sheets, sprites, and fog atomically and retries after a frame error instead of permanently killing the animation loop.
+- [x] Command 303 has an explicit `name_input` suspension lifecycle: actor state updates, the same interpreter resumes at index + 1 exactly once, modal/input state clears, and focus returns to the game surface.
+- [x] Developer-only interpreter tracing records interpreter/map/event/index/code/parameters/wait/result/next index; the stall watchdog reports without auto-skipping.
+- [x] The original Map 97 opening is browser-verified through post-name dialogue, role/gift choices, transfer index 251, and Map 10 Event 38 completion.
+- [x] Missing visual-only animation/event-sprite RTP assets are diagnosed and omitted without killing event logic or leaving a half-committed transfer; failed transfers roll state back transactionally.
 
 ## In progress / partial
 
 - [~] Tiles: A1–A4 quarter composition, animation, A5/B–E, star priority, and shadows are implemented; broader map golden comparisons remain.
 - [~] Collision: VX Ace directional tile flags and the original 8-direction script's strict two-route diagonal check/cardinal fallback are honored; event collision, counter tiles, boats, regions, and other plugin rules remain.
 - [~] Events: 28 of 80 command codes have some implementation; several are only partial.
+- [~] Opening state mutations: flow reaches the playable Map 10 checkpoint, but party, inventory, encounter access, common-event operands, and journal compatibility remain partial.
 - [~] Ruby event compatibility: 3 simple patterns are mapped; the complete 32-snippet registry remains.
 - [~] Audio: map BGM/BGS and SE use manifest-resolved real binaries; fades, ME, pan, and full event coverage remain.
 
@@ -47,3 +52,6 @@
 - New Game: map 7 at `(7,6)`, tileset ID 1 `フィールド`, sheets `World_A1`, `World_A2`, `World_B`.
 - Original map-7 autorun transfers to map 97 `Thư Viện`, tileset ID 3 `内装`, using `Inside_A1`, `Inside_A2`, `Inside_A4`, `Inside_A5`, `Inside_B`, `Inside_C`, `treesrestaffmar11_soruve`, and `VXTileB` plus fog `kurayami01`.
 - Player: actor 1 graphic `!Flame`, character index 5. The verified map-97 path also renders `$c_54b` and `!Other3` event sprites.
+- Name continuation: Map 97 Event 1 Page 0, command 303 at index 11 (`actor=1`, `maxChars=6`) resumes at conditional index 12, confirmation message index 51, choice index 53, and post-choice animation index 60.
+- Actual blocker fixed: Animation 109 references absent RTP `Graphics/Animations/Light6.png`; the rejected visual Promise previously ended the interpreter at index 60. It is now non-fatal and cached as a diagnostic.
+- Stable checkpoint: the default opening branch transfers at Map 97 index 251 to Map 10 `Rừng Thánh` `(15,16)`; Event 38 ends at index 29 after setting Self Switch A. Map 10 renders even when optional event sprite `Damage3` is absent.

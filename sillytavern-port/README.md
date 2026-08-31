@@ -29,9 +29,9 @@ Import `card/Black_Souls_ST.json`, then approve/enable its character script when
 
 The development loader keeps the repository identity, runtime path, and release ref in the single `RUNTIME_RELEASE` configuration in `card/card-entry.js`. It preflights the complete ES-module tree from these bases in order:
 
-1. `https://cdn.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@direct-boot-v0.3.0/sillytavern-port/runtime/`
-2. `https://testingcf.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@direct-boot-v0.3.0/sillytavern-port/runtime/`
-3. `https://raw.githubusercontent.com/anhyeuem1f2-glitch/Black-Souls/direct-boot-v0.3.0/sillytavern-port/runtime/` (last-resort diagnostics; strict browser MIME checks may reject it)
+1. `https://cdn.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@name-confirm-v0.3.1/sillytavern-port/runtime/`
+2. `https://testingcf.jsdelivr.net/gh/anhyeuem1f2-glitch/Black-Souls@name-confirm-v0.3.1/sillytavern-port/runtime/`
+3. `https://raw.githubusercontent.com/anhyeuem1f2-glitch/Black-Souls/name-confirm-v0.3.1/sillytavern-port/runtime/` (last-resort diagnostics; strict browser MIME checks may reject it)
 
 Relative imports remain normal URL-based ES-module imports, so descendants resolve against the source that supplied `bootstrap.js`. The importable card is pinned to the immutable release tag above to avoid stale `@main` CDN modules. Change only `RUNTIME_RELEASE.ref` for a later release. A developer bootstrap override remains available under the failure screen's collapsed debug section or through `window.BLACK_SOULS_RUNTIME_OVERRIDE`.
 

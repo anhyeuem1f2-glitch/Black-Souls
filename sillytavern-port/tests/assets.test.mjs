@@ -83,3 +83,30 @@ test('publishes a map bundle only after every required sheet has decoded', async
   assert.equal(renderer.map, map);
   assert.equal(renderer.sheets.length, 1);
 });
+
+test('missing optional event sprites do not abort an otherwise valid map transfer', async () => {
+  const renderer = Object.create(CanvasRenderer.prototype);
+  renderer.loader = {
+    image: async (path, options = {}) => {
+      if (path.endsWith('/Damage3.png')) {
+        assert.equal(options.optional, true);
+        return null;
+      }
+      return { width: 512, height: 512 };
+    },
+  };
+  renderer.characterImages = new Map();
+  renderer.characterSheetFailures = new Map();
+  renderer.stats = {};
+  renderer.loadFog = async () => null;
+  const map = { note: '', tileset_id: 1 };
+  const tileset = { name: 'fixture', tileset_names: ['World_A1'] };
+  await renderer.setMap(map, tileset, {
+    mapId: 10,
+    playerGraphic: { character_name: '' },
+    events: [{ page: { graphic: { character_name: 'Damage3' } } }],
+  });
+  assert.equal(renderer.map, map);
+  assert.deepEqual(renderer.stats.missingCharacters, ['Damage3']);
+  assert.equal(renderer.characterImages.has('Damage3'), false);
+});
