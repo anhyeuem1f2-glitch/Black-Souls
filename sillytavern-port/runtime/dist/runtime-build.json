@@ -1,0 +1,32 @@
+{
+  "schema": "black-souls-runtime-build-v1",
+  "runtimeVersion": "0.6.0",
+  "sourceCommit": "c601dae8d61f79e89a86cc47521602092de66962",
+  "builtAt": "2026-08-31T14:53:41+07:00",
+  "entry": "black-souls-runtime.bundle.js",
+  "entrySha256": "E0A4D59609F9AA575C938827C5283EF172C0ED6D5D97872586A8BA6FD8AD2558",
+  "entryBytes": 218961,
+  "runtimeManifest": "../manifest.json",
+  "dataVersion": "black-souls-normalized-data-v1",
+  "dependencyIndexVersion": "black-souls-game-dependency-index-v1",
+  "requiredBootData": [
+    "../../generated/database/System.json",
+    "../../generated/database/Tilesets.json",
+    "../../generated/database/Actors.json",
+    "../../generated/database/Classes.json",
+    "../../generated/database/Skills.json",
+    "../../generated/database/Items.json",
+    "../../generated/database/Weapons.json",
+    "../../generated/database/Armors.json",
+    "../../generated/database/Enemies.json",
+    "../../generated/database/Troops.json",
+    "../../generated/database/States.json",
+    "../../generated/database/CommonEvents.json",
+    "../../generated/database/Animations.json",
+    "../../generated/asset-manifest.json",
+    "../../generated/prefetch-manifest.json",
+    "../../generated/dependencies/inventory-dependencies.json",
+    "../../generated/dependencies/combat-dependencies.json",
+    "../../generated/dependencies/ui-dependencies.json"
+  ]
+}
