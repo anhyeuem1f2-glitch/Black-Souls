@@ -5,13 +5,14 @@ import { AudioManager } from '../audio/audio-manager.js';
 import { cancelScene } from './lifecycle.js';
 
 export class GameEngine {
-  constructor({ loader, renderer, saves, status, onSceneChange = () => {}, onExitRequest = () => {} }) {
+  constructor({ loader, renderer, saves, status, onSceneChange = () => {}, onExitRequest = () => {}, onTransitionState = () => {} }) {
     this.loader = loader;
     this.renderer = renderer;
     this.saves = saves;
     this.status = status;
     this.onSceneChange = onSceneChange;
     this.onExitRequest = onExitRequest;
+    this.onTransitionState = onTransitionState;
     this.unsupported = new Set();
     this.diagnosticsLog = [];
     this.interpreterTraceEnabled = new URLSearchParams(globalThis.location?.search ?? '').get('bsTrace') === '1';
@@ -21,10 +22,16 @@ export class GameEngine {
 
   async initialize() {
     this.database = await this.loader.initialize();
+    this.prefetch = this.loader.prefetch;
     this.input = new InputController(this.renderer.stage);
     this.interpreter = new EventInterpreter(this);
     this.audio = new AudioManager(this.loader, (entry) => this.recordDiagnostic(entry));
     this.state = this.initialState('LOADING');
+    this.prefetch.setContextProvider(() => ({
+      interpreter: this.interpreter?.snapshot?.() ?? null,
+      renderer: { scene: this.renderer.stats.scene, mapId: this.renderer.stats.mapId, frames: this.renderer.stats.frames },
+      state: { scene: this.state?.scene, mapId: this.state?.mapId, loadingMap: this.state?.loadingMap },
+    }));
     this.hasSave = await this.saves.has(1).catch((error) => { this.recordDiagnostic({ type: 'save-probe-failed', error: error.message }); return false; });
     await this.enterTitle();
     this.running = true;
@@ -61,6 +68,7 @@ export class GameEngine {
     void this.audio.playLoop('bgm', this.database.system.title_bgm);
     this.notifyScene();
     this.renderer.render(this.state);
+    this.prefetch?.prefetchRoute('opening');
   }
 
   async newGame() {
@@ -74,17 +82,25 @@ export class GameEngine {
 
   async loadMap(mapId) {
     this.state.loadingMap = true;
+    this.onTransitionState({ state: 'loading', mapId, streaming: this.prefetch?.getStatus?.() ?? null });
     try {
+      await this.prefetch?.prepareMap?.(mapId, { x: this.state.x, y: this.state.y });
       const map = await this.loader.map(mapId);
       const tileset = this.database.tilesets[map.tileset_id];
       const collision = new CollisionMap(map, tileset);
       const actorId = this.database.system.party_members?.[0] ?? 1;
       const actor = this.database.actors[actorId];
       const playerGraphic = { character_name: actor?.character_name ?? '', character_index: actor?.character_index ?? 0 };
-      await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId });
+      await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId, x: this.state.x, y: this.state.y });
       this.map = map;
       this.collision = collision;
       await this.audio.applyMapAudio(map);
+      const transition = this.prefetch?.markMapVisible?.(mapId, { x: this.state.x, y: this.state.y }) ?? null;
+      this.onTransitionState({ state: 'visible', mapId, transition, streaming: this.prefetch?.getStatus?.() ?? null });
+    } catch (error) {
+      this.prefetch?.failTransition?.(mapId, error);
+      this.onTransitionState({ state: 'failed', mapId, error: error.message, streaming: this.prefetch?.getStatus?.() ?? null });
+      throw error;
     } finally {
       this.state.loadingMap = false;
     }
@@ -288,7 +304,11 @@ export class GameEngine {
     return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
   }
 
-  advancePattern() { this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4]; this.state.steps = (this.state.steps ?? 0) + 1; }
+  advancePattern() {
+    this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4];
+    this.state.steps = (this.state.steps ?? 0) + 1;
+    this.prefetch?.prefetchLikelyDestinations(this.state.mapId, { x: this.state.x, y: this.state.y });
+  }
 
   showMessage(text) {
     this.state.message = this.expandText(text);
@@ -424,6 +444,7 @@ export class GameEngine {
       },
       playerAsset: this.renderer.playerGraphic?.character_name ?? null,
       interpreter: this.interpreter?.diagnostics(), modals: this.modalStack.map((entry) => ({ ...entry })),
+      streaming: this.prefetch?.getStatus(),
       assets: this.loader.diagnostics(), audio: this.audio?.diagnostics(), renderer: this.renderer.diagnostics(),
       unsupported: [...this.unsupported], log: [...this.diagnosticsLog],
     };

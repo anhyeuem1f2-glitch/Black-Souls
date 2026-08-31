@@ -27,9 +27,14 @@ export class CanvasRenderer {
     };
   }
 
-  async setMap(map, tileset, { playerGraphic, events = [], mapId } = {}) {
+  async setMap(map, tileset, { playerGraphic, events = [], mapId, x = 0, y = 0 } = {}) {
+    const loadToken = Symbol(`map-${mapId ?? 'unknown'}`);
+    this.mapLoadToken = loadToken;
     const sheets = await Promise.all((tileset?.tileset_names ?? []).map((name) => name ? this.loader.image(`Graphics/Tilesets/${name}.png`) : null));
-    const graphics = [playerGraphic, ...events.map((event) => event.page?.graphic)].filter((graphic) => graphic?.character_name);
+    const inInitialViewport = (event) => !Number.isFinite(event.x) || !Number.isFinite(event.y) || (Math.abs(event.x - x) <= 12 && Math.abs(event.y - y) <= 9);
+    const initialEvents = events.filter(inInitialViewport);
+    const deferredEvents = events.filter((event) => !inInitialViewport(event));
+    const graphics = [playerGraphic, ...initialEvents.map((event) => event.page?.graphic)].filter((graphic) => graphic?.character_name);
     const characterImages = new Map(this.characterImages);
     const missingCharacters = [];
     await Promise.all([...new Set(graphics.map((graphic) => graphic.character_name))].map(async (name) => {
@@ -45,6 +50,24 @@ export class CanvasRenderer {
     const fog = await this.loadFog(map.note);
     this.map = map; this.tileset = tileset; this.sheets = sheets; this.characterImages = characterImages; this.fog = fog; this.playerGraphic = playerGraphic;
     this.stats.mapId = mapId; this.stats.tileset = tileset?.name ?? null; this.stats.loadedSheets = (tileset?.tileset_names ?? []).filter(Boolean); this.stats.characters = [...this.characterImages.keys()]; this.stats.missingCharacters = missingCharacters;
+    void this.streamCharacterGraphics(deferredEvents, loadToken);
+  }
+
+  async streamCharacterGraphics(events, loadToken = this.mapLoadToken) {
+    const names = [...new Set(events.map((event) => event.page?.graphic?.character_name).filter(Boolean))]
+      .filter((name) => !this.characterImages.has(name));
+    await Promise.allSettled(names.map(async (name) => {
+      const path = `Graphics/Characters/${name}.png`;
+      if (this.characterSheetFailures.has(path)) return;
+      const image = await this.loader.image(path, { optional: true });
+      if (this.mapLoadToken !== loadToken) return;
+      if (image) this.characterImages.set(name, image);
+      else {
+        this.characterSheetFailures.set(path, 'unavailable');
+        if (!this.stats.missingCharacters.includes(name)) this.stats.missingCharacters.push(name);
+      }
+      this.stats.characters = [...this.characterImages.keys()];
+    }));
   }
 
   async loadFog(note = '') {

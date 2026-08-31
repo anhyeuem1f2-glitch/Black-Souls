@@ -8,6 +8,8 @@
 - Browser audio autoplay can leave title BGM in `blocked` state until the first game interaction. This never blocks the title graphic; the original BGM begins after unlock.
 - The isolated RTP bundle does not contain Animation `Light6` or Map 10 event sprite `Damage3`. Missing visual-only animation/event sprite assets are omitted with diagnostics and cannot terminate event logic; required tilesets/map data still fail loudly and transfers roll back.
 - Event interpreter and embedded Ruby compatibility remain partial; battle and game-specific battle plugins are absent.
+- Predictive dependencies are generated for supported VX Ace commands and bounded to two transfer hops. Dynamic filenames/targets produced only by unported Ruby scripts cannot be predicted yet; a cold CDN miss can still expose normal network latency, but it now reports the exact pending resource and stage.
+- The remote release uses a versioned persistent Cache API plus bounded in-memory LRUs. Local development overrides intentionally skip persistent storage so edited local assets cannot be shadowed by an older response.
 - Command 303 suspension/resume semantics are implemented and the default opening reaches Map 10, but role party changes, gifts/inventory, journal scripts, common event 2 operands, screen tints/flashes, and several other opening-side effects remain compatibility gaps.
-- The importable v0.3.1 card is pinned to release tag `name-confirm-v0.3.1`; later releases update the centralized `RUNTIME_RELEASE.ref` and asset repository ref.
+- The importable v0.4.0 card is pinned to release tag `streaming-v0.4.0`; later releases update the centralized `RUNTIME_RELEASE.ref` and asset repository ref.
 - Direct runtime and a same-origin TavernHelper-style card iframe harness are verified, including composer coverage and compact Resume recovery. Final import confirmation on the user's authenticated `st.proxyvn.top` session remains a user-side check after re-import.

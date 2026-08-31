@@ -17,7 +17,7 @@ test('detects and rejects Git LFS pointer bytes before image decode', async () =
     assert.equal(error.diagnostics.attempts[0].code, 'LFS_POINTER_RECEIVED');
     return true;
   });
-  assert.equal(resolver.diagnostics().lfsPointersRejected, resolver.candidates('Graphics/Tilesets/Test.png').length);
+  assert.ok(resolver.diagnostics().lfsPointersRejected >= resolver.candidates('Graphics/Tilesets/Test.png').length);
 });
 
 test('accepts real PNG and Ogg signatures', () => {
@@ -109,4 +109,31 @@ test('missing optional event sprites do not abort an otherwise valid map transfe
   assert.equal(renderer.map, map);
   assert.deepEqual(renderer.stats.missingCharacters, ['Damage3']);
   assert.equal(renderer.characterImages.has('Damage3'), false);
+});
+
+test('off-screen event sprites stream after the initial map bundle becomes visible', async () => {
+  let resolveOffscreen;
+  const offscreen = new Promise((resolve) => { resolveOffscreen = resolve; });
+  const renderer = Object.create(CanvasRenderer.prototype);
+  renderer.loader = {
+    image: async (path) => path.endsWith('/FarAway.png') ? offscreen : { width: 512, height: 512 },
+  };
+  renderer.characterImages = new Map();
+  renderer.characterSheetFailures = new Map();
+  renderer.stats = {};
+  renderer.loadFog = async () => null;
+  const map = { note: '', tileset_id: 1 };
+  const tileset = { name: 'fixture', tileset_names: ['World_A1'] };
+  await renderer.setMap(map, tileset, {
+    mapId: 97,
+    x: 12,
+    y: 18,
+    playerGraphic: { character_name: '' },
+    events: [{ x: 50, y: 50, page: { graphic: { character_name: 'FarAway' } } }],
+  });
+  assert.equal(renderer.map, map, 'the initial map must not wait for an off-screen sheet');
+  assert.equal(renderer.characterImages.has('FarAway'), false);
+  resolveOffscreen({ width: 384, height: 256 });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(renderer.characterImages.has('FarAway'), true, 'the streamed sheet becomes available without another transition');
 });

@@ -59,6 +59,7 @@ export class EventInterpreter {
     for (let index = start; index < end; index += 1) {
       const command = list[index];
       const parameters = command.parameters ?? [];
+      if (index === start || index % 12 === 0 || command.code === 221) this.engine.prefetch?.scanUpcoming(list, index + 1);
       this.current.rangeDepth = depth;
       this.progress(index, command.code, 'COMMAND_START', { parameters: summarizeParameters(parameters) });
       switch (command.code) {

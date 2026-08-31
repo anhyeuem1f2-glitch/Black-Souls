@@ -27,6 +27,8 @@ The source package was the official `RPGVXAce_RTP.zip` download, SHA-256 `7E93D0
 
 ## Loading boundary
 
-Loading is map-scoped and lazy. A map loads its non-empty tileset sheets, active event graphics, player graphic, fog, and autoplay audio. Future battle/picture scenes must request their own asset sets through the same resolver; they must not construct remote URLs directly.
+Loading remains map-scoped, but v0.4.0 adds generated predictive warming through the single `PrefetchManager`. `tools/build-prefetch.mjs` derives the transfer graph and map/Common Event/picture/audio/animation/battle dependencies from extracted data. The runtime warms only the current map, likely direct destinations, and their second hops; it never preloads the whole repository. Event-command lookahead requests future picture, audio, animation, battle, graphic, Common Event, and transfer resources through the same resolver rather than constructing URLs directly.
+
+The readiness barrier contains map JSON, non-empty render-critical tileset sheets, player/fog resources, and event sprites in the initial viewport. Those images are decoded before the new scene becomes visible. Off-screen sprites and lower-priority branches continue streaming after the barrier. Validated bytes use a 64 MiB LRU, decoded images a 160 MiB LRU, parsed objects a 24 MiB LRU, and release builds use a versioned Cache API namespace. See `PREFETCH_STREAMING.md` for scheduling, retry, invalidation, and instrumentation policy.
 
 Map activation is atomic: the renderer first resolves and decodes every required sheet/sprite/fog image into local values, then swaps the complete map bundle into the draw state. This fixes the real Continue race where `scene=PLAYING` allowed one frame to access `this.sheets[3]` before `setMap()` had assigned `this.sheets`; that exception previously stopped the RAF loop and left a black canvas even though all network requests later succeeded.

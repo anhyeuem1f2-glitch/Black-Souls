@@ -26,6 +26,7 @@ export class BlackSoulsHost {
       <style>${styles}</style>
       <section class="bs-viewport">
         <div class="bs-stage" tabindex="0" aria-label="BLACK SOULS game viewport"></div>
+        <div class="bs-streaming" role="status" aria-live="polite" hidden><i></i><span>Loading area...</span></div>
         <div class="bs-progress" role="status" aria-live="polite"><div class="bs-progress-card"><strong>BLACK SOULS</strong><span>Loading game data...</span><i></i></div></div>
         <nav class="bs-toolbar" aria-label="BLACK SOULS host controls">
           <button data-action="fullscreen" title="Fullscreen">⛶</button>
@@ -51,7 +52,12 @@ export class BlackSoulsHost {
           this.setProgress('Starting BLACK SOULS...', 0.72);
           this.notifyLoader('Starting BLACK SOULS...', message);
         }
-      }, (entry) => { console.debug('[BLACK SOULS diagnostics]', entry); this.refreshDiagnostics(); });
+      }, (entry) => { console.debug('[BLACK SOULS diagnostics]', entry); this.refreshDiagnostics(); }, {
+        runtimeVersion: this.manifest.version,
+        dataVersion: this.manifest.data.schema,
+        developerMode: new URLSearchParams(location.search).get('bsTrace') === '1',
+        ...this.manifest.streaming,
+      });
       const renderer = new CanvasRenderer(this.stage, loader, this.manifest.engine);
       const saves = new SaveStore();
       this.engine = new GameEngine({
@@ -61,6 +67,7 @@ export class BlackSoulsHost {
         status: (message) => this.setStatus(message),
         onSceneChange: (scene) => this.handleSceneChange(scene),
         onExitRequest: () => { void this.pause(); },
+        onTransitionState: (state) => this.updateStreamingState(state),
       });
       await this.engine.initialize();
       this.setProgress('Ready', 1);
@@ -158,6 +165,20 @@ export class BlackSoulsHost {
     if (message && !error) this.statusTimer = setTimeout(() => { if (this.status) this.status.hidden = true; }, 1800);
   }
 
+  updateStreamingState(state) {
+    const indicator = this.root?.querySelector('.bs-streaming');
+    if (!indicator) return;
+    if (state.state === 'loading') {
+      indicator.hidden = false;
+      const transition = state.streaming?.transition;
+      indicator.querySelector('span').textContent = `Loading Map ${String(state.mapId).padStart(3, '0')} · ${transition?.criticalReady ?? 0}/${transition?.criticalTotal ?? '?'} critical`;
+    } else {
+      indicator.hidden = true;
+      if (state.state === 'failed') this.setStatus(`Map ${state.mapId} failed: ${state.error}`, true);
+    }
+    this.refreshDiagnostics();
+  }
+
   notifyLoader(state, detail = '') {
     try { this.onLoaderState(state, detail); } catch (error) { console.warn('[BLACK SOULS] Loader state callback failed', error); }
   }
@@ -209,6 +230,9 @@ const styles = `
   .bs-stage { position: relative; width: min(100vw, calc(100vh * 4 / 3)); height: min(100vh, calc(100vw * 3 / 4)); aspect-ratio: 4 / 3; outline: none; background: #000; }
   .bs-stage:focus-visible { box-shadow: inset 0 0 0 2px #9a5559; }
   .bs-stage canvas { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+  .bs-streaming { position: fixed; z-index: 9; left: 50%; bottom: 16px; transform: translateX(-50%); padding: 7px 10px; border: 1px solid #46383a; background: #080607e8; color: #bcb3aa; font: 11px ui-monospace, monospace; }
+  .bs-streaming i { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border: 1px solid #8e5b60; border-top-color: transparent; border-radius: 50%; animation: bs-stream-spin .8s linear infinite; }
+  @keyframes bs-stream-spin { to { transform: rotate(360deg); } }
   .bs-progress { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: radial-gradient(circle at 50% 34%, #24171b, #050506 66%); transition: opacity .2s ease; }
   .bs-progress.is-ready { opacity: 0; pointer-events: none; }
   .bs-progress-card { width: min(420px, calc(100vw - 36px)); padding: 22px; border: 1px solid #5d4042; background: #0d0a0b; box-shadow: 0 18px 70px #000; display: grid; gap: 12px; }

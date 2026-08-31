@@ -14,6 +14,7 @@
 | Messages | Partial | 101/401 text and confirm wait; faces/choices/name windows incomplete |
 | Name Input command 303 | Verified | Map 97 Event 1 index 11 and sequential-modal fixtures preserve actor/max length, same interpreter identity, exact-once next index, cleared wait state, restored focus, and modal stack cleanup |
 | Interpreter diagnostics | Verified | `?bsTrace=1` exposes deterministic command/wait/resume trace and a non-skipping developer stall watchdog; production trace is hidden |
+| Predictive streaming | Verified for supported command surface | Generated 150-map/283-edge manifest, two-hop ranking, 48-command lookahead, initial-viewport barrier, dedupe/retry/fallback/LRU/Cache API, watchdogs, and deterministic benchmark pass |
 | Switches/variables/self switches | Partial | Basic operations; all operand modes and page semantics incomplete |
 | Save/load | Verified for current schema | IndexedDB slot 1 browser smoke test; original save parity/migrations incomplete |
 | Escape/menu lifecycle | Verified for vertical slice | Escape/X is game Cancel; map menu opens/closes without unmount; fullscreen state is independent; explicit host Exit leaves Resume |

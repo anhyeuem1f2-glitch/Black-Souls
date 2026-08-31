@@ -24,6 +24,9 @@
 - [x] Developer-only interpreter tracing records interpreter/map/event/index/code/parameters/wait/result/next index; the stall watchdog reports without auto-skipping.
 - [x] The original Map 97 opening is browser-verified through post-name dialogue, role/gift choices, transfer index 251, and Map 10 Event 38 completion.
 - [x] Missing visual-only animation/event-sprite RTP assets are diagnosed and omitted without killing event logic or leaving a half-committed transfer; failed transfers roll state back transactionally.
+- [x] Generated predictive streaming covers all 150 maps without a hand-written route table: direct/second-hop transfer graph, interpreter lookahead, Common Event cycle bounds, initial-viewport decode barrier, and opening Map 7 → 97 → {10, 98} warmup.
+- [x] Central priority scheduler provides in-flight dedupe, reserved critical capacity, bounded retry/fallback/timeouts, weighted byte/decoded/parsed LRUs, versioned persistent Cache API storage, and current-map pinning.
+- [x] Browser-native instrumentation reports fetch/decode/transition timing, hit rate, bytes, retries, fallbacks, timeouts, dedupe, exact pending assets, and 3 s/10 s transition watchdog context.
 
 ## In progress / partial
 
@@ -33,6 +36,7 @@
 - [~] Opening state mutations: flow reaches the playable Map 10 checkpoint, but party, inventory, encounter access, common-event operands, and journal compatibility remain partial.
 - [~] Ruby event compatibility: 3 simple patterns are mapped; the complete 32-snippet registry remains.
 - [~] Audio: map BGM/BGS and SE use manifest-resolved real binaries; fades, ME, pan, and full event coverage remain.
+- [~] Predictive coverage: generated dependencies and generic two-hop policy are complete for current supported commands; unimplemented script-driven/dynamic filenames cannot be inferred until their source systems are ported.
 
 ## Not implemented
 

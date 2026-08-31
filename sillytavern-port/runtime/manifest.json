@@ -1,6 +1,6 @@
 {
   "schema": "black-souls-st-runtime-manifest-v1",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "game": "BLACK SOULS",
   "mode": "game-only-no-ai",
   "runtime": {
@@ -24,12 +24,20 @@
     "repository": {
       "owner": "anhyeuem1f2-glitch",
       "name": "Black-Souls",
-      "ref": "name-confirm-v0.3.1"
+      "ref": "streaming-v0.4.0"
     },
     "delivery": {
       "lfs": "github-media",
       "rtp": "runtime-bundle"
     }
+  },
+  "streaming": {
+    "manifest": "prefetch-manifest.json",
+    "maxConcurrent": 8,
+    "reservedCritical": 2,
+    "memoryBudgetBytes": 67108864,
+    "decodedBudgetBytes": 167772160,
+    "timeouts": { "json": 10000, "image": 18000, "audio": 30000, "binary": 18000 }
   },
   "save": {
     "schema": "black-souls-st-save-v1",
