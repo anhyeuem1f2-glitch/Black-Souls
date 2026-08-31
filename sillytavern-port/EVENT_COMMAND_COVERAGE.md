@@ -9,70 +9,70 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | Code | VX Ace command | Count | Maps | Common events | Implemented | Tested |
 |---:|---|---:|---:|---:|---|---|
 | 0 | End | 12802 | 139 | 248 | complete | yes |
-| 101 | Show Text | 6584 | 100 | 132 | partial | no |
-| 102 | Show Choices | 650 | 70 | 18 | partial | yes |
+| 101 | Show Text | 6584 | 100 | 132 | complete | yes |
+| 102 | Show Choices | 650 | 70 | 18 | complete | yes |
 | 103 | Input Number | 17 | 1 | 11 | none | no |
 | 104 | Select Key Item | 6 | 0 | 6 | none | no |
 | 105 | Show Scrolling Text | 2 | 2 | 0 | none | no |
 | 108 | Comment | 841 | 44 | 24 | complete | yes |
 | 111 | Conditional Branch | 1808 | 52 | 80 | partial | yes |
 | 115 | Exit Event Processing | 689 | 13 | 23 | complete | no |
-| 117 | Common Event | 2338 | 109 | 125 | none | no |
+| 117 | Common Event | 2338 | 109 | 125 | complete | yes |
 | 118 | Label | 40 | 15 | 4 | complete | no |
 | 119 | Jump to Label | 187 | 5 | 1 | complete | no |
 | 121 | Control Switches | 1994 | 98 | 164 | complete | yes |
 | 122 | Control Variables | 885 | 73 | 49 | partial | no |
 | 123 | Control Self Switch | 2903 | 113 | 0 | complete | yes |
 | 124 | Control Timer | 9 | 9 | 0 | none | no |
-| 125 | Change Gold | 79 | 18 | 27 | none | no |
-| 126 | Change Items | 1474 | 95 | 16 | none | no |
-| 127 | Change Weapons | 408 | 16 | 1 | none | no |
-| 128 | Change Armors | 136 | 44 | 1 | none | no |
-| 129 | Change Party Member | 432 | 2 | 33 | none | no |
-| 132 | Change Battle BGM | 433 | 70 | 8 | none | no |
-| 135 | Change Menu Access | 20 | 6 | 3 | none | no |
-| 136 | Change Encounter | 2 | 2 | 0 | none | no |
-| 201 | Transfer Player | 642 | 137 | 12 | partial | yes |
+| 125 | Change Gold | 79 | 18 | 27 | complete | yes |
+| 126 | Change Items | 1474 | 95 | 16 | complete | yes |
+| 127 | Change Weapons | 408 | 16 | 1 | complete | yes |
+| 128 | Change Armors | 136 | 44 | 1 | complete | yes |
+| 129 | Change Party Member | 432 | 2 | 33 | partial | yes |
+| 132 | Change Battle BGM | 433 | 70 | 8 | complete | no |
+| 135 | Change Menu Access | 20 | 6 | 3 | complete | no |
+| 136 | Change Encounter | 2 | 2 | 0 | complete | no |
+| 201 | Transfer Player | 642 | 137 | 12 | complete | yes |
 | 202 | Set Vehicle Location | 6 | 1 | 4 | none | no |
 | 203 | Set Event Location | 2 | 1 | 1 | none | no |
 | 204 | Scroll Map | 4 | 3 | 0 | none | no |
 | 205 | Set Move Route | 1742 | 102 | 9 | partial | yes |
 | 206 | Get On/Off Vehicle | 5 | 0 | 5 | none | no |
-| 211 | Change Transparency | 12 | 2 | 1 | none | no |
+| 211 | Change Transparency | 12 | 2 | 1 | complete | no |
 | 212 | Show Animation | 311 | 23 | 15 | partial | yes |
 | 213 | Show Balloon Icon | 291 | 56 | 0 | partial | yes |
-| 221 | Fadeout Screen | 566 | 54 | 119 | partial | yes |
-| 222 | Fadein Screen | 567 | 54 | 118 | partial | yes |
-| 223 | Tint Screen | 253 | 42 | 12 | none | no |
-| 224 | Flash Screen | 124 | 37 | 7 | none | no |
-| 225 | Shake Screen | 30 | 12 | 0 | none | no |
+| 221 | Fadeout Screen | 566 | 54 | 119 | complete | yes |
+| 222 | Fadein Screen | 567 | 54 | 118 | complete | yes |
+| 223 | Tint Screen | 253 | 42 | 12 | partial | yes |
+| 224 | Flash Screen | 124 | 37 | 7 | partial | yes |
+| 225 | Shake Screen | 30 | 12 | 0 | partial | yes |
 | 230 | Wait | 512 | 55 | 107 | complete | no |
-| 231 | Show Picture | 409 | 4 | 97 | none | no |
-| 232 | Move Picture | 229 | 2 | 97 | none | no |
-| 235 | Erase Picture | 417 | 3 | 100 | none | no |
-| 236 | Set Weather Effects | 114 | 24 | 7 | none | no |
-| 241 | Play BGM | 442 | 25 | 98 | none | no |
-| 242 | Fadeout BGM | 118 | 25 | 11 | none | no |
-| 243 | Save BGM | 64 | 10 | 10 | none | no |
-| 244 | Replay BGM | 63 | 10 | 10 | none | no |
-| 245 | Play BGS | 400 | 15 | 91 | none | no |
-| 246 | Fadeout BGS | 18 | 2 | 7 | none | no |
-| 249 | Play ME | 21 | 1 | 0 | none | no |
+| 231 | Show Picture | 409 | 4 | 97 | complete | yes |
+| 232 | Move Picture | 229 | 2 | 97 | partial | yes |
+| 235 | Erase Picture | 417 | 3 | 100 | complete | yes |
+| 236 | Set Weather Effects | 114 | 24 | 7 | partial | yes |
+| 241 | Play BGM | 442 | 25 | 98 | complete | yes |
+| 242 | Fadeout BGM | 118 | 25 | 11 | partial | no |
+| 243 | Save BGM | 64 | 10 | 10 | complete | no |
+| 244 | Replay BGM | 63 | 10 | 10 | complete | no |
+| 245 | Play BGS | 400 | 15 | 91 | complete | yes |
+| 246 | Fadeout BGS | 18 | 2 | 7 | partial | no |
+| 249 | Play ME | 21 | 1 | 0 | complete | no |
 | 250 | Play SE | 1412 | 136 | 66 | partial | yes |
-| 251 | Stop SE | 8 | 3 | 4 | none | no |
+| 251 | Stop SE | 8 | 3 | 4 | complete | no |
 | 281 | Change Map Name Display | 2 | 1 | 0 | none | no |
 | 283 | Change Battle Back | 50 | 7 | 2 | none | no |
-| 301 | Battle Processing | 765 | 96 | 0 | none | no |
-| 302 | Shop Processing | 33 | 9 | 2 | none | no |
+| 301 | Battle Processing | 765 | 96 | 0 | partial | yes |
+| 302 | Shop Processing | 33 | 9 | 2 | partial | yes |
 | 303 | Name Input Processing | 3 | 3 | 0 | complete | yes |
-| 314 | Recover All | 44 | 1 | 42 | none | no |
-| 315 | Change EXP | 12 | 0 | 11 | none | no |
-| 316 | Change Level | 12 | 2 | 1 | none | no |
-| 318 | Change Skill | 72 | 0 | 23 | none | no |
+| 314 | Recover All | 44 | 1 | 42 | complete | no |
+| 315 | Change EXP | 12 | 0 | 11 | complete | no |
+| 316 | Change Level | 12 | 2 | 1 | partial | no |
+| 318 | Change Skill | 72 | 0 | 23 | complete | no |
 | 320 | Change Name | 1 | 1 | 0 | complete | no |
-| 322 | Change Actor Graphic | 37 | 2 | 2 | none | no |
-| 353 | Game Over | 2 | 1 | 0 | none | no |
-| 354 | Return to Title Screen | 1 | 1 | 0 | none | no |
+| 322 | Change Actor Graphic | 37 | 2 | 2 | complete | no |
+| 353 | Game Over | 2 | 1 | 0 | partial | no |
+| 354 | Return to Title Screen | 1 | 1 | 0 | complete | no |
 | 355 | Script | 38 | 5 | 3 | partial | no |
 | 401 | Text Data | 11709 | 100 | 132 | complete | yes |
 | 402 | When Choice | 1470 | 70 | 18 | complete | yes |
@@ -83,11 +83,11 @@ Generated from all 150 maps and 248 common events. Unsupported commands remain e
 | 411 | Else | 775 | 47 | 48 | complete | yes |
 | 412 | Branch End | 1808 | 52 | 80 | complete | yes |
 | 505 | Move Route Command | 6067 | 102 | 9 | partial | yes |
-| 601 | Battle Win | 764 | 96 | 0 | none | no |
-| 602 | Battle Escape | 529 | 49 | 0 | none | no |
-| 603 | Battle Lose | 763 | 95 | 0 | none | no |
-| 604 | Battle End | 764 | 96 | 0 | none | no |
-| 605 | Shop Goods | 186 | 7 | 2 | none | no |
+| 601 | Battle Win | 764 | 96 | 0 | complete | yes |
+| 602 | Battle Escape | 529 | 49 | 0 | complete | yes |
+| 603 | Battle Lose | 763 | 95 | 0 | complete | yes |
+| 604 | Battle End | 764 | 96 | 0 | complete | yes |
+| 605 | Shop Goods | 186 | 7 | 2 | complete | yes |
 
 ## Opening continuation trace (v0.3.1)
 

@@ -4,7 +4,7 @@
 <body>
 <script type="module">
   import { mount } from './runtime/bootstrap.js';
-  mount({ target: document.body, assetDevelopmentBaseUrl: 'https://media.githubusercontent.com/media/anhyeuem1f2-glitch/Black-Souls/main/' }).catch((error) => {
+  mount({ target: document.body, assetDevelopmentBaseUrl: new URL('../', location.href).href }).catch((error) => {
     document.body.textContent = error.stack || error.message;
     document.body.style.cssText = 'white-space:pre-wrap;background:#111;color:#f99;padding:20px';
   });

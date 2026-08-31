@@ -11,7 +11,7 @@
     const iframe = document.querySelector('iframe');
     const runtime = new URL('./runtime/bootstrap.js', location.href).href;
     const cardEntry = new URL('./card/card-entry.js', location.href).href;
-    iframe.srcdoc = `<!doctype html><html><body><script>window.BLACK_SOULS_RUNTIME_OVERRIDE=${JSON.stringify(runtime)};window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE='https://media.githubusercontent.com/media/anhyeuem1f2-glitch/Black-Souls/main/';<\/script><script src=${JSON.stringify(cardEntry)}><\/script></body></html>`;
+    iframe.srcdoc = `<!doctype html><html><body><script>window.BLACK_SOULS_RUNTIME_OVERRIDE=${JSON.stringify(runtime)};window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE=${JSON.stringify(new URL('../', location.href).href)};<\/script><script src=${JSON.stringify(cardEntry)}><\/script></body></html>`;
   </script>
 </body>
 </html>

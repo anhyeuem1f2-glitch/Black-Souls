@@ -35,7 +35,7 @@ for (const name of files) {
       const title = entry[1].text();
       const source = inflateSync(entry[2].bytes).toString('utf8');
       const filename = `${String(index).padStart(3, '0')}-${sanitize(title || 'unnamed')}.rb`;
-      await writeFile(join(generatedRoot, 'scripts', filename), source, 'utf8');
+      await writeFileRetry(join(generatedRoot, 'scripts', filename), source, 'utf8');
       scripts.push({ index, id, title, filename, bytes: Buffer.byteLength(source), lines: source.split(/\r?\n/).length });
     }
     await json(join(generatedRoot, 'scripts', 'index.json'), { schema: 'black-souls-rgss3-scripts-v1', scripts });
@@ -60,5 +60,15 @@ function sanitize(value) {
 }
 
 async function json(path, value) {
-  await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  await writeFileRetry(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+async function writeFileRetry(path, content, encoding, attempts = 6) {
+  for (let attempt = 1; ; attempt += 1) {
+    try { return await writeFile(path, content, encoding); }
+    catch (error) {
+      if (attempt >= attempts || !['UNKNOWN', 'EPERM', 'EBUSY', 'EACCES'].includes(error.code)) throw error;
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, attempt * 60));
+    }
+  }
 }

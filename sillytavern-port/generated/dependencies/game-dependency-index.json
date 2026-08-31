@@ -1,0 +1,43 @@
+{
+  "schema": "black-souls-game-dependency-index-v1",
+  "generatedFrom": "all normalized maps, events, common events, databases, and extracted custom scripts",
+  "counts": {
+    "maps": 150,
+    "events": 6444,
+    "commonEvents": 248,
+    "troops": 355,
+    "indexedAssets": 837,
+    "indexedAudio": 157,
+    "synthesisRecipes": 15
+  },
+  "domains": [
+    "CORE",
+    "TITLE",
+    "OPENING",
+    "MAP_DATA",
+    "MAP_TILESET",
+    "MAP_EVENTS",
+    "MAP_EFFECTS",
+    "PICTURES",
+    "AUDIO",
+    "MENU_UI",
+    "INVENTORY",
+    "EQUIPMENT",
+    "COMBAT_DATA",
+    "COMBAT_GRAPHICS",
+    "COMBAT_AUDIO",
+    "ANIMATIONS",
+    "COMMON_EVENTS",
+    "PLUGIN_RUNTIME"
+  ],
+  "files": [
+    "map-dependencies.json",
+    "event-dependencies.json",
+    "common-event-dependencies.json",
+    "combat-dependencies.json",
+    "inventory-dependencies.json",
+    "ui-dependencies.json",
+    "audio-dependencies.json",
+    "asset-reverse-index.json"
+  ]
+}

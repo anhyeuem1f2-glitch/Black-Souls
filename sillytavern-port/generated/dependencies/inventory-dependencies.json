@@ -1,0 +1,268 @@
+{
+  "schema": "black-souls-inventory-dependencies-v1",
+  "database": {
+    "items": 412,
+    "weapons": 321,
+    "armors": 143,
+    "actors": 35,
+    "classes": 29
+  },
+  "equipment": {
+    "sourceScript": "generated/scripts/114-装備拡張.rb",
+    "mode": "actor",
+    "actorSlotOverrides": {
+      "1": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "2": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "3": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "4": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "armorPartNote": "部位番号："
+  },
+  "synthesis": {
+    "sourceScript": "generated/scripts/120-アイテム合成.rb",
+    "recipes": [
+      {
+        "kind": "armor",
+        "id": 91,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 5
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 96,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 5
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 97,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 5
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 99,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 5
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 110,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 115,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 123,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 125,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "armor",
+        "id": 138,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "item",
+        "id": 8,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "kind": "item",
+        "id": 29,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "item",
+        "id": 184,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "kind": "item",
+        "id": 190,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 10
+          }
+        ]
+      },
+      {
+        "kind": "weapon",
+        "id": 134,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 15
+          }
+        ]
+      },
+      {
+        "kind": "weapon",
+        "id": 244,
+        "gold": 0,
+        "materials": [
+          {
+            "kind": "item",
+            "id": 49,
+            "amount": 15
+          }
+        ]
+      }
+    ]
+  },
+  "assets": [
+    "Graphics/System/IconSet.png",
+    "Graphics/System/Window.png",
+    "Graphics/Faces/poro.png",
+    "Graphics/Faces/alice.png",
+    "Graphics/Faces/jnnu.png",
+    "Graphics/Faces/ri-hu.png",
+    "Graphics/Faces/miranda.png",
+    "Graphics/Faces/kata.png",
+    "Graphics/Faces/gu-su.png",
+    "Graphics/Faces/biku.png",
+    "Graphics/Faces/doro.png",
+    "Graphics/Faces/aka.png",
+    "Graphics/Faces/eruma.png",
+    "Graphics/Faces/kaeru.png",
+    "Graphics/Faces/lap.png",
+    "Graphics/Faces/sira.png",
+    "Graphics/Faces/nin.png",
+    "Graphics/Faces/sin.png",
+    "Graphics/Faces/beru.png",
+    "Graphics/Faces/eriza.png",
+    "Graphics/Faces/ba.png",
+    "Graphics/Faces/hen.png",
+    "Graphics/Faces/gure.png",
+    "Graphics/Faces/maria.png"
+  ]
+}

@@ -1,47 +1,37 @@
 # Test Report
 
-## Automated Node tests
+Release 0.5.0 passes **53/53** automated tests after a clean full build.
 
-The v0.4.1 suite passes **44/44** tests.
+## Automated coverage
 
-- `Scripts.rvdata2` parses to exactly 167 entries; all 150 maps and every database file parse.
-- Every runtime module imports, and `module-manifest.json` covers the complete static relative import tree.
-- The generated Chara Card V3 contains the enabled auto-mount TavernHelper script, no `Open BLACK SOULS` event/button, centralized tagged release config, CDN fallback order, and failure-only recovery controls.
-- Interpreter fixtures cover choices, conditions, actor-name conditions, labels, exact-once command 303 continuation, two sequential name modals, focus/modal-stack cleanup, the full Map 97 default opening branch, and the Map 10 Event 38 checkpoint.
-- Asset tests cover Git LFS pointer rejection before decode, PNG/Ogg magic bytes, bundled RTP priority, special filenames, regular/`$` VX Ace character frames, and non-fatal optional event sprites during map activation.
-- Lifecycle tests cover title creation and Continue availability, New Game map 7, actual engine Esc map→menu→map, fullscreen presentation independence, explicit Shutdown exit request, pause/resume/unmount transitions, keyboard focus ownership, and browser-fullscreen Escape reservation.
-- Decode tests cover the exact `IMAGE_DECODE_FAILED` stage and retained per-asset diagnostics.
-- Streaming tests cover exact in-flight dedupe, later-session Cache API reuse, version invalidation, primary timeout/retry, fallback source selection, reserved critical capacity, direct/second-hop priority, cycle-safe Common Event expansion, transfer/picture/audio/animation/battle/move-route lookahead, initial-viewport readiness, non-blocking off-screen streaming, late sheet registration in the active renderer, and map-audio preparation that does not hold visibility on browser playback startup.
-- The deterministic transition benchmark measured a reactive cold baseline of approximately 158–358 ms and a warmed transition of approximately 0.26–8.61 ms under different test-process load, with exactly two network fetches total.
+- All 150 maps and every rvdata2 database parse without archive-boundary loss.
+- Every runtime ES module imports and the module manifest covers every relative import.
+- Chara Card V3 structure, enabled TavernHelper script, immutable release pin, asset manifest, MIME/signature validation, LFS-pointer rejection, and RTP-first resolution.
+- Request deduplication, timeout/retry/fallback, Cache API reuse, priority reservation, lookahead, Common Event cycle safety, transition barriers, and benchmark behavior.
+- Original title/new-game/Cancel lifecycle, Map 97 name modal, same-interpreter resume, choice branches, missing Animation 109 continuation, Map 10 checkpoint, and host exit separation.
+- Inventory stacks/use/save normalization; eight-slot equipment restrictions/stat changes; shop and original synthesis recipes.
+- Real troop 1 AP battle, smart rating selection, fixed-target retargeting, hit/damage/victory/rewards, casting metadata, and exact variable-60 difficulty matrices.
+- Map 97 switch-14 resource barrier and all five active `14遺体` pages.
+- Transfer resource barrier resumes the same interpreter and does not execute the following switch command early.
+- All nine whole-game dependency indexes and reverse-source evidence.
 
-## Static audit
+Expected test diagnostics: the original database references missing RTP animation sheet `Light6`; visual command 212 reports this and continues. This does not fail the suite.
 
-- 165 `.rvdata2` files extracted; 150 maps generated.
-- 70,425 event command instances / 80 distinct codes inventoried.
-- 32 unique embedded Ruby snippets / 38 occurrences inventoried.
-- 57 custom/plugin scripts total 667,312 bytes / 16,411 lines.
-- 818+ browser asset records include per-path LFS/delivery/status metadata; unresolved references remain listed for later maps.
+## Clean browser run
 
-## Browser smoke test
+The in-app browser loaded a clean local server at runtime 0.5.0. Verified checkpoints:
 
-The direct runtime loaded in the Codex in-app browser at logical 640×480 and scaled to the viewport. Its first meaningful frame was the original title image with the original command window. Title diagnostics recorded `Graphics/Titles1/1.png`, HTTP 200, `image/png`, 376,160 bytes, valid PNG magic, no LFS pointer, successful 560×420 decode, and title BGM waiting for audio unlock.
+- Original title art/menu rendered; New Game entered Map 7 and Map 97.
+- Name input accepted `Alice`, returned focus, and resumed Event 1 once.
+- The blood sequence played `gucha004a`; `14遺体` decoded and appeared with no active-character failure; diagnostics showed the switch-change resource barrier completed.
+- Opening reached Map 10 `(15,16)`, scene `PLAYING`, Event 38 index 29, `running=false`, `waitMode=""`.
+- Item and eight-slot Equip scenes rendered real state.
+- Real troop 1 battle rendered battlers, repository battleback, enemy HP bars, and AP UI. Browser testing exposed and then verified a fix for dead-slot retargeting. Victory cleared battle graphics and restored Map 10/audio.
+- `card-smoke.html` logged `Ready runtime 0.5.0` through the same card entry used in the JSON.
 
-New Game loaded the original Map 7 at `(7,6)` and ran its autorun transfer to Map 97 `(12,18)`. Visual inspection of Map 97 showed composed library tiles, original `!Flame`, `$c_54b`, and `!Other3` sprites, original fog, and Vietnamese Alice dialogue—no diagnostic-color tiles or mock player art. Continue was then reloaded from IndexedDB and reproduced a previously intermittent black screen: `setMap()` exposed the map before its sheet array existed, `drawAutotile()` read `this.sheets[3]`, and the uncaught frame error killed the RAF loop. Atomic map-bundle activation plus retrying frame errors fixed it; the same Continue save then rendered Map 97 correctly.
+## Commands
 
-Two game Cancel inputs dismissed the restored message and opened the original-style menu over the still-visible map; another Cancel returned to play without hiding the host. Fullscreen enter/exit events changed only `FULLSCREEN/WINDOWED` presentation state and retained `TITLE`/`PLAYING`. The same-origin card iframe harness auto-mounted without a launcher, visually covered the simulated SillyTavern composer, restored the composer only after explicit Exit, displayed a persistent compact `Resume BLACK SOULS` button, and resumed the same title scene.
-
-Runtime Diagnostics reported successful assets from both `runtime-bundle` and `github-media`, zero failed loads, zero LFS pointer bodies reaching a decoder, BGM `タイトル、アリス` playing, `Fire1` SE playing, active fog, and all eight non-empty Map 97 tileset sheets. IndexedDB returned `Saved slot 1.`. The opening command 213 balloon path is implemented with the RTP balloon sheet; command 212 uses the normalized database animation and original animation sheet.
-
-The v0.4.1 regression run retained the v0.3.1 name/interpreter fix. Map 97 Event 1 command 303 at index 11 updates actor 1, keeps the same interpreter alive, clears the `name_input` wait, and advances exactly once. The missing Animation 109 `Graphics/Animations/Light6.png` remains a non-fatal visual diagnostic rather than terminating the autorun.
-
-The browser then executed the original default role/gift/opening path, transferred at index 251, rendered Map 10 `Rừng Thánh` at `(15,16)`, showed the Event 38 translation-credit message, and ended that autorun at index 29 with `running=false` and `waitMode=""`. Missing optional Map 10 event sprite `Damage3` was omitted and reported instead of aborting the transfer. Escape still opened and closed the original-style menu over the Map 10 frame.
-
-The v0.4.1 card is configured for immutable tag `streaming-v0.4.1`. A final no-override CDN smoke test is performed after that tag is pushed; the tag remains necessary because prior `@main` testing demonstrated stale jsDelivr content.
-
-Internal browser instrumentation measured the cold opening route while it streamed behind the title. In the final v0.4.1 local run, Map 7 reached visibility in 4.5 ms and Map 97 in 10.8 ms, both prefetch hits; average was 7.65 ms and p95 was 10.8 ms. The four-map opening working set used about 25.2 MiB of validated byte cache and 23.9 MiB of decoded-image cache. Diagnostics kept the original Map 97 Event 1 interpreter alive and subsequently displayed the name input, confirming that predictive reads did not reorder or execute event commands.
-
-The authenticated `https://st.proxyvn.top` instance was not available in this workspace. The generated card uses the same URL-based module tree and browser asset endpoints, but final native import confirmation on that deployment remains a user-side acceptance step.
-
-## Remote loader diagnostics
-
-The card loader CORS-preflights `module-manifest.json` and every module in the static import tree before calling dynamic `import()` on a real CDN URL. Each source attempt records requested/final URL, redirects, HTTP status, Content-Type, exposed CORS header, failing stage, nested module errors, and mount cleanup errors. No fetch-to-Blob module conversion is used, so relative imports resolve against the selected CDN base.
+```text
+npm run build
+npm test
+```

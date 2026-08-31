@@ -2,6 +2,6 @@
 <html lang="en"><head><meta charset="utf-8"><title>BLACK SOULS card bootstrap smoke test</title></head>
 <body><script type="module">
   window.BLACK_SOULS_RUNTIME_OVERRIDE = new URL('./runtime/bootstrap.js', location.href).href;
-  window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE = 'https://media.githubusercontent.com/media/anhyeuem1f2-glitch/Black-Souls/main/';
+  window.BLACK_SOULS_ASSET_DEVELOPMENT_BASE_OVERRIDE = new URL('../', location.href).href;
   await import('./card/card-entry.js');
 </script></body></html>

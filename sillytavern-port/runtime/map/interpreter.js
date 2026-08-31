@@ -105,6 +105,14 @@ export class EventInterpreter {
           break;
         }
         case 115: return { exit: true };
+        case 117: {
+          const commonId = Number(firstParam(parameters)); const common = this.engine.database?.commonEvents?.[commonId];
+          if (!common?.list) { this.engine.noteUnsupported(117, `common event ${commonId}`); break; }
+          const commonLabels = new Map(common.list.flatMap((entry, entryIndex) => entry.code === 118 ? [[String(entry.parameters?.[0] ?? ''), entryIndex]] : []));
+          const result = await this.executeRange(common.list, 0, common.list.length, { ...context, commonEventId: commonId }, commonLabels, depth + 1);
+          if (result?.exit) break;
+          break;
+        }
         case 119: {
           const target = labels.get(String(parameters[0] ?? ''));
           if (target == null) this.engine.noteUnsupported(119, `missing label ${parameters[0]}`);
@@ -113,28 +121,100 @@ export class EventInterpreter {
         }
         case 121:
           for (let id = parameters[0]; id <= parameters[1]; id += 1) this.engine.state.switches[id] = parameters[2] === 0;
+          await this.suspendVisual('resource', this.engine.refreshCurrentMapVisuals?.('switch-change') ?? Promise.resolve(), { reason: 'switch-change', first: parameters[0], last: parameters[1] });
           break;
         case 122: this.controlVariables(parameters); break;
         case 123:
           this.engine.state.selfSwitches[`${this.engine.state.mapId},${context.eventId},${parameters[0]}`] = parameters[1] === 0;
+          await this.suspendVisual('resource', this.engine.refreshCurrentMapVisuals?.('self-switch-change') ?? Promise.resolve(), { reason: 'self-switch-change', eventId: context.eventId, selfSwitch: parameters[0] });
           break;
+        case 125: this.engine.gainGold?.(this.operandValue(parameters[1], parameters[2], parameters[3]) * (parameters[0] === 0 ? 1 : -1)); break;
+        case 126: this.changeInventory('item', parameters); break;
+        case 127: this.changeInventory('weapon', parameters); break;
+        case 128: this.changeInventory('armor', parameters); break;
+        case 129: this.changePartyMember(parameters); break;
+        case 132: this.engine.changeBattleBgm?.(parameters[0]); break;
+        case 135: this.engine.state.menuEnabled = parameters[0] === 0; break;
+        case 136: this.engine.state.encounterEnabled = parameters[0] === 0; break;
         case 201:
           if (parameters[0] !== 0) throw new Error('Variable-based transfers are not implemented yet');
-          await this.suspend('transfer', this.engine.transfer(parameters[1], parameters[2], parameters[3], parameters[4]));
+          await this.suspend('resource', this.engine.transferWithRecovery?.(parameters[1], parameters[2], parameters[3], parameters[4]) ?? this.engine.transfer(parameters[1], parameters[2], parameters[3], parameters[4]), { operation: 'transfer', mapId: parameters[1] });
           break;
-        case 205: this.applyMoveRoute(parameters[0], parameters[1]); break;
+        case 205: await this.applyMoveRoute(parameters[0], parameters[1], context); break;
+        case 211: this.engine.state.transparent = Boolean(firstParam(parameters)); break;
         case 221: await this.suspend('fade', this.engine.renderer.fadeTo(1)); break;
         case 222: await this.suspend('fade', this.engine.renderer.fadeTo(0)); break;
         case 230: {
-          const frames = parameters[0] ?? 1;
+          const frames = firstParam(parameters) ?? 1;
           await this.suspend('wait_count', this.engine.waitFrames ? this.engine.waitFrames(frames) : wait(frames * 1000 / 60));
           break;
         }
         case 212: await this.suspendVisual('animation', this.engine.showAnimation(parameters[0], parameters[1]), { targetId: parameters[0], animationId: parameters[1] }); break;
         case 213: await this.suspend('balloon', this.engine.showBalloon(parameters[0], parameters[1])); break;
+        case 223: await this.suspend('screen_tint', this.engine.tintScreen?.(parameters[0], parameters[1]) ?? Promise.resolve()); break;
+        case 224: await this.suspend('screen_flash', this.engine.flashScreen?.(parameters[0], parameters[1]) ?? Promise.resolve()); break;
+        case 225: await this.suspend('screen_shake', this.engine.shakeScreen?.(parameters[0], parameters[1], parameters[2]) ?? Promise.resolve()); break;
+        case 231: {
+          const picture = pictureParameters(parameters);
+          await this.suspendVisual('resource', this.engine.showPicture?.(parameters[0], String(parameters[1] ?? ''), picture) ?? Promise.resolve(), { pictureId: parameters[0], name: parameters[1] });
+          break;
+        }
+        case 232: {
+          const movement = this.engine.movePicture?.(parameters[0], pictureParameters(parameters)) ?? Promise.resolve();
+          if (parameters[11]) await this.suspendVisual('picture', movement, { pictureId: parameters[0] });
+          break;
+        }
+        case 233: this.engine.movePicture?.(parameters[0], { angleSpeed: parameters[1] }); break;
+        case 234: this.engine.movePicture?.(parameters[0], { tone: parameters[1], duration: parameters[2] }); break;
+        case 235: this.engine.erasePicture?.(firstParam(parameters)); break;
+        case 236: await this.suspend('weather', this.engine.setWeather?.(parameters[0], parameters[1], parameters[2]) ?? Promise.resolve()); break;
+        case 241: await this.suspendVisual('resource', this.engine.playBgm?.(parameters[0]) ?? Promise.resolve(), { channel: 'bgm', name: parameters[0]?.name }); break;
+        case 242: this.engine.stopAudio?.('bgm'); break;
+        case 243: this.engine.saveBgm?.(); break;
+        case 244: await this.suspendVisual('resource', this.engine.replayBgm?.() ?? Promise.resolve(), { channel: 'bgm', operation: 'replay' }); break;
+        case 245: await this.suspendVisual('resource', this.engine.playBgs?.(parameters[0]) ?? Promise.resolve(), { channel: 'bgs', name: parameters[0]?.name }); break;
+        case 246: this.engine.stopAudio?.('bgs'); break;
+        case 249: await this.suspendVisual('audio', this.engine.playMe?.(parameters[0]) ?? Promise.resolve(), { channel: 'me', name: parameters[0]?.name }); break;
         case 250: await this.suspend('audio', this.engine.playSe(parameters[0])); break;
+        case 251: this.engine.stopSe?.(); break;
+        case 301: {
+          if (parameters[0] !== 0) { this.engine.noteUnsupported(301, 'variable/random troop'); break; }
+          const outcome = await this.suspend('battle', this.engine.startBattle(parameters[1], parameters[2], parameters[3]), { troopId: parameters[1] });
+          const boundary = findBattleBoundary(list, index, command.indent, end);
+          const marker = ({ victory: 601, escape: 602, lose: 603, gameover: 603 })[outcome];
+          const branch = boundary.branches.find((item) => item.code === marker);
+          if (branch) {
+            const result = await this.executeRange(list, branch.start, branch.end, context, labels, depth + 1);
+            if (result?.jumpIndex != null || result?.exit) return result;
+          }
+          index = boundary.end;
+          break;
+        }
+        case 302: {
+          const goods = [parameters];
+          while (list[index + 1]?.code === 605) goods.push(list[++index].parameters ?? []);
+          await this.suspend('shop', this.engine.openShop(goods, Boolean(parameters[4])));
+          break;
+        }
         case 303: await this.suspend('name_input', this.engine.nameInput(parameters[0], parameters[1]), { actorId: parameters[0], maxLength: parameters[1] }); break;
+        case 314: for (const actorId of this.actorTargets(parameters)) this.engine.recoverActor?.(actorId); break;
+        case 315: {
+          const amount = this.operandValue(parameters[3], parameters[4]) * (parameters[2] === 0 ? 1 : -1);
+          for (const actorId of this.actorTargets(parameters)) this.engine.changeActorExp?.(actorId, amount);
+          break;
+        }
+        case 316: {
+          const amount = this.operandValue(parameters[3], parameters[4]) * (parameters[2] === 0 ? 1 : -1);
+          for (const actorId of this.actorTargets(parameters)) this.engine.changeActorLevel?.(actorId, amount);
+          break;
+        }
+        case 318: for (const actorId of this.actorTargets(parameters)) this.engine.changeActorSkill?.(actorId, parameters[2], parameters[3]); break;
+        case 319: this.engine.changeActorEquipment?.(parameters[0], parameters[1], parameters[2]); break;
         case 320: this.engine.setActorName(parameters[0], String(parameters[1] ?? '')); break;
+        case 322: await this.suspendVisual('resource', this.engine.setActorGraphic?.(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]) ?? Promise.resolve(), { actorId: parameters[0], graphic: parameters[1] }); break;
+        case 353: this.engine.setScene?.('GAMEOVER'); break;
+        case 354: await this.engine.enterTitle?.(); return { exit: true };
+        case 351: await this.suspend('menu', this.engine.openMenuFromEvent()); break;
         case 355: {
           const lines = [String(parameters[0] ?? '')];
           while (list[index + 1]?.code === 655) lines.push(String(list[++index].parameters?.[0] ?? ''));
@@ -246,13 +326,32 @@ export class EventInterpreter {
     }
   }
 
-  applyMoveRoute(target, route) {
-    if (target !== -1) return this.engine.noteUnsupported(205, 'non-player target');
+  async applyMoveRoute(target, route, context = {}) {
     for (const command of route?.list ?? []) {
-      if (command.code === 39) this.engine.state.transparent = true;
-      else if (command.code === 40) this.engine.state.transparent = false;
+      if (target === -1 && command.code === 39) this.engine.state.transparent = true;
+      else if (target === -1 && command.code === 40) this.engine.state.transparent = false;
+      else if (command.code === 41) {
+        await this.suspendVisual('resource', this.engine.changeCharacterGraphic(target, command.parameters?.[0], command.parameters?.[1], context.eventId), { reason: 'move-route-graphic', target, name: command.parameters?.[0] });
+      }
       else if (command.code !== 0) this.engine.noteUnsupported(205, `move command ${command.code}`);
     }
+  }
+
+  operandValue(type, value, fallback = 0) { return Number(type === 1 ? this.engine.state.variables[value] ?? 0 : value ?? fallback); }
+
+  changeInventory(kind, parameters) {
+    const id = parameters[0]; const operation = parameters[1]; const value = this.operandValue(parameters[2], parameters[3]);
+    this.engine.gainItem?.(kind, id, value * (operation === 0 ? 1 : -1));
+  }
+
+  changePartyMember(parameters) {
+    const [actorId, operation] = parameters; this.engine.state.party ??= { members: [] }; const members = this.engine.state.party.members;
+    if (operation === 0 && !members.includes(actorId)) members.push(actorId);
+    if (operation === 1) this.engine.state.party.members = members.filter((id) => id !== actorId);
+  }
+
+  actorTargets(parameters) {
+    return parameters[0] === 0 ? [Number(parameters[1])] : [...(this.engine.state.party?.members ?? [])];
   }
 }
 
@@ -277,6 +376,22 @@ function findChoiceBoundary(list, start, indent, end) {
   }
   return { end: finish, branches: markers.map((marker, index) => ({ ...marker, start: marker.index + 1, end: markers[index + 1]?.index ?? finish })) };
 }
+
+function findBattleBoundary(list, start, indent, end) {
+  const markers = []; let finish = end - 1;
+  for (let index = start + 1; index < end; index += 1) {
+    if (list[index].indent !== indent) continue;
+    if ([601, 602, 603].includes(list[index].code)) markers.push({ index, code: list[index].code });
+    if (list[index].code === 604) { finish = index; break; }
+  }
+  return { end: finish, branches: markers.map((marker, index) => ({ ...marker, start: marker.index + 1, end: markers[index + 1]?.index ?? finish })) };
+}
+
+function pictureParameters(parameters) {
+  return { origin: parameters[2] ?? 0, x: parameters[4] ?? 0, y: parameters[5] ?? 0, zoomX: parameters[6] ?? 100, zoomY: parameters[7] ?? 100, opacity: parameters[8] ?? 255, blend: parameters[9] ?? 0, duration: parameters[10] ?? 0 };
+}
+
+function firstParam(parameters) { return Array.isArray(parameters) ? parameters[0] : parameters; }
 
 function wait(milliseconds) { return new Promise((resolve) => setTimeout(resolve, milliseconds)); }
 

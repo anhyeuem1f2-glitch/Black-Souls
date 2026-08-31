@@ -28,14 +28,25 @@ export class DataLoader {
 
   async initialize() {
     this.progress('Loading game data...', 0.15);
-    const [system, tilesets, actors, commonEvents, animations, assetManifest, prefetchManifest] = await Promise.all([
+    const [system, tilesets, actors, classes, skills, items, weapons, armors, enemies, troops, states, commonEvents, animations, assetManifest, prefetchManifest, inventoryDependencies, combatDependencies, uiDependencies] = await Promise.all([
       this.json('database/System.json'),
       this.json('database/Tilesets.json'),
       this.json('database/Actors.json'),
+      this.json('database/Classes.json'),
+      this.json('database/Skills.json'),
+      this.json('database/Items.json'),
+      this.json('database/Weapons.json'),
+      this.json('database/Armors.json'),
+      this.json('database/Enemies.json'),
+      this.json('database/Troops.json'),
+      this.json('database/States.json'),
       this.json('database/CommonEvents.json'),
       this.json('database/Animations.json'),
       this.json(this.assetConfig.manifest, this.runtimeBaseUrl),
       this.json(this.prefetchManifest),
+      this.json('dependencies/inventory-dependencies.json'),
+      this.json('dependencies/combat-dependencies.json'),
+      this.json('dependencies/ui-dependencies.json'),
     ]);
     this.assets = new AssetResolver({
       manifest: assetManifest,
@@ -46,7 +57,7 @@ export class DataLoader {
     });
     this.prefetch.setManifest(prefetchManifest);
     this.progress('Game data ready', 0.45);
-    return { system, tilesets, actors, commonEvents, animations, assetManifest, prefetchManifest };
+    return { system, tilesets, actors, classes, skills, items, weapons, armors, enemies, troops, states, commonEvents, animations, assetManifest, prefetchManifest, inventoryDependencies, combatDependencies, uiDependencies };
   }
 
   map(id, options = {}) {

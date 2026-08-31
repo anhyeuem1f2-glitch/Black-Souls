@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLACK SOULS combat smoke test</title></head>
+<body>
+<script type="module">
+  import { mount } from './runtime/bootstrap.js';
+  const host = await mount({ target: document.body, assetDevelopmentBaseUrl: new URL('../', location.href).href });
+  await host.engine.audio.unlock();
+  host.engine.state = host.engine.initialState('PLAYING');
+  host.engine.state.mapId = 10;
+  host.engine.state.x = 15;
+  host.engine.state.y = 16;
+  await host.engine.loadMap(10);
+  host.engine.state.nextBattleback1 = 'top33_b';
+  host.engine.state.nextBattleback2 = '';
+  void host.engine.startBattle(1, true, false);
+</script>
+</body>
+</html>

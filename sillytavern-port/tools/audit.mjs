@@ -40,13 +40,18 @@ const commandNames = new Map(Object.entries({
 const coverage = new Map();
 const snippets = new Map();
 const runtimeCoverage = new Map(Object.entries({
-  0: ['complete', true], 101: ['partial', false], 108: ['complete', true], 121: ['complete', true],
-  102: ['partial', true], 111: ['partial', true], 115: ['complete', false], 118: ['complete', false], 119: ['complete', false],
-  122: ['partial', false], 123: ['complete', true], 201: ['partial', true], 205: ['partial', true],
-  212: ['partial', true], 213: ['partial', true], 221: ['partial', true], 222: ['partial', true], 230: ['complete', false], 250: ['partial', true],
+  0: ['complete', true], 101: ['complete', true], 108: ['complete', true], 117: ['complete', true], 121: ['complete', true],
+  102: ['complete', true], 111: ['partial', true], 115: ['complete', false], 118: ['complete', false], 119: ['complete', false],
+  122: ['partial', false], 123: ['complete', true], 125: ['complete', true], 126: ['complete', true], 127: ['complete', true],
+  128: ['complete', true], 129: ['partial', true], 132: ['complete', false], 135: ['complete', false], 136: ['complete', false], 201: ['complete', true], 205: ['partial', true], 211: ['complete', false],
+  212: ['partial', true], 213: ['partial', true], 221: ['complete', true], 222: ['complete', true], 223: ['partial', true],
+  224: ['partial', true], 225: ['partial', true], 230: ['complete', false], 231: ['complete', true], 232: ['partial', true],
+  233: ['partial', true], 234: ['partial', true], 235: ['complete', true], 236: ['partial', true], 241: ['complete', true],
+  242: ['partial', false], 243: ['complete', false], 244: ['complete', false], 245: ['complete', true], 246: ['partial', false], 249: ['complete', false], 250: ['partial', true], 251: ['complete', false],
+  301: ['partial', true], 302: ['partial', true], 314: ['complete', false], 315: ['complete', false], 316: ['partial', false], 318: ['complete', false], 319: ['partial', true], 322: ['complete', false], 351: ['partial', true], 353: ['partial', false], 354: ['complete', false],
   303: ['complete', true], 320: ['complete', false], 355: ['partial', false], 401: ['complete', true],
   402: ['complete', true], 403: ['complete', true], 404: ['complete', true], 408: ['complete', false],
-  411: ['complete', true], 412: ['complete', true], 505: ['partial', true], 655: ['complete', false],
+  411: ['complete', true], 412: ['complete', true], 505: ['partial', true], 601: ['complete', true], 602: ['complete', true], 603: ['complete', true], 604: ['complete', true], 605: ['complete', true], 655: ['complete', false],
 }));
 
 for (let mapId = 1; mapId <= 150; mapId += 1) {
@@ -108,8 +113,8 @@ const summary = {
   start: { mapId: system.start_map_id, x: system.start_x, y: system.start_y },
 };
 await writeJson(join(auditRoot, 'summary.json'), summary);
-await writeFile(join(portRoot, 'EVENT_COMMAND_COVERAGE.md'), eventCoverageMarkdown(summary, eventCoverage, embeddedRuby), 'utf8');
-await writeFile(join(portRoot, 'CUSTOM_SCRIPT_COVERAGE.md'), scriptCoverageMarkdown(summary, scripts), 'utf8');
+await writeFileRetry(join(portRoot, 'EVENT_COMMAND_COVERAGE.md'), eventCoverageMarkdown(summary, eventCoverage, embeddedRuby), 'utf8');
+await writeFileRetry(join(portRoot, 'CUSTOM_SCRIPT_COVERAGE.md'), scriptCoverageMarkdown(summary, scripts), 'utf8');
 
 console.log(JSON.stringify(summary, null, 2));
 
@@ -164,7 +169,14 @@ function eventCoverageMarkdown(summary, commands, ruby) {
 
 function scriptCoverageMarkdown(summary, allScripts) {
   const custom = allScripts.filter((item) => item.layer === 'BLACK SOULS custom/plugin');
-  const rows = custom.map((item) => `| ${item.index} | ${escapeCell(item.title)} | ${item.lines} | ${item.bytes} | ${item.win32ApiReferences} | not ported |`).join('\n');
+  const status = (item) => {
+    if (item.index === 114) return 'partial: eight-slot equipment rules';
+    if (item.index === 120) return 'partial: 15 synthesis recipes and unlock API';
+    if (item.index >= 122 && item.index <= 128) return 'partial: browser AP/casting/state battle core';
+    if (item.index === 162) return 'complete: variable 60 parameter/reward matrices';
+    return 'not ported';
+  };
+  const rows = custom.map((item) => `| ${item.index} | ${escapeCell(item.title)} | ${item.lines} | ${item.bytes} | ${item.win32ApiReferences} | ${status(item)} |`).join('\n');
   return `# Custom Script Coverage\n\nGenerated from the decompressed \`Data/Scripts.rvdata2\` archive.\n\n- Total entries: ${summary.scripts}\n- Custom/plugin entries: ${summary.customScripts}\n- Custom/plugin source: ${summary.customScriptLines} lines / ${summary.customScriptBytes} bytes\n- Static \`Win32API\` references across all scripts: ${summary.win32ApiReferences}\n\n| Index | Script | Lines | Bytes | Win32API refs | Browser status |\n|---:|---|---:|---:|---:|---|\n${rows}\n`;
 }
 
@@ -177,5 +189,15 @@ async function json(path) {
 }
 
 async function writeJson(path, value) {
-  await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  await writeFileRetry(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+async function writeFileRetry(path, content, encoding = 'utf8', attempts = 6) {
+  for (let attempt = 1; ; attempt += 1) {
+    try { return await writeFile(path, content, encoding); }
+    catch (error) {
+      if (attempt >= attempts || !['UNKNOWN', 'EPERM', 'EBUSY', 'EACCES'].includes(error.code)) throw error;
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, attempt * 60));
+    }
+  }
 }

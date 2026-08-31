@@ -39,7 +39,7 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   assert.equal(card.data.extensions.tavern_helper.scripts[0].enabled, true);
   const content = card.data.extensions.tavern_helper.scripts[0].content;
   assert.doesNotMatch(content, /getButtonEvent\(|Open BLACK SOULS|hideFrame\(\)/);
-  assert.match(content, /streaming-v0\.4\.1/);
+  assert.match(content, /systems-v0\.5\.0/);
   assert.match(content, /function compactFrame\(\)/);
   assert.match(content, /onHostState: handleHostState/);
   assert.match(content, /\nboot\(\);\s*$/);

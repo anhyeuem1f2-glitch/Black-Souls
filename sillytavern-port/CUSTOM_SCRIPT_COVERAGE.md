@@ -14,21 +14,21 @@ Generated from the decompressed `Data/Scripts.rvdata2` archive.
 | 111 | メニュー変数 | 90 | 3209 | 0 | not ported |
 | 112 | 特殊軽量化 | 38 | 1450 | 0 | not ported |
 | 113 | A1共通スクリプト | 1094 | 50161 | 0 | not ported |
-| 114 | 装備拡張 | 287 | 12914 | 0 | not ported |
+| 114 | 装備拡張 | 287 | 12914 | 0 | partial: eight-slot equipment rules |
 | 115 | アクター窓 | 52 | 2610 | 0 | not ported |
 | 116 | 画面外自律移動 | 80 | 3510 | 0 | not ported |
 | 117 | ステータス限界突破 | 265 | 8163 | 0 | not ported |
 | 118 | タイマー非表示 | 68 | 2520 | 0 | not ported |
 | 119 | ８方向移動 | 152 | 5645 | 0 | not ported |
-| 120 | アイテム合成 | 889 | 33951 | 0 | not ported |
+| 120 | アイテム合成 | 889 | 33951 | 0 | partial: 15 synthesis recipes and unlock API |
 | 121 | バトルスピード調整 | 207 | 9466 | 0 | not ported |
-| 122 | 61 ※ＡＴＢ　メイン設定 | 125 | 4429 | 0 | not ported |
-| 123 | 71 Scene_Battle | 297 | 12128 | 0 | not ported |
-| 124 | 62 ステート　ターンフレーム | 362 | 14983 | 0 | not ported |
-| 125 | 62 Game_Battler | 276 | 10486 | 0 | not ported |
-| 126 | 71 Game_Battler フレーム更新 | 87 | 3022 | 0 | not ported |
-| 127 | 71 Game_Battler 詠唱 | 200 | 8050 | 0 | not ported |
-| 128 | 71 ※ＡＰ増減ステート　設定 | 257 | 9986 | 0 | not ported |
+| 122 | 61 ※ＡＴＢ　メイン設定 | 125 | 4429 | 0 | partial: browser AP/casting/state battle core |
+| 123 | 71 Scene_Battle | 297 | 12128 | 0 | partial: browser AP/casting/state battle core |
+| 124 | 62 ステート　ターンフレーム | 362 | 14983 | 0 | partial: browser AP/casting/state battle core |
+| 125 | 62 Game_Battler | 276 | 10486 | 0 | partial: browser AP/casting/state battle core |
+| 126 | 71 Game_Battler フレーム更新 | 87 | 3022 | 0 | partial: browser AP/casting/state battle core |
+| 127 | 71 Game_Battler 詠唱 | 200 | 8050 | 0 | partial: browser AP/casting/state battle core |
+| 128 | 71 ※ＡＰ増減ステート　設定 | 257 | 9986 | 0 | partial: browser AP/casting/state battle core |
 | 129 | 64 ※ＡＴＢ　ウインドウ設定 | 93 | 4529 | 0 | not ported |
 | 130 | 50 ※ゲージ色設定　新 | 132 | 4900 | 0 | not ported |
 | 131 | 戦闘コマンドカスタム1.05 | 952 | 39926 | 0 | not ported |
@@ -62,7 +62,7 @@ Generated from the decompressed `Data/Scripts.rvdata2` archive.
 | 159 | 足音 | 129 | 6507 | 0 | not ported |
 | 160 | レベル限界突破 | 339 | 12219 | 0 | not ported |
 | 161 | バトルシェイク | 106 | 3921 | 0 | not ported |
-| 162 | 周回敵の強さ | 123 | 6418 | 0 | not ported |
+| 162 | 周回敵の強さ | 123 | 6418 | 0 | complete: variable 60 parameter/reward matrices |
 | 163 | King Maker worldmap | 515 | 13751 | 0 | not ported |
 | 164 | King Maker walkthrough | 888 | 43372 | 0 | not ported |
 | 165 | メッセージスキップ | 88 | 3313 | 0 | not ported |

@@ -1,0 +1,33 @@
+{
+  "schema": "black-souls-ui-dependencies-v1",
+  "MENU_UI": [
+    "Graphics/System/Window.png",
+    "Graphics/System/IconSet.png",
+    "Graphics/Faces/poro.png",
+    "Graphics/Faces/alice.png",
+    "Graphics/Faces/jnnu.png",
+    "Graphics/Faces/ri-hu.png",
+    "Graphics/Faces/miranda.png",
+    "Graphics/Faces/kata.png",
+    "Graphics/Faces/gu-su.png",
+    "Graphics/Faces/biku.png",
+    "Graphics/Faces/doro.png",
+    "Graphics/Faces/aka.png",
+    "Graphics/Faces/eruma.png",
+    "Graphics/Faces/kaeru.png",
+    "Graphics/Faces/lap.png",
+    "Graphics/Faces/sira.png",
+    "Graphics/Faces/nin.png",
+    "Graphics/Faces/sin.png",
+    "Graphics/Faces/beru.png",
+    "Graphics/Faces/eriza.png",
+    "Graphics/Faces/ba.png",
+    "Graphics/Faces/hen.png",
+    "Graphics/Faces/gure.png",
+    "Graphics/Faces/maria.png"
+  ],
+  "TITLE": [
+    "Graphics/Titles1/1.png",
+    "Audio/BGM/タイトル、アリス.mp3"
+  ]
+}

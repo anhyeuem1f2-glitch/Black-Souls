@@ -6,7 +6,8 @@ export class CanvasRenderer {
     this.width = engineConfig.logicalWidth; this.height = engineConfig.logicalHeight; this.tileSize = engineConfig.tileSize;
     this.canvas = document.createElement('canvas'); this.canvas.width = this.width; this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d'); this.context.imageSmoothingEnabled = false; stage.append(this.canvas);
-    this.fade = 0; this.characterImages = new Map(); this.animations = []; this.balloons = [];
+    this.fade = 0; this.characterImages = new Map(); this.animations = []; this.balloons = []; this.pictures = new Map();
+    this.screenTone = null; this.screenFlash = null; this.screenShake = null; this.weather = null; this.battleGraphics = null;
     this.animationSheetFailures = new Map();
     this.characterSheetFailures = new Map();
     this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: 'LOADING', mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [] };
@@ -70,6 +71,46 @@ export class CanvasRenderer {
     }));
   }
 
+  async ensureEventGraphics(events, loadToken = this.mapLoadToken) {
+    const names = [...new Set(events.map((event) => event.page?.graphic?.character_name ?? event.graphic?.character_name).filter(Boolean))]
+      .filter((name) => !this.characterImages.has(name));
+    const unavailable = [];
+    await Promise.all(names.map(async (name) => {
+      const path = `Graphics/Characters/${name}.png`;
+      try {
+        const image = await this.loader.image(path);
+        if (this.mapLoadToken === loadToken && image) {
+          this.characterImages.set(name, image);
+          this.characterSheetFailures.delete(path);
+          this.stats.missingCharacters = this.stats.missingCharacters.filter((entry) => entry !== name);
+        }
+      } catch (error) {
+        unavailable.push({ name, error: error.message });
+        this.characterSheetFailures.set(path, error.message);
+        if (!this.stats.missingCharacters.includes(name)) this.stats.missingCharacters.push(name);
+      }
+    }));
+    this.stats.characters = [...this.characterImages.keys()];
+    if (unavailable.length) throw new Error(`Could not load active event graphic: ${unavailable.map((entry) => entry.name).join(', ')}`);
+  }
+
+  async setBattle(battle) {
+    const battleback1Path = battle.battleback1 ? `Graphics/Battlebacks1/${battle.battleback1}.png` : null;
+    const battleback2Path = battle.battleback2 ? `Graphics/Battlebacks2/${battle.battleback2}.png` : null;
+    const [battleback1, battleback2] = await Promise.all([
+      battleback1Path ? this.loader.image(battleback1Path, { optional: true }) : null,
+      battleback2Path ? this.loader.image(battleback2Path, { optional: true }) : null,
+    ]);
+    const enemies = new Map();
+    await Promise.all([...new Set(battle.enemies.map((enemy) => enemy.battlerName).filter(Boolean))].map(async (name) => {
+      const image = await this.loader.image(`Graphics/Battlers/${name}.png`);
+      enemies.set(name, image);
+    }));
+    this.battleGraphics = { battleback1, battleback2, battleback1Path, battleback2Path, enemies };
+  }
+
+  clearBattle() { this.battleGraphics = null; }
+
   async loadFog(note = '') {
     const match = /==マップフォグ([^\[]+)\[([^\]]+)\]==/.exec(note); if (!match) return null;
     const [x = 0, y = 0, zoom = 100, opacity = 255, blend = 0] = match[2].split(',').map(Number);
@@ -82,6 +123,13 @@ export class CanvasRenderer {
     this.stats.scene = state.scene ?? 'PLAYING';
     if (state.scene === 'TITLE') {
       this.drawTitle(state.title);
+      this.finishFrame(began);
+      return;
+    }
+    if (state.scene === 'BATTLE') {
+      this.drawBattle(state.battle);
+      this.drawPictures();
+      this.drawScreenEffects();
       this.finishFrame(began);
       return;
     }
@@ -102,8 +150,12 @@ export class CanvasRenderer {
     for (const sprite of sprites.filter((item) => item.priority < 2)) this.drawCharacter(sprite, cameraX, cameraY);
     for (const args of upper) this.drawTile(...args); this.drawFog();
     for (const sprite of sprites.filter((item) => item.priority >= 2)) this.drawCharacter(sprite, cameraX, cameraY);
-    this.drawAnimations(cameraX, cameraY); this.drawBalloons(cameraX, cameraY); this.drawMessage(state.message); this.drawChoice(state.choice);
-    if (state.scene === 'MENU' || state.scene === 'END') this.drawGameMenu(state.menu);
+    // Background discovery is best-effort and remembers failures. Explicit event
+    // page/resource barriers use ensureEventGraphics so Retry can make a fresh attempt.
+    void this.streamCharacterGraphics(events).catch(() => {});
+    this.drawAnimations(cameraX, cameraY); this.drawBalloons(cameraX, cameraY); this.drawPictures(); this.drawWeather(); this.drawMessage(state.message); this.drawChoice(state.choice);
+    if (['MENU', 'END', 'ITEM', 'EQUIP', 'STATUS', 'SYNTHESIS', 'SHOP'].includes(state.scene)) this.drawGameMenu(state.menu, state);
+    this.drawScreenEffects();
     if (this.fade > 0) { context.fillStyle = `rgba(0,0,0,${this.fade})`; context.fillRect(0, 0, this.width, this.height); }
     this.finishFrame(began);
   }
@@ -129,8 +181,11 @@ export class CanvasRenderer {
     c.textBaseline = 'alphabetic';
   }
 
-  drawGameMenu(menu) {
+  drawGameMenu(menu, state = {}) {
     if (!menu) return;
+    if (menu.kind === 'item' || menu.kind === 'synthesis' || menu.kind === 'shop') return this.drawInventoryMenu(menu, state);
+    if (menu.kind === 'equip') return this.drawEquipMenu(menu, state);
+    if (menu.kind === 'status') return this.drawStatusMenu(menu, state);
     const c = this.context; c.fillStyle = 'rgba(0,0,0,.58)'; c.fillRect(0, 0, this.width, this.height);
     const width = menu.kind === 'end' ? 210 : 190; const lineHeight = 30; const padding = 14; const height = menu.commands.length * lineHeight + padding * 2;
     const x = menu.kind === 'end' ? (this.width - width) / 2 : 18; const y = menu.kind === 'end' ? (this.height - height) / 2 : 18;
@@ -142,6 +197,119 @@ export class CanvasRenderer {
       c.fillText(`${selected ? '›' : ' '} ${command.label}`, x + 16, y + padding + lineHeight * index + lineHeight / 2);
     });
     c.textBaseline = 'alphabetic';
+  }
+
+  drawInventoryMenu(menu, state = {}) {
+    const c = this.context; c.fillStyle = 'rgba(0,0,0,.72)'; c.fillRect(0, 0, this.width, this.height);
+    this.drawWindow(18, 18, 604, 444);
+    c.font = '18px "Noto Serif", Georgia, serif'; c.fillStyle = '#eee'; c.fillText(menu.kind === 'synthesis' ? 'Synthesis' : menu.kind === 'shop' ? `Shop     ${state.party?.gold ?? 0} ${this.currencyUnit ?? 'S'}` : 'Items', 38, 50);
+    const entries = menu.entries ?? [];
+    entries.slice(0, 12).forEach((entry, index) => {
+      const selected = index === menu.selected; const data = entry.data ?? {};
+      const suffix = menu.kind === 'shop' ? `${entry.price} S` : `×${entry.amount ?? 1}`;
+      c.fillStyle = selected ? '#fff' : '#cbc5bc'; c.fillText(`${selected ? '›' : ' '} ${data.name ?? `${entry.kind} ${entry.id}`}  ${suffix}`, 42, 84 + index * 27);
+    });
+    const selected = entries[menu.selected];
+    if (selected?.data?.description) { c.fillStyle = '#aaa49c'; c.font = '14px Georgia, serif'; wrapText(c, selected.data.description, 330, 84, 270, 20); }
+  }
+
+  drawEquipMenu(menu, state) {
+    const c = this.context; c.fillStyle = 'rgba(0,0,0,.72)'; c.fillRect(0, 0, this.width, this.height); this.drawWindow(18, 18, 604, 444);
+    const actor = state.actors?.[menu.actorId]; c.font = '18px Georgia, serif'; c.fillStyle = '#eee'; c.fillText(`Equipment — ${actor?.name ?? ''}`, 38, 50);
+    (menu.slotEntries ?? actor?.equips ?? []).forEach((slot, index) => {
+      const item = slot.data;
+      c.fillStyle = menu.mode === 'slots' && index === menu.selected ? '#fff' : '#c9c3ba';
+      c.fillText(`${menu.mode === 'slots' && index === menu.selected ? '›' : ' '} [${slot.etypeId}] ${item?.name ?? (slot.id ? `${slot.kind} ${slot.id}` : '(empty)')}`, 42, 84 + index * 27);
+    });
+    if (menu.mode === 'choices') (menu.choices ?? []).slice(0, 10).forEach((entry, index) => {
+      c.fillStyle = index === menu.choiceSelected ? '#fff' : '#aaa'; c.fillText(`${index === menu.choiceSelected ? '›' : ' '} ${entry.data?.name ?? '(Remove)'}`, 350, 84 + index * 27);
+    });
+  }
+
+  drawStatusMenu(menu, state) {
+    const c = this.context; c.fillStyle = 'rgba(0,0,0,.72)'; c.fillRect(0, 0, this.width, this.height); this.drawWindow(80, 55, 480, 370);
+    const actor = state.actors?.[menu.actorId]; c.font = '20px Georgia, serif'; c.fillStyle = '#fff'; c.fillText(actor?.name ?? '', 108, 95);
+    c.font = '17px Georgia, serif'; c.fillStyle = '#d1cbc2'; c.fillText(`Lv ${actor?.level ?? 1}    HP ${actor?.hp ?? 0}/${menu.parameters?.mhp ?? 0}    MP ${actor?.mp ?? 0}/${menu.parameters?.mmp ?? 0}`, 108, 132);
+    Object.entries(menu.parameters ?? {}).forEach(([name, value], index) => c.fillText(`${name.toUpperCase().padEnd(4)} ${value}`, 120 + (index % 2) * 210, 180 + Math.floor(index / 2) * 42));
+  }
+
+  drawBattle(battle) {
+    const c = this.context; c.fillStyle = '#100d12'; c.fillRect(0, 0, this.width, this.height);
+    if (this.battleGraphics?.battleback1) c.drawImage(this.battleGraphics.battleback1, 0, 0, this.width, this.height);
+    if (this.battleGraphics?.battleback2) c.drawImage(this.battleGraphics.battleback2, 0, 0, this.width, this.height);
+    for (const enemy of battle?.enemies ?? []) {
+      if (enemy.hp <= 0) continue; const image = this.battleGraphics?.enemies?.get(enemy.battlerName); if (!image) continue;
+      const scale = Math.min(1, 260 / Math.max(image.width, image.height)); const width = image.width * scale; const height = image.height * scale;
+      c.drawImage(image, enemy.x - width / 2, enemy.y - height, width, height);
+      c.fillStyle = '#17080a'; c.fillRect(enemy.x - 55, enemy.y + 4, 110, 7); c.fillStyle = '#8d1f29'; c.fillRect(enemy.x - 55, enemy.y + 4, 110 * enemy.hp / Math.max(1, enemy.parameters.mhp), 7);
+      c.fillStyle = '#eee'; c.font = '13px Georgia, serif'; c.textAlign = 'center'; c.fillText(enemy.name, enemy.x, enemy.y + 28); c.textAlign = 'left';
+    }
+    this.drawWindow(12, 350, 616, 118); c.font = '16px Georgia, serif'; c.fillStyle = '#eee';
+    const actor = battle?.actors?.[0]; if (actor) c.fillText(`${actor.name}  HP ${actor.hp}/${actor.parameters.mhp}  MP ${actor.mp}/${actor.parameters.mmp}  AP ${Math.floor(actor.ap)}/${4000}`, 30, 380);
+    if (battle?.phase === 'actor-command') (battle.commands ?? []).forEach((command, index) => { c.fillStyle = index === battle.selectedCommand ? '#fff' : '#aaa'; c.fillText(`${index === battle.selectedCommand ? '›' : ' '} ${command}`, 30 + (index % 3) * 180, 414 + Math.floor(index / 3) * 28); });
+    else { c.fillStyle = '#c9c2ba'; c.fillText(battle?.log?.at(-1) ?? '', 30, 420); }
+  }
+
+  async showPicture(id, name, parameters = {}) {
+    const image = await this.loader.image(`Graphics/Pictures/${name}.png`);
+    this.pictures.set(Number(id), { id: Number(id), name, image, origin: 0, x: 0, y: 0, zoomX: 100, zoomY: 100, opacity: 255, blend: 0, ...parameters });
+  }
+
+  movePicture(id, parameters = {}) {
+    const picture = this.pictures.get(Number(id)); if (!picture) return Promise.resolve();
+    const frames = Math.max(0, Number(parameters.duration) || 0);
+    const target = { ...parameters }; delete target.duration;
+    if (!frames) { Object.assign(picture, target); return Promise.resolve(); }
+    const began = performance.now(); const until = began + frames * 1000 / 60;
+    picture.transition = { from: Object.fromEntries(Object.keys(target).map((key) => [key, picture[key]])), target, began, until };
+    return waitFrames(frames);
+  }
+  erasePicture(id) { this.pictures.delete(Number(id)); }
+
+  drawPictures() {
+    const c = this.context;
+    for (const picture of [...this.pictures.values()].sort((a, b) => a.id - b.id)) {
+      updatePictureTransition(picture);
+      if (picture.angleSpeed) picture.angle = (Number(picture.angle ?? 0) + Number(picture.angleSpeed) / 2) % 360;
+      const width = picture.image.width * (picture.zoomX ?? 100) / 100; const height = picture.image.height * (picture.zoomY ?? 100) / 100;
+      const x = (picture.x ?? 0) - (picture.origin === 1 ? width / 2 : 0); const y = (picture.y ?? 0) - (picture.origin === 1 ? height / 2 : 0);
+      c.save(); c.globalAlpha = (picture.opacity ?? 255) / 255; c.globalCompositeOperation = ['source-over', 'lighter', 'multiply'][picture.blend ?? 0] ?? 'source-over';
+      c.translate(x + width / 2, y + height / 2); c.rotate(Number(picture.angle ?? 0) * Math.PI / 180);
+      c.drawImage(picture.image, -width / 2, -height / 2, width, height);
+      const tone = picture.tone;
+      if (tone && (Number(tone.red ?? tone[0]) < 0 || Number(tone.green ?? tone[1]) < 0 || Number(tone.blue ?? tone[2]) < 0)) {
+        const darkness = clamp(-(Number(tone.red ?? tone[0] ?? 0) + Number(tone.green ?? tone[1] ?? 0) + Number(tone.blue ?? tone[2] ?? 0)) / 765, 0, 1);
+        c.globalCompositeOperation = 'source-atop'; c.fillStyle = `rgba(0,0,0,${darkness})`; c.fillRect(-width / 2, -height / 2, width, height);
+      }
+      c.restore();
+    }
+  }
+
+  tintScreen(tone, frames = 1) { this.screenTone = { tone, until: performance.now() + frames * 1000 / 60 }; return waitFrames(frames); }
+  flashScreen(color, frames = 1) { this.screenFlash = { color, began: performance.now(), until: performance.now() + frames * 1000 / 60 }; return waitFrames(frames); }
+  shakeScreen(power, speed, frames = 1) { this.screenShake = { power, speed, began: performance.now(), until: performance.now() + frames * 1000 / 60 }; return waitFrames(frames); }
+  setWeather(type, power, frames = 1) { this.weather = { type, power, began: performance.now() }; return waitFrames(frames); }
+
+  drawScreenEffects() {
+    const c = this.context; const now = performance.now();
+    if (this.screenTone) {
+      const tone = this.screenTone.tone ?? {}; const darkness = clamp(-(Number(tone.red) + Number(tone.green) + Number(tone.blue)) / (255 * 3), 0, 1);
+      if (darkness > 0) { c.fillStyle = `rgba(0,0,0,${darkness})`; c.fillRect(0, 0, this.width, this.height); }
+    }
+    if (this.screenFlash) {
+      const color = this.screenFlash.color ?? {}; const duration = Math.max(1, this.screenFlash.until - this.screenFlash.began); const alpha = clamp((this.screenFlash.until - now) / duration, 0, 1) * (Number(color.alpha ?? 255) / 255);
+      if (alpha > 0) { c.fillStyle = `rgba(${color.red ?? 255},${color.green ?? 255},${color.blue ?? 255},${alpha})`; c.fillRect(0, 0, this.width, this.height); }
+      else this.screenFlash = null;
+    }
+    if (this.screenShake && now >= this.screenShake.until) this.screenShake = null;
+  }
+
+  drawWeather() {
+    if (!this.weather || !this.weather.type || this.weather.power <= 0) return;
+    const c = this.context; const now = performance.now() / 30; c.save(); c.strokeStyle = 'rgba(190,210,230,.48)'; c.lineWidth = 1;
+    const count = Math.min(120, this.weather.power * 12);
+    for (let index = 0; index < count; index += 1) { const x = (index * 83 + now * 5) % this.width; const y = (index * 47 + now * 11) % this.height; c.beginPath(); c.moveTo(x, y); c.lineTo(x - 5, y + 12); c.stroke(); }
+    c.restore();
   }
 
   drawWindow(x, y, width, height) {
@@ -263,8 +431,26 @@ export class CanvasRenderer {
       input.focus({ preventScroll: true });
     });
   }
+  promptRetry(label, detail = '') {
+    return new Promise((resolve) => {
+      const form = document.createElement('form'); form.dataset.bsModal = 'resource-retry';
+      form.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#000d;color:#eee;font:16px Georgia,serif;z-index:30';
+      form.innerHTML = `<section style="width:min(480px,86%);padding:20px;border:1px solid #744;background:#100c0d"><strong></strong><p style="color:#b9acad;overflow-wrap:anywhere"></p><button value="retry">Retry</button><button value="cancel">Cancel</button></section>`;
+      form.querySelector('strong').textContent = label; form.querySelector('p').textContent = detail;
+      form.addEventListener('submit', (event) => { event.preventDefault(); const retry = event.submitter?.value === 'retry'; form.remove(); this.stage.focus({ preventScroll: true }); resolve(retry); });
+      this.stage.append(form); form.querySelector('button').focus({ preventScroll: true });
+    });
+  }
   async fadeTo(target, duration = 280) { const start = this.fade; const began = performance.now(); await new Promise((resolve) => { const frame = (now) => { const progress = Math.min(1, (now - began) / duration); this.fade = start + (target - start) * progress; if (progress < 1) requestAnimationFrame(frame); else resolve(); }; requestAnimationFrame(frame); }); }
-  diagnostics() { return { ...this.stats, camera: this.camera, activeAnimations: this.animations.length, activeBalloons: this.balloons.length, fog: Boolean(this.fog) }; }
+  diagnostics() {
+    return {
+      ...this.stats, camera: this.camera, activeAnimations: this.animations.length, activeBalloons: this.balloons.length,
+      fog: Boolean(this.fog), pictures: [...this.pictures.values()].map(({ id, name, x, y, opacity, angle }) => ({ id, name, x, y, opacity, angle })),
+      battle: this.battleGraphics ? { battleback1: this.battleGraphics.battleback1Path, battleback2: this.battleGraphics.battleback2Path, enemies: [...this.battleGraphics.enemies.keys()] } : null,
+      screenEffects: { tone: this.screenTone, flash: this.screenFlash, shake: this.screenShake, weather: this.weather },
+      failedCharacterSheets: [...this.characterSheetFailures].map(([path, error]) => ({ path, error })),
+    };
+  }
 }
 
 export function characterFrame(image, name, index, direction, pattern) {
@@ -287,3 +473,12 @@ const WALL_AUTOTILE_TABLE = [
 const WATERFALL_AUTOTILE_TABLE = [[[2,0],[1,0],[2,1],[1,1]],[[0,0],[1,0],[0,1],[1,1]],[[2,0],[3,0],[2,1],[3,1]],[[0,0],[3,0],[0,1],[3,1]]];
 function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
 function wrapText(context, text, x, y, width, lineHeight) { for (const paragraph of String(text).split('\n')) { let line = ''; for (const word of paragraph.split(/\s+/)) { const test = line ? `${line} ${word}` : word; if (context.measureText(test).width > width && line) { context.fillText(line, x, y); y += lineHeight; line = word; } else line = test; } context.fillText(line, x, y); y += lineHeight; } }
+function waitFrames(frames) { return new Promise((resolve) => setTimeout(resolve, Math.max(0, Number(frames) || 0) * 1000 / 60)); }
+function updatePictureTransition(picture) {
+  const transition = picture.transition; if (!transition) return;
+  const now = performance.now(); const progress = clamp((now - transition.began) / Math.max(1, transition.until - transition.began), 0, 1);
+  for (const [key, target] of Object.entries(transition.target)) {
+    const start = transition.from[key]; picture[key] = Number.isFinite(Number(start)) && Number.isFinite(Number(target)) ? Number(start) + (Number(target) - Number(start)) * progress : (progress >= 1 ? target : start);
+  }
+  if (progress >= 1) delete picture.transition;
+}

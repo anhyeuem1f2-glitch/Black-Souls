@@ -1,6 +1,6 @@
 {
   "schema": "black-souls-runtime-module-tree-v1",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "entry": "bootstrap.js",
   "modules": [
     "bootstrap.js",
@@ -11,6 +11,8 @@
     "core/input.js",
     "core/lifecycle.js",
     "data/loader.js",
+    "game/combat-system.js",
+    "game/party-system.js",
     "map/collision.js",
     "map/interpreter.js",
     "render/canvas-renderer.js",

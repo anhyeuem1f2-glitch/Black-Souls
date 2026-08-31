@@ -1,61 +1,37 @@
-# Port Status
+# BLACK SOULS SillyTavern Port Status
 
-## Implemented foundation
+Release: **0.5.0** (`systems-v0.5.0`)
 
-- [x] Original files isolated from all port writes.
-- [x] Ruby Marshal 4.8 decoder with object/symbol links, strings, RPG objects, `Table`, `Color`, and `Tone` normalization.
-- [x] All 165 `.rvdata2` files extract reproducibly; all 167 scripts inflate.
-- [x] All 150 map JSON files retain four table layers, events, pages, conditions, move routes, and exact event command codes/parameters.
-- [x] 80-code command coverage and 32-snippet embedded Ruby inventories.
-- [x] Canvas host at logical 640×480.
-- [x] Original System start map/coordinates loaded (`7`, `7`, `6`).
-- [x] Partial interpreter executes the original map-7 autorun transfer to map 97.
-- [x] IndexedDB save slot 1 survives load within the browser profile.
-- [x] Chara Card V3 JSON with `data.extensions.tavern_helper` script schema verified against installed TavernHelper source.
-- [x] LFS-pointer detection, magic-byte validation, centralized asset resolver, and isolated browser-ready RTP subset.
-- [x] Verified Map 7 → Map 97 tile/sprite/fog/BGM/SE rendering with original assets.
-- [x] Command 212 animation and command 213 balloon rendering; compatibility diagnostics stay out of player status.
-- [x] Direct card boot: the TavernHelper iframe auto-mounts without a normal `Open BLACK SOULS` launcher and covers the SillyTavern interaction surface while active.
-- [x] Original `Scene_Title`: `Graphics/Titles1/1.png` is stretched to the script-declared 640×480 surface, the original Vietnamese command labels are used, Continue reflects IndexedDB slot 1, and title BGM is deferred until browser audio unlock.
-- [x] Explicit host states and recovery: `LOADING`, `TITLE`, `PLAYING`, `MENU`, `PAUSED`, `ERROR`, and `UNMOUNTED`; explicit Exit compacts the iframe into a persistent Resume control.
-- [x] VX Ace Cancel lifecycle: Escape/X opens or closes the in-game menu and never hides/unmounts the iframe; fullscreen changes preserve game scene/state.
-- [x] Map renderer commits map, sheets, sprites, and fog atomically and retries after a frame error instead of permanently killing the animation loop.
-- [x] Command 303 has an explicit `name_input` suspension lifecycle: actor state updates, the same interpreter resumes at index + 1 exactly once, modal/input state clears, and focus returns to the game surface.
-- [x] Developer-only interpreter tracing records interpreter/map/event/index/code/parameters/wait/result/next index; the stall watchdog reports without auto-skipping.
-- [x] The original Map 97 opening is browser-verified through post-name dialogue, role/gift choices, transfer index 251, and Map 10 Event 38 completion.
-- [x] Missing visual-only animation/event-sprite RTP assets are diagnosed and omitted without killing event logic or leaving a half-committed transfer; failed transfers roll state back transactionally.
-- [x] Generated predictive streaming covers all 150 maps without a hand-written route table: direct/second-hop transfer graph, interpreter lookahead, Common Event cycle bounds, initial-viewport decode barrier, and opening Map 7 → 97 → {10, 98} warmup.
-- [x] Central priority scheduler provides in-flight dedupe, reserved critical capacity, bounded retry/fallback/timeouts, weighted byte/decoded/parsed LRUs, versioned persistent Cache API storage, and current-map pinning.
-- [x] Browser-native instrumentation reports fetch/decode/transition timing, hit rate, bytes, retries, fallbacks, timeouts, dedupe, exact pending assets, and 3 s/10 s transition watchdog context.
+The importable Chara Card V3 boots a deterministic browser game in a TavernHelper iframe and makes no model/API gameplay calls. It starts at the original title, executes the Map 7 → Map 97 → Map 10 opening, and keeps game Cancel/Menu separate from the explicit SillyTavern exit control.
 
-## In progress / partial
+## Implemented in this release
 
-- [~] Tiles: A1–A4 quarter composition, animation, A5/B–E, star priority, and shadows are implemented; broader map golden comparisons remain.
-- [~] Collision: VX Ace directional tile flags and the original 8-direction script's strict two-route diagonal check/cardinal fallback are honored; event collision, counter tiles, boats, regions, and other plugin rules remain.
-- [~] Events: 28 of 80 command codes have some implementation; several are only partial.
-- [~] Opening state mutations: flow reaches the playable Map 10 checkpoint, but party, inventory, encounter access, common-event operands, and journal compatibility remain partial.
-- [~] Ruby event compatibility: 3 simple patterns are mapped; the complete 32-snippet registry remains.
-- [~] Audio: map BGM/BGS and SE use manifest-resolved real binaries; fades, ME, pan, and full event coverage remain.
-- [~] Predictive coverage: generated dependencies and generic two-hop policy are complete for current supported commands; unimplemented script-driven/dynamic filenames cannot be inferred until their source systems are ported.
+- Complete extraction/audit of 150 maps, 6,444 events, 248 common events, 355 troops, 70,425 event commands, database content, and 167 Ruby script entries.
+- Nine required whole-game dependency/reverse indexes across map, event, common event, combat, inventory, UI, audio, and assets.
+- Predictive bounded streaming plus a generic same-interpreter resource barrier with transfer rollback and Retry/Cancel recovery.
+- Exact Map 97 name-input continuation and switch-14 `14遺体` blood/corpse page transition.
+- VX Ace map/tile/character/fog/picture/screen-effect rendering and real title/audio paths.
+- Persistent party, stack inventory, item use, eight-slot equipment, status, shop, and 15-recipe synthesis systems.
+- Real troop/enemy/skill battle state with MAX_AP 4000, deterministic hit/variance/critical rolls, smart action ratings, casting/interruption, rewards/drops, difficulty variable 60, and map return.
+- IndexedDB saves containing party, actor, inventory, equipment, recipes, event state, and pictures.
+- Immutable card release pin with runtime preflight and CDN fallback diagnostics.
 
-## Not implemented
+## Browser-verified vertical slices
 
-- [~] Menu fidelity: original menu and game-end command labels/cancel structure render; Item/Skill/Equip/Status scenes and full actor/status windows are intentionally disabled pending their real implementations.
-- [ ] Full name-input window fidelity (the current browser input remains functional but is not the original grid).
-- [ ] Full message/choice/branch/loop interpreter behavior.
-- [ ] Pictures, weather, complete move routes, shops, battles, common-event scheduling.
-- [ ] ATB/AP, casting, smart enemy AI, battle UI, difficulty variable 60, and other custom battle systems.
-- [ ] Remaining 8-direction integrations (event collision/move routes), symbol encounters, footsteps, journal UI, synthesis, world map.
-- [ ] Complete save schema parity and migrations.
-- [ ] User-side re-import and final native confirmation on the authenticated `st.proxyvn.top` deployment (direct browser and same-origin TavernHelper-style iframe harness are verified).
+1. Clean 0.5.0 title → New Game → name modal → `Alice. XÁC NHẬN?` → accepted branch.
+2. Map 97 switch 14 loaded and displayed `14遺体`; diagnostics showed the graphic decoded, no missing active character, and the same interpreter continuing at index 238.
+3. Opening completed at Map 10 `(15,16)` with interpreter stopped cleanly at Event 38 index 29 and no wait mode.
+4. Cancel opened the original menu; Item showed real opening inventory; Equip showed all eight actor slots.
+5. The battle harness loaded real troop 1, three battlers, a repository battleback, AP/HP UI, accepted keyboard attacks, retargeted living enemies, reached victory, cleared the battle renderer, restored Map 10 BGM, and returned to `PLAYING`.
+6. The card bootstrap path loaded local modules and logged `Ready runtime 0.5.0`.
 
-## Traced boot facts
+## Explicit remaining gaps
 
-- Title asset: `Graphics/Titles1/1.png`, original binary 376,160 bytes, decoded 560×420, then stretched by `RGSSLAB::XP_Display_Size::TITLE_TYPE = 1` to 640×480. `Titles2` is unused and `opt_draw_title` is false.
-- Title BGM: `Audio/BGM/タイトル、アリス.mp3`.
-- New Game: map 7 at `(7,6)`, tileset ID 1 `フィールド`, sheets `World_A1`, `World_A2`, `World_B`.
-- Original map-7 autorun transfers to map 97 `Thư Viện`, tileset ID 3 `内装`, using `Inside_A1`, `Inside_A2`, `Inside_A4`, `Inside_A5`, `Inside_B`, `Inside_C`, `treesrestaffmar11_soruve`, and `VXTileB` plus fog `kurayami01`.
-- Player: actor 1 graphic `!Flame`, character index 5. The verified map-97 path also renders `$c_54b` and `!Other3` event sprites.
-- Name continuation: Map 97 Event 1 Page 0, command 303 at index 11 (`actor=1`, `maxChars=6`) resumes at conditional index 12, confirmation message index 51, choice index 53, and post-choice animation index 60.
-- Actual blocker fixed: Animation 109 references absent RTP `Graphics/Animations/Light6.png`; the rejected visual Promise previously ended the interpreter at index 60. It is now non-fatal and cached as a diagnostic.
-- Stable checkpoint: the default opening branch transfers at Map 97 index 251 to Map 10 `Rừng Thánh` `(15,16)`; Event 38 ends at index 29 after setting Self Switch A. Map 10 renders even when optional event sprite `Damage3` is absent.
+This is not full RGSS3/plugin parity. The authoritative gaps are in `EVENT_COMMAND_COVERAGE.md`, `CUSTOM_SCRIPT_COVERAGE.md`, `KNOWN_DIFFERENCES.md`, and the domain reports. Important partial areas include move-route breadth, all conditional operand types, battle troop event pages, the complete smart-target plugin, elements/features/buffs, key-item/number-input UI, movie/vehicle/scroll commands, and numerous custom Ruby systems. The supplied game/repository also lacks 212 referenced RTP resources; opening-critical RTP is bundled, optional missing visuals are diagnostic, and critical missing resources block with recovery.
+
+## Artifacts
+
+- Runtime: `sillytavern-port/runtime/`
+- Generated data/indexes: `sillytavern-port/generated/`
+- Source card build: `sillytavern-port/card/Black_Souls_ST.json`
+- Final deliverable: `deliverables/Black_Souls_ST.json`

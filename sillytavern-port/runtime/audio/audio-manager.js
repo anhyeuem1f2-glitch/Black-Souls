@@ -4,6 +4,7 @@ export class AudioManager {
     this.onDiagnostic = onDiagnostic;
     this.channels = { bgm: null, bgs: null };
     this.pending = { bgm: null, bgs: null };
+    this.descriptors = { bgm: null, bgs: null };
     this.stats = { unlocked: false, bgm: null, bgs: null, lastSe: null, failures: [] };
   }
 
@@ -38,6 +39,7 @@ export class AudioManager {
     const path = this.findAudioPath(`Audio/${channel.toUpperCase()}/${descriptor.name}`);
     if (!path) return this.failure(channel, descriptor.name, 'not listed in asset manifest');
     try {
+      this.descriptors[channel] = structuredClone(descriptor);
       const url = await this.loader.audioUrl(path);
       const element = new Audio(url);
       element.loop = true;
@@ -61,19 +63,22 @@ export class AudioManager {
     }
   }
 
-  async playSe(descriptor) {
+  async playSe(descriptor) { return this.playOneShot('SE', descriptor); }
+
+  async playOneShot(category, descriptor) {
     if (!descriptor?.name) return;
-    const path = this.findAudioPath(`Audio/SE/${descriptor.name}`);
-    if (!path) return this.failure('se', descriptor.name, 'not listed in asset manifest');
+    const normalized = String(category).toUpperCase(); const channel = normalized.toLowerCase();
+    const path = this.findAudioPath(`Audio/${normalized}/${descriptor.name}`);
+    if (!path) return this.failure(channel, descriptor.name, 'not listed in asset manifest');
     try {
       const element = new Audio(await this.loader.audioUrl(path));
       applySettings(element, descriptor);
-      this.stats.lastSe = { name: descriptor.name, path, state: 'loading' };
+      this.stats.lastSe = { category: normalized, name: descriptor.name, path, state: 'loading' };
       await element.play();
       this.stats.lastSe.state = 'playing';
-      this.onDiagnostic({ type: 'audio-playing', channel: 'se', path });
+      this.onDiagnostic({ type: 'audio-playing', channel, path });
     } catch (error) {
-      this.failure('se', descriptor.name, error.message);
+      this.failure(channel, descriptor.name, error.message);
     }
   }
 
@@ -93,6 +98,7 @@ export class AudioManager {
     if (element) { element.pause(); element.currentTime = 0; }
     this.channels[channel] = null;
     this.pending[channel] = null;
+    this.descriptors[channel] = null;
     this.stats[channel] = null;
   }
 

@@ -18,7 +18,7 @@ const ACTIVE_SCENES = new Set([HOST_STATES.TITLE, HOST_STATES.PLAYING, HOST_STAT
 
 export function hostStateForScene(scene) {
   if (scene === 'TITLE') return HOST_STATES.TITLE;
-  if (scene === 'MENU' || scene === 'END') return HOST_STATES.MENU;
+  if (['MENU', 'END', 'ITEM', 'EQUIP', 'STATUS', 'SYNTHESIS', 'SHOP'].includes(scene)) return HOST_STATES.MENU;
   return HOST_STATES.PLAYING;
 }
 
