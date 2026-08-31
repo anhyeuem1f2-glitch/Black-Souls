@@ -1,4 +1,4 @@
-/* BLACK SOULS browser runtime 0.6.0; source c601dae8d61f79e89a86cc47521602092de66962 */
+/* BLACK SOULS browser runtime 0.7.0; source 6527019cf04d15c77a8b0bfac1d85881b0e5f62a */
 (() => {
   // runtime/core/input.js
   var axes = /* @__PURE__ */ new Map([
@@ -41,12 +41,14 @@
       this.confirmed = false;
       this.cancelled = false;
       this.interacted = false;
+      this.dashPressed = false;
       this.onKeyDown = (event) => {
         if (!this.ownsKeyboard(event)) return;
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
         if (axes.has(key)) {
+          const firstPress = !this.held.has(key);
           this.held.set(key, axes.get(key));
-          this.enqueueHeldDirection();
+          if (firstPress) this.enqueueHeldDirection();
           this.consume(event);
         } else if (keypad.has(key) && /^Numpad/.test(event.code || "")) {
           this.queue.push(keypad.get(key));
@@ -63,10 +65,15 @@
           this.interacted = true;
           this.consume(event);
         }
+        if (key === "Shift") {
+          this.dashPressed = true;
+          this.consume(event);
+        }
       };
       this.onKeyUp = (event) => {
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
         this.held.delete(key);
+        if (key === "Shift") this.dashPressed = false;
       };
       this.window.addEventListener("keydown", this.onKeyDown, true);
       this.window.addEventListener("keyup", this.onKeyUp, true);
@@ -96,6 +103,29 @@
     takeDirection() {
       return this.queue.shift() ?? null;
     }
+    currentDirection() {
+      let dx = 0;
+      let dy = 0;
+      for (const [x, y] of this.held.values()) {
+        dx += x;
+        dy += y;
+      }
+      dx = Math.sign(dx);
+      dy = Math.sign(dy);
+      const direction = directionNumber.get(`${dx},${dy}`);
+      return direction ? [dx, dy, direction] : null;
+    }
+    takeMovementDirection() {
+      const held = this.currentDirection();
+      if (held) {
+        this.queue.length = 0;
+        return held;
+      }
+      return this.takeDirection();
+    }
+    isDashPressed() {
+      return this.dashPressed;
+    }
     takeConfirm() {
       const value = this.confirmed;
       this.confirmed = false;
@@ -116,6 +146,7 @@
       this.confirmed = false;
       this.cancelled = false;
       this.held.clear();
+      this.dashPressed = false;
     }
     destroy() {
       this.window.removeEventListener("keydown", this.onKeyDown, true);
@@ -220,7 +251,10 @@
           case 101: {
             const lines = [];
             while (list[index + 1]?.code === 401) lines.push(String(list[++index].parameters?.[0] ?? ""));
-            await this.suspend("message", this.engine.showMessage(lines.join("\n"), { face: parameters[0], faceIndex: parameters[1], background: parameters[2], position: parameters[3] }));
+            const choiceAttached = list[index + 1]?.code === 102;
+            const message = this.engine.showMessage(lines.join("\n"), { face: parameters[0], faceIndex: parameters[1], background: parameters[2], position: parameters[3], choiceAttached });
+            if (choiceAttached) await message;
+            else await this.suspend("message", message);
             break;
           }
           case 102: {
@@ -301,16 +335,26 @@
             this.changeInventory("armor", parameters);
             break;
           case 129:
-            this.changePartyMember(parameters);
+            await this.suspendVisual("resource", this.changePartyMember(parameters), { operation: "party-member", actorId: parameters[0] });
             break;
           case 132:
             this.engine.changeBattleBgm?.(parameters[0]);
             break;
+          case 134:
+            this.engine.state.system ??= {};
+            this.engine.state.system.saveDisabled = parameters[0] !== 0;
+            break;
           case 135:
-            this.engine.state.menuEnabled = parameters[0] === 0;
+            this.engine.state.system ??= {};
+            this.engine.state.system.menuDisabled = parameters[0] !== 0;
             break;
           case 136:
-            this.engine.state.encounterEnabled = parameters[0] === 0;
+            this.engine.state.system ??= {};
+            this.engine.state.system.encounterDisabled = parameters[0] !== 0;
+            break;
+          case 137:
+            this.engine.state.system ??= {};
+            this.engine.state.system.formationDisabled = parameters[0] !== 0;
             break;
           case 201:
             if (parameters[0] !== 0) throw new Error("Variable-based transfers are not implemented yet");
@@ -397,6 +441,9 @@
           case 251:
             this.engine.stopSe?.();
             break;
+          case 281:
+            this.engine.state.mapNameDisplay = parameters[0] === 0;
+            break;
           case 301: {
             if (parameters[0] !== 0) {
               this.engine.noteUnsupported(301, "variable/random troop");
@@ -443,6 +490,9 @@
             break;
           case 320:
             this.engine.setActorName(parameters[0], String(parameters[1] ?? ""));
+            break;
+          case 321:
+            this.engine.changeActorClass?.(parameters[0], parameters[1], Boolean(parameters[2]));
             break;
           case 322:
             await this.suspendVisual("resource", this.engine.setActorGraphic?.(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]) ?? Promise.resolve(), { actorId: parameters[0], graphic: parameters[1] });
@@ -554,19 +604,65 @@
       let value = 0;
       if (operandType === 0) value = operand[0];
       else if (operandType === 1) value = this.engine.state.variables[operand[0]] ?? 0;
+      else if (operandType === 2) value = randomInteger(Number(operand[0]), Number(operand[1]));
+      else if (operandType === 3) value = this.gameDataOperand(operand[0], operand[1], operand[2]);
       else return this.engine.noteUnsupported(122, `operand ${operandType}`);
       for (let id = first; id <= last; id += 1) {
         const current = this.engine.state.variables[id] ?? 0;
         this.engine.state.variables[id] = operation === 0 ? value : operation === 1 ? current + value : operation === 2 ? current - value : operation === 3 ? current * value : operation === 4 ? Math.trunc(current / value) : current % value;
       }
     }
+    gameDataOperand(type, first, second) {
+      if (type === 0) return this.engine.party?.quantity?.(this.engine.state, "item", first) ?? 0;
+      if (type === 1) return this.engine.party?.quantity?.(this.engine.state, "weapon", first) ?? 0;
+      if (type === 2) return this.engine.party?.quantity?.(this.engine.state, "armor", first) ?? 0;
+      if (type === 3) {
+        const actor = this.engine.state.actors?.[first];
+        const parameters = this.engine.party?.parameters?.(this.engine.state, first) ?? {};
+        return [actor?.level, actor?.exp, actor?.hp, actor?.mp, parameters.mhp, parameters.mmp, parameters.atk, parameters.def, parameters.mat, parameters.mdf, parameters.agi, parameters.luk][second] ?? 0;
+      }
+      if (type === 5) {
+        if (Number(first) === -1) return [this.engine.state.x, this.engine.state.y, this.engine.state.direction][second] ?? 0;
+        const id = Number(first) === 0 ? this.current?.eventId : Number(first);
+        const event = this.engine.map?.events?.[id];
+        const override = this.engine.state.eventOverrides?.[`${this.engine.state.mapId},${id}`];
+        return [override?.x ?? event?.x, override?.y ?? event?.y, override?.direction][second] ?? 0;
+      }
+      if (type === 6) return this.engine.state.party?.members?.[Number(first)] ?? 0;
+      if (type === 7) return [
+        this.engine.state.mapId,
+        this.engine.state.party?.members?.length ?? 0,
+        this.engine.state.party?.gold ?? 0,
+        this.engine.state.steps ?? 0,
+        Math.floor(this.engine.state.system?.playtimeSeconds ?? 0),
+        Math.floor((this.engine.state.timer?.count ?? 0) / 60),
+        this.engine.state.system?.saveCount ?? 0,
+        this.engine.state.system?.battleCount ?? 0
+      ][first] ?? 0;
+      this.engine.noteUnsupported(122, `game data ${type}:${first}:${second}`);
+      return 0;
+    }
     async applyMoveRoute(target, route, context = {}) {
       for (const command of route?.list ?? []) {
-        if (target === -1 && command.code === 39) this.engine.state.transparent = true;
-        else if (target === -1 && command.code === 40) this.engine.state.transparent = false;
+        const parameters = command.parameters ?? [];
+        if (command.code >= 1 && command.code <= 8) {
+          const movement = [[0, 0, 0], [0, 1, 2], [-1, 0, 4], [1, 0, 6], [0, -1, 8], [-1, 1, 1], [1, 1, 3], [-1, -1, 7], [1, -1, 9]][command.code];
+          await this.engine.moveRouteStep?.(target, ...movement, context.eventId);
+        } else if (command.code === 15) await (this.engine.waitFrames?.(Math.max(0, Number(parameters[0]) - 1)) ?? wait(Math.max(0, Number(parameters[0]) - 1) * 1e3 / 60));
+        else if (command.code >= 16 && command.code <= 19) this.engine.setRouteDirection?.(target, { 16: 2, 17: 4, 18: 6, 19: 8 }[command.code], context.eventId);
+        else if (command.code === 27) this.engine.state.switches[parameters[0]] = true;
+        else if (command.code === 28) this.engine.state.switches[parameters[0]] = false;
+        else if (command.code === 29) this.engine.setRouteProperty?.(target, "moveSpeed", Number(parameters[0]), context.eventId);
+        else if (command.code === 30) this.engine.setRouteProperty?.(target, "moveFrequency", Number(parameters[0]), context.eventId);
+        else if (command.code === 37) this.engine.setRouteProperty?.(target, "through", true, context.eventId);
+        else if (command.code === 38) this.engine.setRouteProperty?.(target, "through", false, context.eventId);
+        else if (command.code === 39) this.engine.setRouteProperty?.(target, "transparent", true, context.eventId);
+        else if (command.code === 40) this.engine.setRouteProperty?.(target, "transparent", false, context.eventId);
         else if (command.code === 41) {
           await this.suspendVisual("resource", this.engine.changeCharacterGraphic(target, command.parameters?.[0], command.parameters?.[1], context.eventId), { reason: "move-route-graphic", target, name: command.parameters?.[0] });
-        } else if (command.code !== 0) this.engine.noteUnsupported(205, `move command ${command.code}`);
+        } else if (command.code === 42) this.engine.setRouteProperty?.(target, "opacity", Number(parameters[0]), context.eventId);
+        else if (command.code === 44) await this.engine.playSe?.(parameters[0]);
+        else if (![0, 31, 32, 33, 34, 35, 36, 43].includes(command.code)) this.engine.noteUnsupported(205, `move command ${command.code}`);
       }
     }
     operandValue(type, value, fallback = 0) {
@@ -579,11 +675,13 @@
       this.engine.gainItem?.(kind, id, value * (operation === 0 ? 1 : -1));
     }
     changePartyMember(parameters) {
-      const [actorId, operation] = parameters;
+      const [actorId, operation, initialize] = parameters;
+      if (this.engine.changePartyMember) return this.engine.changePartyMember(actorId, operation, Boolean(initialize));
       this.engine.state.party ??= { members: [] };
       const members = this.engine.state.party.members;
       if (operation === 0 && !members.includes(actorId)) members.push(actorId);
       if (operation === 1) this.engine.state.party.members = members.filter((id) => id !== actorId);
+      return Promise.resolve();
     }
     actorTargets(parameters) {
       return parameters[0] === 0 ? [Number(parameters[1])] : [...this.engine.state.party?.members ?? []];
@@ -633,6 +731,11 @@
   }
   function wait(milliseconds) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
+  function randomInteger(minimum, maximum) {
+    const low = Math.min(minimum, maximum);
+    const high = Math.max(minimum, maximum);
+    return low + Math.floor(Math.random() * (high - low + 1));
   }
   var interpreterSequence = 0;
   function summarizeParameters(parameters) {
@@ -823,6 +926,12 @@
         hp: 1,
         mp: 0,
         tp: 0,
+        nickname: actor.nickname ?? "",
+        description: actor.description ?? "",
+        characterName: actor.character_name ?? "",
+        characterIndex: Number(actor.character_index) || 0,
+        faceName: actor.face_name ?? "",
+        faceIndex: Number(actor.face_index) || 0,
         states: [],
         skills: this.initialSkills(actor.class_id, level),
         equips
@@ -863,6 +972,12 @@
         actor.classId ??= actorData.class_id;
         actor.level ??= actorData.initial_level || 1;
         actor.exp ??= 0;
+        actor.nickname ??= actorData.nickname ?? "";
+        actor.description ??= actorData.description ?? "";
+        actor.characterName ??= actorData.character_name ?? "";
+        actor.characterIndex ??= Number(actorData.character_index) || 0;
+        actor.faceName ??= actorData.face_name ?? "";
+        actor.faceIndex ??= Number(actorData.face_index) || 0;
         actor.states ??= [];
         actor.skills ??= this.initialSkills(actor.classId, actor.level);
         actor.equips ??= this.initialEquips(actorData);
@@ -1427,6 +1542,10 @@
       this.interpreterTraceEnabled = new URLSearchParams(globalThis.location?.search ?? "").get("bsTrace") === "1";
       this.modalStack = [];
       this.modalSequence = 0;
+      this.fixedStepMs = 1e3 / 60;
+      this.maxFrameDeltaMs = 250;
+      this.accumulatorMs = 0;
+      this.lastLoopAt = null;
     }
     async initialize() {
       this.database = await this.loader.initialize();
@@ -1442,7 +1561,7 @@
         renderer: { scene: this.renderer.stats.scene, mapId: this.renderer.stats.mapId, frames: this.renderer.stats.frames },
         state: { scene: this.state?.scene, mapId: this.state?.mapId, loadingMap: this.state?.loadingMap }
       }));
-      this.hasSave = await this.saves.has(1).catch((error) => {
+      this.hasSave = await (this.saves.any?.() ?? this.saves.has(1)).catch((error) => {
         this.recordDiagnostic({ type: "save-probe-failed", error: error.message });
         return false;
       });
@@ -1457,14 +1576,20 @@
         actors: Object.fromEntries(this.database.actors.filter(Boolean).map((actor) => [actor.id, { name: actor.name }]))
       };
       return {
-        schema: "black-souls-st-state-v1",
+        schema: "black-souls-st-state-v2",
         scene,
         mapId: this.database.system.start_map_id,
         x: this.database.system.start_x,
         y: this.database.system.start_y,
+        realX: this.database.system.start_x,
+        realY: this.database.system.start_y,
         direction: 2,
         pattern: 1,
+        originalPattern: 1,
+        animationCount: 0,
         steps: 0,
+        moveSpeed: 4,
+        dash: false,
         switches: {},
         variables: {},
         selfSwitches: {},
@@ -1479,7 +1604,12 @@
         screenShake: null,
         weather: null,
         battle: null,
-        eventOverrides: {}
+        eventOverrides: {},
+        system: { saveDisabled: false, menuDisabled: false, encounterDisabled: false, formationDisabled: false, playtimeSeconds: 0, startedAt: Date.now(), saveCount: 0 },
+        timer: { working: false, count: 0 },
+        pluginState: {},
+        difficulty: 0,
+        ngPlus: 0
       };
     }
     async enterTitle() {
@@ -1507,6 +1637,7 @@
     async newGame() {
       await this.audio.unlock();
       this.state = this.initialState("PLAYING");
+      this.state.system.startedAt = Date.now();
       this.notifyScene();
       await this.loadMap(this.state.mapId);
       this.status(`New game: map ${this.state.mapId} (${this.state.x}, ${this.state.y})`);
@@ -1520,13 +1651,16 @@
         const map = await this.loader.map(mapId);
         const tileset = this.database.tilesets[map.tileset_id];
         const collision = new CollisionMap(map, tileset);
-        const actorId = this.database.system.party_members?.[0] ?? 1;
+        const actorId = this.state.party?.members?.[0] ?? this.database.system.party_members?.[0] ?? 1;
         const actor = this.database.actors[actorId];
         const actorState = this.state.actors[actorId];
         const playerGraphic = { character_name: actorState?.characterName ?? actor?.character_name ?? "", character_index: actorState?.characterIndex ?? actor?.character_index ?? 0 };
         await this.renderer.setMap(map, tileset, { playerGraphic, events: this.currentRenderableEvents(map), mapId, x: this.state.x, y: this.state.y });
         this.map = map;
         this.collision = collision;
+        this.state.mapName = String(map.display_name ?? "").normalize("NFC");
+        this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+        this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
         await this.audio.applyMapAudio(map);
         const transition = this.prefetch?.markMapVisible?.(mapId, { x: this.state.x, y: this.state.y }) ?? null;
         this.onTransitionState({ state: "visible", mapId, transition, streaming: this.prefetch?.getStatus?.() ?? null });
@@ -1539,10 +1673,10 @@
       }
     }
     async transfer(mapId, x, y, direction = 0) {
-      const previous = { mapId: this.state.mapId, x: this.state.x, y: this.state.y, direction: this.state.direction };
+      const previous = { mapId: this.state.mapId, x: this.state.x, y: this.state.y, realX: this.state.realX, realY: this.state.realY, direction: this.state.direction };
       this.state.mapId = mapId;
-      this.state.x = x;
-      this.state.y = y;
+      this.state.x = this.state.realX = x;
+      this.state.y = this.state.realY = y;
       if (direction) this.state.direction = direction;
       try {
         await this.loadMap(mapId);
@@ -1562,7 +1696,7 @@
     async runAutorunEvents() {
       for (const event of Object.values(this.map?.events ?? {})) {
         const page = this.activePage(event);
-        if (page?.trigger === 3) await this.interpreter.run(page.list, { eventId: event.id });
+        if (page?.trigger === 3 || page?.trigger === 4) await this.interpreter.run(page.list, { eventId: event.id, trigger: page.trigger });
       }
     }
     handleInterpreterFailure(error, interpreter = this.interpreter?.snapshot()) {
@@ -1583,10 +1717,19 @@
       if (condition.actor_valid && !this.state.party.members.includes(condition.actor_id)) return false;
       return true;
     }
-    loop = () => {
+    loop = (now = performance.now()) => {
       if (!this.running) return;
       try {
-        this.update();
+        if (this.lastLoopAt == null) this.lastLoopAt = now;
+        const elapsed = Math.min(this.maxFrameDeltaMs, Math.max(0, now - this.lastLoopAt));
+        this.lastLoopAt = now;
+        this.accumulatorMs += elapsed;
+        let updates = 0;
+        while (this.accumulatorMs >= this.fixedStepMs && updates < 15) {
+          this.update(this.fixedStepMs / 1e3);
+          this.accumulatorMs -= this.fixedStepMs;
+          updates += 1;
+        }
         this.renderer.render(this.state, this.currentRenderableEvents());
         this.lastRenderError = null;
       } catch (error) {
@@ -1598,8 +1741,10 @@
       }
       this.frame = requestAnimationFrame(this.loop);
     };
-    update() {
+    update(deltaSeconds = 1 / 60) {
       if (this.paused) return;
+      this.updatePlaytime(deltaSeconds);
+      this.updateMovement(deltaSeconds);
       this.interpreter?.updateWatchdog?.();
       if (this.input.takeInteraction()) void this.audio.unlock();
       if (this.state.scene === "TITLE") {
@@ -1610,7 +1755,7 @@
         this.updateBattle();
         return;
       }
-      if (["MENU", "END", "ITEM", "EQUIP", "STATUS", "SYNTHESIS", "SHOP"].includes(this.state.scene)) {
+      if (["MENU", "END", "ITEM", "SKILL", "EQUIP", "STATUS", "SYNTHESIS", "SHOP", "FILE_SAVE", "FILE_LOAD"].includes(this.state.scene)) {
         this.updateMenu();
         return;
       }
@@ -1620,6 +1765,15 @@
         if (this.input.takeConfirm()) {
           const selected = this.state.choice.selected;
           this.state.choice = null;
+          if (this.state.message?.choiceAttached) this.state.message = null;
+          this.choiceResolve?.(selected);
+          this.choiceResolve = null;
+          return;
+        }
+        if (this.input.takeCancel() && this.state.choice.cancelType >= 0) {
+          const selected = this.state.choice.cancelType;
+          this.state.choice = null;
+          if (this.state.message?.choiceAttached) this.state.message = null;
           this.choiceResolve?.(selected);
           this.choiceResolve = null;
         }
@@ -1634,6 +1788,7 @@
         return;
       }
       if (this.interpreter.running) return;
+      if (this.isMoving()) return;
       if (this.input.takeCancel()) {
         this.openMenu();
         return;
@@ -1642,7 +1797,7 @@
         this.triggerActionEvent();
         return;
       }
-      const movement = this.input.takeDirection();
+      const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
       if (!movement || !this.map) return;
       this.move(...movement);
     }
@@ -1661,7 +1816,7 @@
         return;
       }
       this.transitioning = true;
-      const task = command.symbol === "new_game" ? this.newGame() : this.load(1);
+      const task = command.symbol === "new_game" ? this.newGame() : this.openLoadMenu();
       Promise.resolve(task).catch((error) => {
         this.recordDiagnostic({ type: "scene-transition-failed", error: error.message });
         this.status(error.message);
@@ -1670,8 +1825,16 @@
       });
     }
     updateMenu() {
+      if (this.state.scene === "FILE_SAVE" || this.state.scene === "FILE_LOAD") {
+        this.updateFileMenu();
+        return;
+      }
       if (this.state.scene === "ITEM") {
         this.updateItemMenu();
+        return;
+      }
+      if (this.state.scene === "SKILL") {
+        if (this.input.takeCancel()) this.openMenu();
         return;
       }
       if (this.state.scene === "EQUIP") {
@@ -1709,23 +1872,27 @@
         if (command.symbol === "cancel") this.openMenu();
         return;
       }
-      if (command.symbol === "save") void this.save(1);
+      if (command.symbol === "save") void this.openSaveMenu();
       if (command.symbol === "game_end") this.openEndMenu();
       if (command.symbol === "item") this.openItemMenu();
+      if (command.symbol === "skill") this.openSkillMenu();
       if (command.symbol === "equip") this.openEquipMenu();
       if (command.symbol === "status") this.openStatusMenu();
     }
     openMenu() {
       const labels = this.database.system.terms.commands;
+      const members = this.state.party?.members ?? [];
       this.state.menu = {
         kind: "menu",
         selected: 0,
+        actorStatus: Object.fromEntries(members.map((actorId) => [actorId, this.party.parameters(this.state, actorId)])),
         commands: [
           { symbol: "item", label: labels[4], enabled: true },
-          { symbol: "skill", label: labels[5], enabled: false },
+          { symbol: "skill", label: labels[5], enabled: true },
           { symbol: "equip", label: labels[6], enabled: true },
           { symbol: "status", label: labels[7], enabled: true },
-          { symbol: "save", label: labels[9], enabled: true },
+          { symbol: "formation", label: labels[8], enabled: members.length >= 2 && !this.state.system?.formationDisabled },
+          { symbol: "save", label: labels[9], enabled: !this.state.system?.saveDisabled },
           { symbol: "game_end", label: labels[10], enabled: true }
         ]
       };
@@ -1755,34 +1922,105 @@
       }
     }
     openItemMenu() {
-      const entries = this.party.inventoryEntries(this.state, ["item"]);
-      this.state.menu = { kind: "item", selected: 0, entries };
+      const labels = this.database.system.terms.commands;
+      this.state.menu = {
+        kind: "item",
+        mode: "category",
+        categorySelected: 0,
+        selected: 0,
+        categories: [
+          { symbol: "item", label: labels[4] },
+          { symbol: "weapon", label: labels[12] },
+          { symbol: "armor", label: labels[13] },
+          { symbol: "key_item", label: labels[14] }
+        ],
+        entries: this.itemEntriesForCategory("item")
+      };
       this.setScene("ITEM");
     }
     updateItemMenu() {
       const menu = this.state.menu;
-      if (this.input.takeCancel()) {
-        this.openMenu();
+      if (menu.mode === "category") {
+        if (this.input.takeCancel()) {
+          this.openMenu();
+          return;
+        }
+        const movement2 = this.input.takeDirection();
+        if (movement2?.[0]) {
+          menu.categorySelected = cycle(menu.categorySelected, Math.sign(movement2[0]), menu.categories.length);
+          menu.entries = this.itemEntriesForCategory(menu.categories[menu.categorySelected].symbol);
+          menu.selected = 0;
+        }
+        if (this.input.takeConfirm()) menu.mode = "items";
         return;
       }
-      const movement = this.input.takeDirection();
-      if (movement?.[1] && menu.entries.length) menu.selected = cycle(menu.selected, Math.sign(movement[1]), menu.entries.length);
+      if (this.input.takeCancel()) {
+        menu.mode = "category";
+        return;
+      }
+      if (this.isMoving()) return;
+      const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
+      if (movement && menu.entries.length) {
+        const delta = movement[1] ? Math.sign(movement[1]) * 2 : Math.sign(movement[0]);
+        if (delta) menu.selected = cycle(menu.selected, delta, menu.entries.length);
+      }
       if (!this.input.takeConfirm() || !menu.entries.length) return;
       const entry = menu.entries[menu.selected];
+      if (entry.kind !== "item") return;
       const result = this.party.useItem(this.state, entry.id, this.state.party.members[0]);
       if (result.used) this.status(`Used ${entry.data.name}.`);
-      menu.entries = this.party.inventoryEntries(this.state, ["item"]);
+      menu.entries = this.itemEntriesForCategory(menu.categories[menu.categorySelected].symbol);
       menu.selected = Math.max(0, Math.min(menu.selected, menu.entries.length - 1));
+    }
+    itemEntriesForCategory(category) {
+      if (category === "weapon" || category === "armor") return this.party.inventoryEntries(this.state, [category]);
+      return this.party.inventoryEntries(this.state, ["item"]).filter((entry) => Number(entry.data?.itype_id ?? 1) === 2 === (category === "key_item"));
+    }
+    openSkillMenu() {
+      const actorId = this.state.party.members[0];
+      const actor = this.state.actors[actorId];
+      this.state.menu = { kind: "skill", actorId, selected: 0, entries: (actor?.skills ?? []).map((id) => ({ id, data: this.database.skills[id] })).filter((entry) => entry.data) };
+      this.setScene("SKILL");
     }
     openEquipMenu() {
       const actorId = this.state.party.members[0];
-      this.state.menu = { kind: "equip", mode: "slots", actorId, selected: 0, choices: [], choiceSelected: 0 };
+      const labels = this.database.system.terms.commands;
+      this.state.menu = {
+        kind: "equip",
+        mode: "command",
+        actorId,
+        commandSelected: 0,
+        commands: [{ symbol: "equip", label: labels[15] }, { symbol: "optimize", label: labels[16] }, { symbol: "clear", label: labels[17] }],
+        selected: 0,
+        choices: [],
+        choiceSelected: 0
+      };
       this.decorateEquipMenu(this.state.menu);
       this.setScene("EQUIP");
     }
     updateEquipMenu() {
       const menu = this.state.menu;
       const actor = this.state.actors[menu.actorId];
+      if (menu.mode === "command") {
+        if (this.input.takeCancel()) {
+          this.openMenu();
+          return;
+        }
+        const movement2 = this.input.takeDirection();
+        if (movement2?.[0]) menu.commandSelected = cycle(menu.commandSelected, Math.sign(movement2[0]), menu.commands.length);
+        if (!this.input.takeConfirm()) return;
+        const symbol = menu.commands[menu.commandSelected].symbol;
+        if (symbol === "equip") menu.mode = "slots";
+        if (symbol === "clear") {
+          this.clearActorEquipment(menu.actorId);
+          this.decorateEquipMenu(menu);
+        }
+        if (symbol === "optimize") {
+          this.optimizeActorEquipment(menu.actorId);
+          this.decorateEquipMenu(menu);
+        }
+        return;
+      }
       if (menu.mode === "choices") {
         if (this.input.takeCancel()) {
           menu.mode = "slots";
@@ -1799,10 +2037,10 @@
         return;
       }
       if (this.input.takeCancel()) {
-        this.openMenu();
+        menu.mode = "command";
         return;
       }
-      const movement = this.input.takeDirection();
+      const movement = this.input.takeMovementDirection?.() ?? this.input.takeDirection();
       if (movement?.[1] && actor.equips.length) menu.selected = cycle(menu.selected, Math.sign(movement[1]), actor.equips.length);
       if (!this.input.takeConfirm()) return;
       const current = actor.equips[menu.selected];
@@ -1812,11 +2050,88 @@
     }
     decorateEquipMenu(menu) {
       menu.slotEntries = (this.state.actors[menu.actorId]?.equips ?? []).map((slot) => ({ ...slot, data: slot.id ? this.party.data(slot.kind, slot.id) : null }));
+      menu.parameters = this.party.parameters(this.state, menu.actorId);
+    }
+    clearActorEquipment(actorId) {
+      const actor = this.state.actors[actorId];
+      for (let index = 0; index < (actor?.equips?.length ?? 0); index += 1) {
+        const slot = actor.equips[index];
+        if (slot.id) this.party.equip(this.state, actorId, index, slot.kind, 0);
+      }
+    }
+    optimizeActorEquipment(actorId) {
+      this.clearActorEquipment(actorId);
+      const actor = this.state.actors[actorId];
+      for (let index = 0; index < (actor?.equips?.length ?? 0); index += 1) {
+        const candidates = this.party.inventoryEntries(this.state, ["weapon", "armor"]).filter((entry) => this.party.canEquip(this.state, actorId, entry.kind, entry.id, index)).sort((a, b) => sumParams(b.data?.params) - sumParams(a.data?.params));
+        const best = candidates[0];
+        if (best) this.party.equip(this.state, actorId, index, best.kind, best.id);
+      }
     }
     openStatusMenu() {
       const actorId = this.state.party.members[0];
-      this.state.menu = { kind: "status", actorId, parameters: this.party.parameters(this.state, actorId) };
+      const actor = this.state.actors[actorId];
+      this.state.menu = {
+        kind: "status",
+        actorId,
+        parameters: this.party.parameters(this.state, actorId),
+        className: this.database.classes[actor?.classId]?.name ?? "",
+        expCurrent: actor?.exp ?? 0,
+        expNext: Math.max(0, this.party.expForLevel(actor?.classId, (actor?.level ?? 1) + 1) - (actor?.exp ?? 0)),
+        equipment: (actor?.equips ?? []).map((slot) => slot.id ? this.party.data(slot.kind, slot.id) : null),
+        paramLabels: this.database.system.terms.params
+      };
       this.setScene("STATUS");
+    }
+    async openLoadMenu() {
+      const slots = await this.saves.list();
+      const graphics = slots.flatMap((slot) => (slot.partyCharacters ?? []).map((entry) => ({ graphic: { character_name: entry.characterName, character_index: entry.characterIndex } })));
+      await Promise.resolve(this.renderer.ensureEventGraphics?.(graphics)).catch((error) => this.recordDiagnostic({ type: "save-character-warm-failed", error: error.message }));
+      const latest = await this.saves.latestSlot();
+      this.state.menu = { kind: "file", mode: "load", help: "Mở tệp nào?", selected: Math.max(0, latest - 1), topIndex: Math.max(0, Math.min(12, latest - 3)), slots };
+      this.setScene("FILE_LOAD");
+    }
+    async openSaveMenu() {
+      if (this.state.system?.saveDisabled) {
+        this.status("Không thể lưu tại đây.");
+        return;
+      }
+      const slots = await this.saves.list();
+      const graphics = slots.flatMap((slot) => (slot.partyCharacters ?? []).map((entry) => ({ graphic: { character_name: entry.characterName, character_index: entry.characterIndex } })));
+      await Promise.resolve(this.renderer.ensureEventGraphics?.(graphics)).catch((error) => this.recordDiagnostic({ type: "save-character-warm-failed", error: error.message }));
+      const selected = Math.max(0, Math.min(15, Number(this.lastSaveSlot ?? 1) - 1));
+      this.state.menu = { kind: "file", mode: "save", help: "Lưu vào đâu?", selected, topIndex: Math.max(0, Math.min(12, selected - 1)), slots };
+      this.setScene("FILE_SAVE");
+    }
+    updateFileMenu() {
+      const menu = this.state.menu;
+      if (!menu || this.transitioning) return;
+      if (this.input.takeCancel()) {
+        if (menu.mode === "load") void this.enterTitle();
+        else this.openMenu();
+        return;
+      }
+      const movement = this.input.takeDirection();
+      if (movement?.[1]) {
+        menu.selected = cycle(menu.selected, Math.sign(movement[1]), menu.slots.length);
+        if (menu.selected < menu.topIndex) menu.topIndex = menu.selected;
+        if (menu.selected > menu.topIndex + 3) menu.topIndex = menu.selected - 3;
+      }
+      if (!this.input.takeConfirm()) return;
+      const slot = menu.selected + 1;
+      const entry = menu.slots[menu.selected];
+      if (menu.mode === "load" && entry.empty) {
+        this.status("Tệp này không có dữ liệu.");
+        return;
+      }
+      this.transitioning = true;
+      const task = menu.mode === "save" ? this.save(slot).then(() => this.openMenu()) : this.load(slot);
+      Promise.resolve(task).catch((error) => {
+        this.recordDiagnostic({ type: "save-scene-failed", mode: menu.mode, slot, error: error.message });
+        this.status(error.message);
+      }).finally(() => {
+        this.transitioning = false;
+      });
     }
     openSynthesisMenu() {
       const entries = this.database.inventoryDependencies.synthesis.recipes.filter((recipe) => this.state.party.recipes[recipe.kind]?.[recipe.id]).map((recipe) => ({ ...recipe, data: this.party.data(recipe.kind, recipe.id) }));
@@ -1974,6 +2289,30 @@
       if (operation === 0 && !actor.skills.includes(skillId)) actor.skills.push(skillId);
       if (operation === 1) actor.skills = actor.skills.filter((id) => id !== skillId);
     }
+    changeActorClass(actorId, classId, keepExp = false) {
+      const actor = this.state.actors[actorId];
+      if (!actor || !this.database.classes[classId]) return;
+      actor.classId = Number(classId);
+      if (!keepExp) actor.exp = 0;
+      actor.skills = this.party.initialSkills(actor.classId, actor.level);
+      const parameters = this.party.parameters(this.state, actorId);
+      actor.hp = Math.min(actor.hp, parameters.mhp);
+      actor.mp = Math.min(actor.mp, parameters.mmp);
+    }
+    async changePartyMember(actorId, operation, initialize = false) {
+      const members = this.state.party.members;
+      if (operation === 0 && !members.includes(actorId)) {
+        if (initialize) this.state.actors[actorId] = this.party.createActor(this.database.actors[actorId]);
+        members.push(actorId);
+      }
+      if (operation === 1) this.state.party.members = members.filter((id) => id !== actorId);
+      const leaderId = this.state.party.members[0];
+      const leader = this.state.actors[leaderId];
+      if (leader) {
+        this.renderer.playerGraphic = { character_name: leader.characterName ?? "", character_index: leader.characterIndex ?? 0 };
+        await this.renderer.ensureEventGraphics?.([{ graphic: this.renderer.playerGraphic }]);
+      }
+    }
     async setActorGraphic(actorId, characterName, characterIndex, faceName, faceIndex) {
       const actor = this.state.actors[actorId];
       if (!actor) return;
@@ -2040,6 +2379,68 @@
       this.state.eventOverrides[key].graphic = { character_name: String(name ?? ""), character_index: Number(index) || 0, direction: this.map?.events?.[resolvedId]?.pages?.[0]?.graphic?.direction ?? 2, pattern: 1 };
       await this.refreshCurrentMapVisuals("move-route-graphic");
     }
+    waitFrames(frames) {
+      return new Promise((resolve) => setTimeout(resolve, Math.max(0, Number(frames) || 0) * 1e3 / 60));
+    }
+    async moveRouteStep(target, dx, dy, direction, eventId = 0) {
+      if (target === -1) {
+        this.ensureRealPosition();
+        const speed2 = Number(this.state.moveSpeed ?? 4);
+        this.state.routeForcing = true;
+        this.state.x += dx;
+        this.state.y += dy;
+        if (direction % 2 === 0) this.state.direction = direction;
+        else {
+          const horizontal = dx < 0 ? 4 : 6;
+          const vertical = dy < 0 ? 8 : 2;
+          if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
+          if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
+        }
+        this.advanceStep();
+        await this.waitFrames(256 / 2 ** speed2);
+        this.state.realX = this.state.x;
+        this.state.realY = this.state.y;
+        this.state.routeForcing = false;
+        return;
+      }
+      const override = this.routeOverride(target, eventId);
+      const speed = Number(override.moveSpeed ?? 3);
+      const fromX = Number(override.x);
+      const fromY = Number(override.y);
+      override.x = fromX + dx;
+      override.y = fromY + dy;
+      if (direction % 2 === 0) override.direction = direction;
+      override.motion = { fromX, fromY, toX: override.x, toY: override.y, began: performance.now(), durationMs: 256 / 2 ** speed * 1e3 / 60 };
+      await this.waitFrames(256 / 2 ** speed);
+      delete override.motion;
+    }
+    setRouteDirection(target, direction, eventId = 0) {
+      if (target === -1) this.state.direction = direction;
+      else this.routeOverride(target, eventId).direction = direction;
+    }
+    setRouteProperty(target, property, value, eventId = 0) {
+      if (target === -1) {
+        if (property === "transparent") this.state.transparent = Boolean(value);
+        else if (property === "opacity") this.state.opacity = Number(value);
+        else this.state[property] = value;
+        return;
+      }
+      this.routeOverride(target, eventId)[property] = value;
+    }
+    routeOverride(target, eventId = 0) {
+      const resolvedId = target === 0 ? eventId : target;
+      const event = this.map?.events?.[resolvedId];
+      const page = event ? this.activePage(event) : null;
+      const key = `${this.state.mapId},${resolvedId}`;
+      const override = this.state.eventOverrides[key] ??= {};
+      override.x ??= event?.x ?? 0;
+      override.y ??= event?.y ?? 0;
+      override.direction ??= page?.graphic?.direction ?? 2;
+      override.pattern ??= page?.graphic?.pattern ?? 1;
+      override.moveSpeed ??= page?.move_speed ?? 3;
+      override.moveFrequency ??= page?.move_frequency ?? 3;
+      return override;
+    }
     setScene(scene) {
       this.state.scene = scene;
       if (scene === "PLAYING") this.state.menu = null;
@@ -2054,12 +2455,13 @@
         const vertical = dy < 0 ? 8 : 2;
         const strict = this.canStep(this.state.x, this.state.y, horizontal) && this.canStep(this.state.x + dx, this.state.y, vertical) && this.canStep(this.state.x, this.state.y, vertical) && this.canStep(this.state.x, this.state.y + dy, horizontal);
         if (strict) {
+          this.ensureRealPosition();
           this.state.x += dx;
           this.state.y += dy;
           if (this.state.direction === reverse(horizontal)) this.state.direction = horizontal;
           if (this.state.direction === reverse(vertical)) this.state.direction = vertical;
-          this.advancePattern();
-          return;
+          this.advanceStep();
+          return true;
         }
         const fallback = this.state.direction === horizontal ? [vertical, horizontal] : this.state.direction === vertical ? [horizontal, vertical] : [];
         for (const candidate of fallback) if (this.moveCardinal(candidate)) return;
@@ -2071,28 +2473,65 @@
       const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
       this.state.direction = direction;
       if (!this.canStep(this.state.x, this.state.y, direction)) return false;
+      this.ensureRealPosition();
       this.state.x += dx;
       this.state.y += dy;
-      this.advancePattern();
+      this.advanceStep();
       return true;
     }
     canStep(x, y, direction) {
       const [dx, dy] = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1] }[direction] ?? [0, 0];
       return this.collision.passable(x, y, direction) && this.collision.passable(x + dx, y + dy, reverse(direction));
     }
-    advancePattern() {
-      this.state.pattern = [0, 1, 2, 1][(this.state.steps ?? 0) % 4];
+    advanceStep() {
       this.state.steps = (this.state.steps ?? 0) + 1;
       this.prefetch?.prefetchLikelyDestinations(this.state.mapId, { x: this.state.x, y: this.state.y });
     }
-    showMessage(text) {
-      this.state.message = this.expandText(text);
+    ensureRealPosition() {
+      if (!Number.isFinite(this.state.realX)) this.state.realX = this.state.x;
+      if (!Number.isFinite(this.state.realY)) this.state.realY = this.state.y;
+    }
+    isMoving() {
+      this.ensureRealPosition();
+      return Math.abs(this.state.realX - this.state.x) > 1e-6 || Math.abs(this.state.realY - this.state.y) > 1e-6;
+    }
+    realMoveSpeed() {
+      const dashAllowed = !this.map?.disable_dashing && !this.state.switches?.[0];
+      const dash = !this.state.routeForcing && dashAllowed && Boolean(this.input?.isDashPressed?.());
+      this.state.dash = dash;
+      return Number(this.state.moveSpeed ?? 4) + (dash ? 1 : 0);
+    }
+    updateMovement(deltaSeconds = 1 / 60) {
+      if (!this.state || this.state.scene !== "PLAYING") return;
+      this.ensureRealPosition();
+      if (!this.isMoving()) return;
+      const speed = this.realMoveSpeed();
+      const distance = 2 ** speed / 256 * Math.max(0, deltaSeconds * 60);
+      this.state.realX = approach(this.state.realX, this.state.x, distance);
+      this.state.realY = approach(this.state.realY, this.state.y, distance);
+      this.state.animationCount = Number(this.state.animationCount ?? 0) + 1.5 * Math.max(0, deltaSeconds * 60);
+      if (this.state.animationCount > 18 - speed * 2) {
+        this.state.pattern = (Number(this.state.pattern ?? 1) + 1) % 4;
+        this.state.animationCount = 0;
+      }
+      if (!this.isMoving()) this.state.pattern = this.state.originalPattern ?? 1;
+    }
+    updatePlaytime(deltaSeconds = 1 / 60) {
+      if (!this.state?.system || this.state.scene === "TITLE") return;
+      this.state.system.playtimeSeconds = Number(this.state.system.playtimeSeconds ?? 0) + Math.max(0, deltaSeconds);
+      if (this.state.timer?.working) this.state.timer.count = Math.max(0, Number(this.state.timer.count ?? 0) - Math.max(0, deltaSeconds * 60));
+    }
+    async showMessage(text, options = {}) {
+      if (options.face) await Promise.resolve(this.renderer.prepareFace?.(String(options.face))).catch((error) => this.recordDiagnostic({ type: "message-face-failed", face: options.face, error: error.message }));
+      this.state.message = { text: this.expandText(text), face: String(options.face ?? ""), faceIndex: Number(options.faceIndex) || 0, background: Number(options.background) || 0, position: Number(options.position ?? 2), choiceAttached: Boolean(options.choiceAttached) };
+      if (options.choiceAttached) return;
       return new Promise((resolve) => {
         this.messageResolve = resolve;
       });
     }
-    showChoice(options) {
-      this.state.choice = { options: options.map((item) => this.expandText(item)), selected: 0 };
+    showChoice(options, { cancelType = -1, defaultType = 0 } = {}) {
+      const resolvedCancel = Number(cancelType) >= 0 && Number(cancelType) < options.length ? Number(cancelType) : -1;
+      this.state.choice = { options: options.map((item) => this.expandText(item)), selected: clampIndex(defaultType, options.length), cancelType: resolvedCancel };
       return new Promise((resolve) => {
         this.choiceResolve = resolve;
       });
@@ -2170,10 +2609,10 @@
     }
     setActorName(actorId, name) {
       this.state.actors[actorId] ??= {};
-      this.state.actors[actorId].name = name;
+      this.state.actors[actorId].name = String(name ?? "").normalize("NFC");
     }
     expandText(text) {
-      return String(text).replace(/\\[Nn]\[(\d+)\]/g, (_, id) => this.state.actors[id]?.name ?? "").replace(/\\[Cc]\[\d+\]|\\[.!|{}^><]/g, "");
+      return String(text).normalize("NFC").replace(/\\[Nn]\[(\d+)\]/g, (_, id) => this.state.actors[id]?.name ?? "").replace(/\\[Cc]\[\d+\]|\\[.!|{}^><]/g, "").normalize("NFC");
     }
     triggerActionEvent() {
       const vectors = { 2: [0, 1], 4: [-1, 0], 6: [1, 0], 8: [0, -1], 1: [-1, 1], 3: [1, 1], 7: [-1, -1], 9: [1, -1] };
@@ -2200,8 +2639,9 @@
         const page = this.activePage(event);
         const override = this.state.eventOverrides?.[`${this.state.mapId},${event.id}`] ?? {};
         const graphic = override.graphic ?? page?.graphic;
-        if (!graphic?.character_name) return [];
-        return [{ id: event.id, x: override.x ?? event.x, y: override.y ?? event.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, page: { ...page, graphic } }];
+        if (!graphic?.character_name || override.transparent) return [];
+        const position = routePosition(override, event);
+        return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, priority: page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
       });
     }
     runRubyCompatibility(source) {
@@ -2294,15 +2734,30 @@
       return structuredClone(this.state);
     }
     async save(slot) {
-      await this.saves.save(slot, this.snapshot());
+      this.state.system ??= {};
+      this.state.system.saveCount = Number(this.state.system.saveCount ?? 0) + 1;
+      const metadata = await this.saves.save(slot, this.snapshot(), { location: this.state.mapName });
+      this.lastSaveSlot = Number(slot);
       this.hasSave = true;
-      this.status(`Đã lưu vào slot ${slot}.`);
+      this.status(`Đã lưu vào tệp ${slot}.`);
+      this.recordDiagnostic({ type: "save-db-ready", operation: "save", slot, metadata });
+      return metadata;
     }
     async load(slot) {
       const state = await this.saves.load(slot);
       if (!state) throw new Error(`Save slot ${slot} is empty.`);
       this.state = state;
       this.party.normalizeState(this.state);
+      this.state.schema = "black-souls-st-state-v2";
+      this.state.system ??= { saveDisabled: false, menuDisabled: false, encounterDisabled: false, formationDisabled: false, playtimeSeconds: 0, startedAt: Date.now(), saveCount: 0 };
+      this.state.timer ??= { working: false, count: 0 };
+      this.state.pluginState ??= {};
+      this.state.realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
+      this.state.realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
+      this.state.moveSpeed ??= 4;
+      this.state.pattern ??= 1;
+      this.state.originalPattern ??= 1;
+      this.state.animationCount ??= 0;
       this.state.eventOverrides ??= {};
       this.state.pictures ??= {};
       this.state.battle = null;
@@ -2314,8 +2769,20 @@
       if (this.state.screenFlash) void this.renderer.flashScreen?.(this.state.screenFlash.color, this.state.screenFlash.frames);
       if (this.state.screenShake) void this.renderer.shakeScreen?.(this.state.screenShake.power, this.state.screenShake.speed, this.state.screenShake.frames);
       if (this.state.weather) void this.renderer.setWeather?.(this.state.weather.type, this.state.weather.power, 0);
+      this.lastSaveSlot = Number(slot);
+      this.hasSave = true;
       this.notifyScene();
-      this.status(`Đã tải slot ${slot}.`);
+      this.status(`Đã tải tệp ${slot}.`);
+      this.recordDiagnostic({ type: "save-db-ready", operation: "load", slot });
+    }
+    async exportSave(slot = null) {
+      return this.saves.export(slot ?? this.lastSaveSlot ?? await this.saves.latestSlot());
+    }
+    async importSave(serialized, targetSlot = null) {
+      const metadata = await this.saves.import(serialized, targetSlot);
+      this.hasSave = true;
+      if (this.state.scene === "TITLE") await this.enterTitle();
+      return metadata;
     }
     pause() {
       this.paused = true;
@@ -2338,6 +2805,21 @@
   }
   function reverse(direction) {
     return 10 - direction;
+  }
+  function clampIndex(value, length) {
+    return length ? Math.max(0, Math.min(length - 1, Number(value) || 0)) : 0;
+  }
+  function approach(current, target, distance) {
+    return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target;
+  }
+  function sumParams(values = []) {
+    return values.reduce((sum, value) => sum + Number(value || 0), 0);
+  }
+  function routePosition(override, event) {
+    const motion = override.motion;
+    if (!motion) return { x: override.x ?? event.x, y: override.y ?? event.y };
+    const progress = Math.max(0, Math.min(1, (performance.now() - motion.began) / Math.max(1, motion.durationMs)));
+    return { x: motion.fromX + (motion.toX - motion.fromX) * progress, y: motion.fromY + (motion.toY - motion.fromY) * progress };
   }
   function nextFrame() {
     return new Promise((resolve) => {
@@ -2387,6 +2869,7 @@
       this.memory = new WeightedLru(memoryBudgetBytes);
       this.decoded = new WeightedLru(decodedBudgetBytes);
       this.parsed = new WeightedLru(24 * 1024 * 1024);
+      this.globalPins = /* @__PURE__ */ new Set();
       this.inflight = /* @__PURE__ */ new Map();
       this.queue = [];
       this.active = /* @__PURE__ */ new Map();
@@ -2450,6 +2933,7 @@
       const pending = this.schedule(logicalKey, priority, async () => {
         const result = await this.loadCandidates(logicalKey, normalizeCandidates(candidates), { kind, retries, timeoutMs, validate, persistent, priority });
         this.memory.set(logicalKey, result, result.bytes.byteLength);
+        if (this.globalPins.has(key)) this.memory.pin(logicalKey);
         return result;
       });
       this.inflight.set(logicalKey, pending);
@@ -2576,7 +3060,9 @@
       return value;
     }
     setDecoded(key, value, bytes) {
-      this.decoded.set(this.versioned(key), value, bytes);
+      const logicalKey = this.versioned(key);
+      this.decoded.set(logicalKey, value, bytes);
+      if (this.globalPins.has(key)) this.decoded.pin(logicalKey);
     }
     hasResource(key) {
       return this.memory.entries.has(this.versioned(key));
@@ -2591,6 +3077,17 @@
     }
     setParsed(key, value, bytes = 1) {
       this.parsed.set(this.versioned(key), value, bytes);
+    }
+    pinGlobalAssets(paths) {
+      for (const path of unique(paths)) {
+        const normalized = normalKey(path);
+        const assetKey = `asset:${normalized}`;
+        const imageKey = `image:${normalized}`;
+        this.globalPins.add(assetKey);
+        this.globalPins.add(imageKey);
+        this.memory.pin(this.versioned(assetKey));
+        this.decoded.pin(this.versioned(imageKey));
+      }
     }
     async prefetchAssets(paths, { priority = PREFETCH_PRIORITY.NORMAL, reason = "assets" } = {}) {
       if (!this.loader) return [];
@@ -2659,6 +3156,7 @@
       const actions = [];
       for (const command of (list ?? []).slice(start, start + limit)) {
         const parameters = command?.parameters ?? [];
+        if (command?.code === 101 && parameters[0]) actions.push({ type: "asset", path: this.resolveAsset(`Graphics/Faces/${parameters[0]}`), priority: PREFETCH_PRIORITY.HIGH });
         if (command?.code === 201 && parameters[0] === 0) actions.push({ type: "map", mapId: Number(parameters[1]), priority: PREFETCH_PRIORITY.HIGH });
         if (command?.code === 212) actions.push(...(this.manifest?.animations?.[Number(parameters[1])]?.assets ?? []).map((path) => ({ type: "asset", path, priority: PREFETCH_PRIORITY.HIGH })));
         if (command?.code === 231 && parameters[1]) actions.push({ type: "asset", path: this.resolveAsset(`Graphics/Pictures/${parameters[1]}`), priority: PREFETCH_PRIORITY.HIGH });
@@ -2759,6 +3257,10 @@
       this.memory.unpinAll();
       this.decoded.unpinAll();
       this.parsed.unpinAll();
+      for (const key of this.globalPins) {
+        if (key.startsWith("asset:")) this.memory.pin(this.versioned(key));
+        if (key.startsWith("image:")) this.decoded.pin(this.versioned(key));
+      }
       const dependency = this.manifest?.maps?.[mapId];
       if (!dependency) return;
       this.parsed.pin(this.versioned(`map:${mapId}`));
@@ -2779,6 +3281,7 @@
         versionKey: this.versionKey,
         cacheName: this.cacheName,
         policy: { maxConcurrent: this.maxConcurrent, reservedCritical: this.reservedCritical, lookahead: this.manifest?.policy?.eventLookahead ?? 48, graphDepth: 2, timeouts: { ...this.timeouts } },
+        globalPinnedAssets: this.globalPins.size / 2,
         transition: this.transitionSnapshot(),
         pendingCriticalFetches: active.filter((item) => item.priority === "CRITICAL").length + queued.filter((item) => item.priority === "CRITICAL").length,
         oldestRequestAge: Math.max(0, ...active.map((item) => item.ageMs), ...queued.map((item) => item.ageMs)),
@@ -3244,6 +3747,9 @@
         streaming: this.prefetch
       });
       this.prefetch.setManifest(prefetchManifest);
+      const globalUiAssets = [...(uiDependencies.MENU_UI ?? []).slice(0, 2), ...uiDependencies.TITLE ?? []];
+      this.prefetch.pinGlobalAssets(globalUiAssets);
+      void this.prefetch.prefetchAssets(globalUiAssets, { priority: PREFETCH_PRIORITY.HIGH, reason: "global-ui-warmup" });
       this.progress("Game data ready", 0.45);
       return { system, tilesets, actors, classes, skills, items, weapons, armors, enemies, troops, states, commonEvents, animations, assetManifest, prefetchManifest, inventoryDependencies, combatDependencies, uiDependencies };
     }
@@ -3339,6 +3845,7 @@
       stage.append(this.canvas);
       this.fade = 0;
       this.characterImages = /* @__PURE__ */ new Map();
+      this.faceImages = /* @__PURE__ */ new Map();
       this.animations = [];
       this.balloons = [];
       this.pictures = /* @__PURE__ */ new Map();
@@ -3349,15 +3856,23 @@
       this.battleGraphics = null;
       this.animationSheetFailures = /* @__PURE__ */ new Map();
       this.characterSheetFailures = /* @__PURE__ */ new Map();
-      this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: "LOADING", mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [] };
+      this.stats = { frames: 0, lastFrameMs: 0, maxFrameMs: 0, scene: "LOADING", mapId: null, tileset: null, loadedSheets: [], characters: [], missingCharacters: [], title: null, animationFailures: [], fontReadyMs: 0, font: "Arial" };
     }
     async setTitle(system) {
+      const fontBegan = performance.now();
+      await waitForFonts();
+      this.stats.fontReadyMs = Math.round((performance.now() - fontBegan) * 100) / 100;
       const title1Path = system.title1_name ? `Graphics/Titles1/${system.title1_name}.png` : null;
       const title2Path = system.title2_name ? `Graphics/Titles2/${system.title2_name}.png` : null;
-      const [title1, title2] = await Promise.all([
+      const [title1, title2, windowSkin, iconSet] = await Promise.all([
         title1Path ? this.loader.image(title1Path) : null,
-        title2Path ? this.loader.image(title2Path) : null
+        title2Path ? this.loader.image(title2Path) : null,
+        this.loader.image("Graphics/System/Window.png"),
+        this.loader.image("Graphics/System/IconSet.png")
       ]);
+      this.windowSkin = windowSkin;
+      this.iconSet = iconSet;
+      this.currencyUnit = system.currency_unit ?? "";
       this.title = { title1, title2, title1Path, title2Path };
       this.stats.title = {
         title1: title1Path ? { path: title1Path, width: title1.naturalWidth || title1.width, height: title1.naturalHeight || title1.height, decoded: true } : null,
@@ -3438,6 +3953,12 @@
       this.stats.characters = [...this.characterImages.keys()];
       if (unavailable.length) throw new Error(`Could not load active event graphic: ${unavailable.map((entry) => entry.name).join(", ")}`);
     }
+    async prepareFace(name) {
+      if (!name || this.faceImages.has(name)) return this.faceImages.get(name) ?? null;
+      const image = await this.loader.image(`Graphics/Faces/${name}.png`, { optional: true });
+      if (image) this.faceImages.set(name, image);
+      return image;
+    }
     async setBattle(battle) {
       const battleback1Path = battle.battleback1 ? `Graphics/Battlebacks1/${battle.battleback1}.png` : null;
       const battleback2Path = battle.battleback2 ? `Graphics/Battlebacks2/${battle.battleback2}.png` : null;
@@ -3480,14 +4001,21 @@
         this.finishFrame(began);
         return;
       }
+      if (state.scene === "FILE_LOAD") {
+        this.drawFileMenu(state.menu);
+        this.finishFrame(began);
+        return;
+      }
       if (!this.map || !this.sheets) {
         this.finishFrame(began);
         return;
       }
       const visibleX = Math.ceil(this.width / this.tileSize) + 1;
       const visibleY = Math.ceil(this.height / this.tileSize) + 1;
-      const cameraX = clamp2(state.x - Math.floor(visibleX / 2), 0, Math.max(0, this.map.width - visibleX));
-      const cameraY = clamp2(state.y - Math.floor(visibleY / 2), 0, Math.max(0, this.map.height - visibleY));
+      const playerX = Number.isFinite(state.realX) ? state.realX : state.x;
+      const playerY = Number.isFinite(state.realY) ? state.realY : state.y;
+      const cameraX = clamp2(playerX - Math.floor(visibleX / 2), 0, Math.max(0, this.map.width - visibleX));
+      const cameraY = clamp2(playerY - Math.floor(visibleY / 2), 0, Math.max(0, this.map.height - visibleY));
       this.camera = { x: cameraX, y: cameraY };
       const upper = [];
       for (let z = 0; z < 3; z += 1) for (let y = 0; y < visibleY; y += 1) for (let x = 0; x < visibleX; x += 1) {
@@ -3501,7 +4029,7 @@
       }
       this.drawShadows(cameraX, cameraY, visibleX, visibleY);
       const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: "event" }));
-      if (!state.transparent) sprites.push({ x: state.x, y: state.y, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: "player" });
+      if (!state.transparent) sprites.push({ x: playerX, y: playerY, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: "player" });
       sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === "event" ? -1 : 1));
       for (const sprite of sprites.filter((item) => item.priority < 2)) this.drawCharacter(sprite, cameraX, cameraY);
       for (const args of upper) this.drawTile(...args);
@@ -3513,10 +4041,10 @@
       this.drawBalloons(cameraX, cameraY);
       this.drawPictures();
       this.drawWeather();
+      this.drawScreenEffects();
       this.drawMessage(state.message);
       this.drawChoice(state.choice);
-      if (["MENU", "END", "ITEM", "EQUIP", "STATUS", "SYNTHESIS", "SHOP"].includes(state.scene)) this.drawGameMenu(state.menu, state);
-      this.drawScreenEffects();
+      if (["MENU", "END", "ITEM", "SKILL", "EQUIP", "STATUS", "SYNTHESIS", "SHOP", "FILE_SAVE", "FILE_LOAD"].includes(state.scene)) this.drawGameMenu(state.menu, state);
       if (this.fade > 0) {
         context.fillStyle = `rgba(0,0,0,${this.fade})`;
         context.fillRect(0, 0, this.width, this.height);
@@ -3541,94 +4069,254 @@
       const x = (this.width - width) / 2;
       const y = (this.height * 1.6 - height) / 2;
       this.drawWindow(x, y, width, height);
-      c.font = '18px "Noto Serif", Georgia, serif';
+      c.font = font(22);
       c.textBaseline = "middle";
       commands.forEach((command, index) => {
         const selected = index === title?.selected;
-        c.fillStyle = command.enabled === false ? "#676263" : selected ? "#ffffff" : "#d5d0c8";
-        c.fillText(`${selected ? "›" : " "} ${String(command.label).trim()}`, x + 14, y + padding + lineHeight * index + lineHeight / 2);
+        c.fillStyle = command.enabled === false ? "#777" : "#f4f4f4";
+        if (selected) this.drawCursor(x + 12, y + padding + lineHeight * index, width - 24, lineHeight);
+        c.fillText(displayText(command.label), x + 16, y + padding + lineHeight * index + lineHeight / 2);
       });
       c.textBaseline = "alphabetic";
     }
     drawGameMenu(menu, state = {}) {
       if (!menu) return;
-      if (menu.kind === "item" || menu.kind === "synthesis" || menu.kind === "shop") return this.drawInventoryMenu(menu, state);
+      if (menu.kind === "file") return this.drawFileMenu(menu);
+      if (menu.kind === "item" || menu.kind === "skill" || menu.kind === "synthesis" || menu.kind === "shop") return this.drawInventoryMenu(menu, state);
       if (menu.kind === "equip") return this.drawEquipMenu(menu, state);
       if (menu.kind === "status") return this.drawStatusMenu(menu, state);
       const c = this.context;
-      c.fillStyle = "rgba(0,0,0,.58)";
+      c.fillStyle = "rgba(0,0,0,.30)";
       c.fillRect(0, 0, this.width, this.height);
-      const width = menu.kind === "end" ? 210 : 190;
-      const lineHeight = 30;
-      const padding = 14;
+      const width = menu.kind === "end" ? 160 : 160;
+      const lineHeight = 24;
+      const padding = 12;
       const height = menu.commands.length * lineHeight + padding * 2;
-      const x = menu.kind === "end" ? (this.width - width) / 2 : 18;
-      const y = menu.kind === "end" ? (this.height - height) / 2 : 18;
+      const x = menu.kind === "end" ? (this.width - width) / 2 : 0;
+      const y = menu.kind === "end" ? (this.height - height) / 2 : 0;
       this.drawWindow(x, y, width, height);
-      c.font = '19px "Noto Serif", Georgia, serif';
+      c.font = font(20);
       c.textBaseline = "middle";
       menu.commands.forEach((command, index) => {
         const selected = index === menu.selected;
-        c.fillStyle = command.enabled === false ? "#6e6868" : selected ? "#fff" : "#d1cbc2";
-        c.fillText(`${selected ? "›" : " "} ${command.label}`, x + 16, y + padding + lineHeight * index + lineHeight / 2);
+        c.fillStyle = command.enabled === false ? "#777" : "#f4f4f4";
+        if (selected) this.drawCursor(x + padding, y + padding + index * lineHeight, width - padding * 2, lineHeight);
+        c.fillText(displayText(command.label), x + 16, y + padding + lineHeight * index + lineHeight / 2);
       });
       c.textBaseline = "alphabetic";
+      if (menu.kind !== "end") this.drawMenuStatus(state, menu);
+    }
+    drawMenuStatus(state, menu = {}) {
+      const c = this.context;
+      this.drawWindow(160, 0, 480, 480);
+      const members = state.party?.members ?? [];
+      members.slice(0, 4).forEach((actorId, index) => {
+        const actor = state.actors?.[actorId] ?? {};
+        const y = 12 + index * 114;
+        this.drawActorPortrait(actor, 170, y + 6, 96, 96);
+        c.font = font(20);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(actor.name), 278, y + 25);
+        c.font = font(18);
+        c.fillText(`Lv ${actor.level ?? 1}`, 278, y + 53);
+        const parameters = menu.actorStatus?.[actorId] ?? {};
+        this.drawGauge(360, y + 42, 138, 8, actor.hp, parameters.mhp ?? actor.hp, "#d85a5a", "#7b1f2b");
+        c.fillText(`HP ${Math.floor(actor.hp ?? 0)}`, 278, y + 78);
+        c.fillText(`MP ${Math.floor(actor.mp ?? 0)}`, 414, y + 78);
+      });
+      this.drawWindow(0, 432, 160, 48);
+      c.font = font(18);
+      c.fillStyle = "#f4f4f4";
+      c.textAlign = "right";
+      c.fillText(`${Math.floor(state.party?.gold ?? 0)} ${displayText(this.currencyUnit)}`, 146, 462);
+      c.textAlign = "left";
+      this.drawWindow(0, 370, 160, 64);
+      c.fillStyle = "#e5d08d";
+      c.fillText("Tội Lỗi", 14, 394);
+      c.fillStyle = "#f4f4f4";
+      c.textAlign = "right";
+      c.fillText(String(state.variables?.[38] ?? 0), 140, 420);
+      c.textAlign = "left";
     }
     drawInventoryMenu(menu, state = {}) {
       const c = this.context;
-      c.fillStyle = "rgba(0,0,0,.72)";
+      c.fillStyle = "rgba(0,0,0,.30)";
       c.fillRect(0, 0, this.width, this.height);
-      this.drawWindow(18, 18, 604, 444);
-      c.font = '18px "Noto Serif", Georgia, serif';
-      c.fillStyle = "#eee";
-      c.fillText(menu.kind === "synthesis" ? "Synthesis" : menu.kind === "shop" ? `Shop     ${state.party?.gold ?? 0} ${this.currencyUnit ?? "S"}` : "Items", 38, 50);
       const entries = menu.entries ?? [];
-      entries.slice(0, 12).forEach((entry, index) => {
-        const selected2 = index === menu.selected;
-        const data = entry.data ?? {};
-        const suffix = menu.kind === "shop" ? `${entry.price} S` : `×${entry.amount ?? 1}`;
-        c.fillStyle = selected2 ? "#fff" : "#cbc5bc";
-        c.fillText(`${selected2 ? "›" : " "} ${data.name ?? `${entry.kind} ${entry.id}`}  ${suffix}`, 42, 84 + index * 27);
-      });
       const selected = entries[menu.selected];
-      if (selected?.data?.description) {
-        c.fillStyle = "#aaa49c";
-        c.font = "14px Georgia, serif";
-        wrapText(c, selected.data.description, 330, 84, 270, 20);
+      this.drawWindow(0, 0, 640, 48);
+      c.font = font(18);
+      c.fillStyle = "#f4f4f4";
+      c.fillText(displayText(selected?.data?.description ?? ""), 14, 30);
+      let listY = 48;
+      if (menu.kind === "item") {
+        this.drawWindow(0, 48, 640, 48);
+        listY = 96;
+        const columnWidth = 640 / Math.max(1, menu.categories?.length ?? 4);
+        (menu.categories ?? []).forEach((category, index) => {
+          if (menu.mode === "category" && index === menu.categorySelected) this.drawCursor(index * columnWidth + 12, 60, columnWidth - 24, 24);
+          c.fillStyle = "#f4f4f4";
+          c.textAlign = "center";
+          c.fillText(displayText(category.label), index * columnWidth + columnWidth / 2, 82);
+        });
+        c.textAlign = "left";
       }
+      this.drawWindow(0, listY, 640, 480 - listY);
+      c.font = font(18);
+      entries.slice(0, 28).forEach((entry, index) => {
+        const column = index % 2;
+        const row = Math.floor(index / 2);
+        const x = 12 + column * 308;
+        const y = listY + 12 + row * 24;
+        const active = menu.kind !== "item" || menu.mode === "items";
+        if (active && index === menu.selected) this.drawCursor(x, y, 300, 24);
+        const data = entry.data ?? {};
+        if (data.icon_index != null) this.drawIcon(Number(data.icon_index), x + 2, y);
+        const suffix = menu.kind === "shop" ? `${entry.price} ${this.currencyUnit}` : menu.kind === "skill" ? `${data.mp_cost ?? 0} MP` : `:${String(entry.amount ?? 1).padStart(2, " ")}`;
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(data.name ?? `${entry.kind} ${entry.id}`), x + 30, y + 19);
+        c.textAlign = "right";
+        c.fillText(displayText(suffix), x + 294, y + 19);
+        c.textAlign = "left";
+      });
     }
     drawEquipMenu(menu, state) {
       const c = this.context;
-      c.fillStyle = "rgba(0,0,0,.72)";
+      c.fillStyle = "rgba(0,0,0,.30)";
       c.fillRect(0, 0, this.width, this.height);
-      this.drawWindow(18, 18, 604, 444);
-      const actor = state.actors?.[menu.actorId];
-      c.font = "18px Georgia, serif";
-      c.fillStyle = "#eee";
-      c.fillText(`Equipment — ${actor?.name ?? ""}`, 38, 50);
-      (menu.slotEntries ?? actor?.equips ?? []).forEach((slot, index) => {
-        const item = slot.data;
-        c.fillStyle = menu.mode === "slots" && index === menu.selected ? "#fff" : "#c9c3ba";
-        c.fillText(`${menu.mode === "slots" && index === menu.selected ? "›" : " "} [${slot.etypeId}] ${item?.name ?? (slot.id ? `${slot.kind} ${slot.id}` : "(empty)")}`, 42, 84 + index * 27);
+      const actor = state.actors?.[menu.actorId] ?? {};
+      const selectedSlot = menu.slotEntries?.[menu.selected];
+      this.drawWindow(0, 0, 640, 48);
+      c.font = font(18);
+      c.fillStyle = "#f4f4f4";
+      c.fillText(displayText(selectedSlot?.data?.description ?? ""), 14, 30);
+      this.drawWindow(0, 48, 208, 192);
+      c.fillText(displayText(actor.name), 16, 76);
+      const labels = ["Công Kích", "Phòng Ngự", "Phép Thuật", "Kháng Phép", "Tốc Độ", "May Mắn"];
+      const names = ["atk", "def", "mat", "mdf", "agi", "luk"];
+      labels.forEach((label, index) => {
+        c.fillStyle = "#e5d08d";
+        c.fillText(label, 16, 102 + index * 24);
+        c.fillStyle = "#f4f4f4";
+        c.textAlign = "right";
+        c.fillText(String(menu.parameters?.[names[index]] ?? 0), 190, 102 + index * 24);
+        c.textAlign = "left";
       });
-      if (menu.mode === "choices") (menu.choices ?? []).slice(0, 10).forEach((entry, index) => {
-        c.fillStyle = index === menu.choiceSelected ? "#fff" : "#aaa";
-        c.fillText(`${index === menu.choiceSelected ? "›" : " "} ${entry.data?.name ?? "(Remove)"}`, 350, 84 + index * 27);
+      this.drawWindow(208, 48, 432, 48);
+      (menu.commands ?? []).forEach((command, index) => {
+        const x = 220 + index * 136;
+        if (menu.mode === "command" && index === menu.commandSelected) this.drawCursor(x, 60, 128, 24);
+        c.fillStyle = "#f4f4f4";
+        c.textAlign = "center";
+        c.fillText(displayText(command.label), x + 64, 80);
+      });
+      c.textAlign = "left";
+      this.drawWindow(208, 96, 432, 144);
+      const etypeNames = ["Vũ Khí", "", "", "Nhẫn", "Phụ Kiện"];
+      (menu.slotEntries ?? actor.equips ?? []).slice(0, 5).forEach((slot, index) => {
+        const y = 108 + index * 24;
+        if (menu.mode === "slots" && index === menu.selected) this.drawCursor(220, y, 408, 24);
+        c.fillStyle = "#e5d08d";
+        c.fillText(displayText(etypeNames[slot.etypeId] ?? ""), 224, y + 19);
+        if (slot.data?.icon_index != null) this.drawIcon(slot.data.icon_index, 314, y);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(slot.data?.name ?? ""), 342, y + 19);
+      });
+      this.drawWindow(0, 240, 640, 240);
+      if (menu.mode === "choices") (menu.choices ?? []).slice(0, 18).forEach((entry, index) => {
+        const column = index % 2;
+        const row = Math.floor(index / 2);
+        const x = 12 + column * 308;
+        const y = 252 + row * 24;
+        if (index === menu.choiceSelected) this.drawCursor(x, y, 300, 24);
+        if (entry.data?.icon_index != null) this.drawIcon(entry.data.icon_index, x + 2, y);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(entry.data?.name ?? ""), x + 30, y + 19);
       });
     }
     drawStatusMenu(menu, state) {
       const c = this.context;
-      c.fillStyle = "rgba(0,0,0,.72)";
+      c.fillStyle = "rgba(0,0,0,.30)";
       c.fillRect(0, 0, this.width, this.height);
-      this.drawWindow(80, 55, 480, 370);
-      const actor = state.actors?.[menu.actorId];
-      c.font = "20px Georgia, serif";
-      c.fillStyle = "#fff";
-      c.fillText(actor?.name ?? "", 108, 95);
-      c.font = "17px Georgia, serif";
-      c.fillStyle = "#d1cbc2";
-      c.fillText(`Lv ${actor?.level ?? 1}    HP ${actor?.hp ?? 0}/${menu.parameters?.mhp ?? 0}    MP ${actor?.mp ?? 0}/${menu.parameters?.mmp ?? 0}`, 108, 132);
-      Object.entries(menu.parameters ?? {}).forEach(([name, value], index) => c.fillText(`${name.toUpperCase().padEnd(4)} ${value}`, 120 + index % 2 * 210, 180 + Math.floor(index / 2) * 42));
+      this.drawWindow(0, 0, 640, 480);
+      const actor = state.actors?.[menu.actorId] ?? {};
+      c.font = font(20);
+      c.fillStyle = "#f4f4f4";
+      c.fillText(displayText(actor.name), 16, 31);
+      c.fillText(displayText(menu.className), 140, 31);
+      c.fillText(displayText(actor.nickname), 300, 31);
+      this.drawHorzLine(12, 36, 616);
+      this.drawActorPortrait(actor, 20, 60, 96, 96);
+      c.fillStyle = "#e5d08d";
+      c.fillText("Lv", 148, 82);
+      c.fillStyle = "#f4f4f4";
+      c.textAlign = "right";
+      c.fillText(String(actor.level ?? 1), 278, 82);
+      c.textAlign = "left";
+      this.drawGauge(148, 112, 124, 8, actor.hp, menu.parameters?.mhp, "#dc5b60", "#79202d");
+      c.fillText(`HP ${Math.floor(actor.hp ?? 0)}/${menu.parameters?.mhp ?? 0}`, 148, 132);
+      this.drawGauge(148, 142, 124, 8, actor.mp, menu.parameters?.mmp, "#5c87d9", "#253e7c");
+      c.fillText(`MP ${Math.floor(actor.mp ?? 0)}/${menu.parameters?.mmp ?? 0}`, 148, 162);
+      c.fillStyle = "#e5d08d";
+      c.fillText("Kinh Nghiệm hiện tại", 316, 82);
+      c.fillText("Cần thêm Cấp độ", 316, 130);
+      c.fillStyle = "#f4f4f4";
+      c.textAlign = "right";
+      c.fillText(String(menu.expCurrent ?? 0), 604, 106);
+      c.fillText(String(menu.expNext ?? 0), 604, 154);
+      c.textAlign = "left";
+      this.drawHorzLine(12, 156, 616);
+      const paramKeys = ["atk", "def", "mat", "mdf", "agi", "luk"];
+      paramKeys.forEach((key, index) => {
+        const y = 190 + index * 24;
+        c.fillStyle = "#e5d08d";
+        c.fillText(displayText(menu.paramLabels?.[index + 2] ?? key), 44, y);
+        c.fillStyle = "#f4f4f4";
+        c.textAlign = "right";
+        c.fillText(String(menu.parameters?.[key] ?? 0), 258, y);
+        c.textAlign = "left";
+      });
+      (menu.equipment ?? []).slice(0, 8).forEach((item, index) => {
+        const y = 190 + index * 24;
+        if (item?.icon_index != null) this.drawIcon(item.icon_index, 300, y - 18);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(item?.name ?? ""), 328, y);
+      });
+      this.drawHorzLine(12, 324, 616);
+      c.fillStyle = "#f4f4f4";
+      wrapText(c, displayText(actor.description), 16, 370, 608, 24);
+    }
+    drawFileMenu(menu) {
+      const c = this.context;
+      c.fillStyle = "#09080a";
+      c.fillRect(0, 0, this.width, this.height);
+      this.drawWindow(0, 0, 640, 48);
+      c.font = font(20);
+      c.fillStyle = "#f4f4f4";
+      c.fillText(displayText(menu.help), 14, 31);
+      const visible = (menu.slots ?? []).slice(menu.topIndex, menu.topIndex + 4);
+      visible.forEach((entry, visibleIndex) => {
+        const index = menu.topIndex + visibleIndex;
+        const y = 48 + visibleIndex * 108;
+        this.drawWindow(0, y, 640, 108);
+        c.font = font(20);
+        c.fillStyle = entry.empty ? "#777" : "#f4f4f4";
+        const name = `Tệp ${entry.slot}`;
+        if (index === menu.selected) this.drawCursor(12, y + 12, Math.max(78, c.measureText(name).width + 12), 24);
+        c.fillText(name, 16, y + 34);
+        if (!entry.empty) {
+          (entry.partyCharacters ?? []).slice(0, 4).forEach((character, partyIndex) => this.drawSaveCharacter(character, 152 + partyIndex * 48, y + 70));
+          c.font = font(16);
+          c.fillStyle = "#d7d2cb";
+          c.fillText(`${displayText(entry.playerName)}  Lv ${entry.level ?? 1}`, 300, y + 35);
+          c.fillText(displayText(entry.location), 300, y + 60);
+          c.textAlign = "right";
+          c.fillText(formatPlaytime(entry.playtimeSeconds), 620, y + 88);
+          c.textAlign = "left";
+          c.fillStyle = "#9e9891";
+          c.fillText(formatTimestamp(entry.savedAt), 300, y + 86);
+        }
+      });
     }
     drawBattle(battle) {
       const c = this.context;
@@ -3649,23 +4337,33 @@
         c.fillStyle = "#8d1f29";
         c.fillRect(enemy.x - 55, enemy.y + 4, 110 * enemy.hp / Math.max(1, enemy.parameters.mhp), 7);
         c.fillStyle = "#eee";
-        c.font = "13px Georgia, serif";
+        c.font = font(13);
         c.textAlign = "center";
-        c.fillText(enemy.name, enemy.x, enemy.y + 28);
+        c.fillText(displayText(enemy.name), enemy.x, enemy.y + 28);
         c.textAlign = "left";
       }
-      this.drawWindow(12, 350, 616, 118);
-      c.font = "16px Georgia, serif";
-      c.fillStyle = "#eee";
+      this.drawWindow(0, 360, 128, 120);
+      this.drawWindow(128, 360, 512, 120);
+      c.font = font(17);
+      c.fillStyle = "#f4f4f4";
       const actor = battle?.actors?.[0];
-      if (actor) c.fillText(`${actor.name}  HP ${actor.hp}/${actor.parameters.mhp}  MP ${actor.mp}/${actor.parameters.mmp}  AP ${Math.floor(actor.ap)}/${4e3}`, 30, 380);
-      if (battle?.phase === "actor-command") (battle.commands ?? []).forEach((command, index) => {
-        c.fillStyle = index === battle.selectedCommand ? "#fff" : "#aaa";
-        c.fillText(`${index === battle.selectedCommand ? "›" : " "} ${command}`, 30 + index % 3 * 180, 414 + Math.floor(index / 3) * 28);
+      if (actor) {
+        c.fillText(displayText(actor.name), 142, 387);
+        this.drawGauge(330, 375, 120, 8, actor.hp, actor.parameters.mhp, "#dc5b60", "#79202d");
+        this.drawGauge(468, 375, 80, 8, actor.mp, actor.parameters.mmp, "#5c87d9", "#253e7c");
+        c.fillText(`HP ${actor.hp}/${actor.parameters.mhp}`, 320, 408);
+        c.fillText(`MP ${actor.mp}/${actor.parameters.mmp}`, 466, 408);
+        c.fillText(`AP ${Math.floor(actor.ap)}/4000`, 320, 437);
+      }
+      if (battle?.phase === "actor-command") (battle.commands ?? []).slice(0, 4).forEach((command, index) => {
+        const y = 372 + index * 24;
+        if (index === battle.selectedCommand) this.drawCursor(12, y, 104, 24);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(command), 16, y + 19);
       });
       else {
         c.fillStyle = "#c9c2ba";
-        c.fillText(battle?.log?.at(-1) ?? "", 30, 420);
+        c.fillText(displayText(battle?.log?.at(-1) ?? ""), 146, 462);
       }
     }
     async showPicture(id, name, parameters = {}) {
@@ -3773,14 +4471,72 @@
     }
     drawWindow(x, y, width, height) {
       const c = this.context;
-      c.fillStyle = "rgba(0,0,0,.90)";
-      c.fillRect(x, y, width, height);
-      c.strokeStyle = "#d2cbbd";
-      c.lineWidth = 2;
-      c.strokeRect(x + 1, y + 1, width - 2, height - 2);
-      c.strokeStyle = "#514c49";
-      c.lineWidth = 1;
-      c.strokeRect(x + 4.5, y + 4.5, width - 9, height - 9);
+      if (!this.windowSkin) {
+        c.fillStyle = "rgba(0,0,0,.90)";
+        c.fillRect(x, y, width, height);
+        c.strokeStyle = "#d2cbbd";
+        c.strokeRect(x + 0.5, y + 0.5, width - 1, height - 1);
+        return;
+      }
+      c.save();
+      c.globalAlpha = 0.94;
+      c.drawImage(this.windowSkin, 0, 0, 64, 64, x + 4, y + 4, Math.max(1, width - 8), Math.max(1, height - 8));
+      const s = this.windowSkin;
+      const edge = 16;
+      c.drawImage(s, 64, 0, 16, 16, x, y, edge, edge);
+      c.drawImage(s, 112, 0, 16, 16, x + width - edge, y, edge, edge);
+      c.drawImage(s, 64, 48, 16, 16, x, y + height - edge, edge, edge);
+      c.drawImage(s, 112, 48, 16, 16, x + width - edge, y + height - edge, edge, edge);
+      c.drawImage(s, 80, 0, 32, 16, x + edge, y, Math.max(1, width - edge * 2), edge);
+      c.drawImage(s, 80, 48, 32, 16, x + edge, y + height - edge, Math.max(1, width - edge * 2), edge);
+      c.drawImage(s, 64, 16, 16, 32, x, y + edge, edge, Math.max(1, height - edge * 2));
+      c.drawImage(s, 112, 16, 16, 32, x + width - edge, y + edge, edge, Math.max(1, height - edge * 2));
+      c.restore();
+    }
+    drawCursor(x, y, width, height) {
+      const c = this.context;
+      if (this.windowSkin) {
+        c.save();
+        c.globalAlpha = 0.72;
+        c.drawImage(this.windowSkin, 64, 64, 32, 32, x, y, width, height);
+        c.restore();
+      } else {
+        c.fillStyle = "rgba(255,255,255,.16)";
+        c.fillRect(x, y, width, height);
+      }
+    }
+    drawIcon(index, x, y) {
+      if (!this.iconSet || !Number.isFinite(Number(index))) return;
+      const id = Number(index);
+      this.context.drawImage(this.iconSet, id % 16 * 24, Math.floor(id / 16) * 24, 24, 24, x, y, 24, 24);
+    }
+    drawGauge(x, y, width, height, value = 0, maximum = 1, color1 = "#fff", color2 = "#888") {
+      const ratio2 = clamp2(Number(value) / Math.max(1, Number(maximum)), 0, 1);
+      const gradient = this.context.createLinearGradient(x, y, x + width, y);
+      gradient.addColorStop(0, color2);
+      gradient.addColorStop(1, color1);
+      this.context.fillStyle = "#241f25";
+      this.context.fillRect(x, y, width, height);
+      this.context.fillStyle = gradient;
+      this.context.fillRect(x, y, width * ratio2, height);
+    }
+    drawHorzLine(x, y, width) {
+      this.context.fillStyle = "rgba(255,255,255,.20)";
+      this.context.fillRect(x, y, width, 2);
+    }
+    drawActorPortrait(actor, x, y, width, height) {
+      const name = actor?.characterName;
+      const image = name ? this.characterImages.get(name) : null;
+      if (!image) return;
+      const frame = characterFrame(image, name, actor.characterIndex ?? 0, 2, 1);
+      const scale = Math.min(width / frame.width, height / frame.height, 2);
+      this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, x + (width - frame.width * scale) / 2, y + height - frame.height * scale, frame.width * scale, frame.height * scale);
+    }
+    drawSaveCharacter(character, x, y) {
+      const image = this.characterImages.get(character.characterName);
+      if (!image) return;
+      const frame = characterFrame(image, character.characterName, character.characterIndex ?? 0, 2, 1);
+      this.context.drawImage(image, frame.sx, frame.sy, frame.width, frame.height, x - frame.width / 2, y - frame.height, frame.width, frame.height);
     }
     tileAt(x, y, z) {
       return this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height] ?? 0;
@@ -3882,7 +4638,7 @@
       const opacity = clamp2(Number(sprite.opacity ?? 255) / 255, 0, 1);
       this.context.save();
       this.context.globalAlpha = opacity;
-      if (this.isBush(sprite.x, sprite.y) && frame.height >= 24) {
+      if (this.isBush(Math.round(sprite.x), Math.round(sprite.y)) && frame.height >= 24) {
         const bushHeight = Math.min(12, frame.height / 2);
         const topHeight = frame.height - bushHeight;
         this.context.drawImage(image, frame.sx, frame.sy, frame.width, topHeight, dx, dy, frame.width, topHeight);
@@ -3971,40 +4727,48 @@
     }
     drawMessage(message) {
       if (!message) return;
+      const data = typeof message === "string" ? { text: message, position: 2, background: 0 } : message;
       const c = this.context;
-      c.fillStyle = "rgba(8,6,8,.92)";
-      c.fillRect(12, this.height - 132, this.width - 24, 120);
-      c.strokeStyle = "#c5bda9";
-      c.strokeRect(12.5, this.height - 131.5, this.width - 25, 119);
-      c.fillStyle = "#f1ede4";
-      c.font = "20px Georgia, serif";
-      wrapText(c, message, 30, this.height - 96, this.width - 60, 28);
-      c.font = "13px ui-monospace, monospace";
-      c.fillStyle = "#aaa";
-      c.fillText("Enter / Space", this.width - 125, this.height - 24);
+      const y = [0, 180, 360][Number(data.position ?? 2)] ?? 360;
+      if (Number(data.background ?? 0) === 1) {
+        const gradient = c.createLinearGradient(0, y, 0, y + 120);
+        gradient.addColorStop(0, "rgba(0,0,0,0)");
+        gradient.addColorStop(0.25, "rgba(0,0,0,.76)");
+        gradient.addColorStop(0.75, "rgba(0,0,0,.76)");
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        c.fillStyle = gradient;
+        c.fillRect(0, y, 640, 120);
+      } else if (Number(data.background ?? 0) === 0) this.drawWindow(0, y, 640, 120);
+      const face = this.faceImages.get(data.face);
+      if (face) {
+        const index = Number(data.faceIndex) || 0;
+        c.drawImage(face, index % 4 * 96, Math.floor(index / 4) * 96, 96, 96, 12, y + 12, 96, 96);
+      }
+      c.fillStyle = "#f4f4f4";
+      c.font = font(20);
+      wrapText(c, displayText(data.text), face ? 120 : 12, y + 34, face ? 508 : 616, 24);
     }
     drawChoice(choice) {
       if (!choice) return;
       const c = this.context;
-      const width = 280;
-      const height = choice.options.length * 30 + 24;
-      const x = this.width - width - 22;
-      const y = this.height - 144 - height;
-      c.fillStyle = "rgba(8,6,8,.95)";
-      c.fillRect(x, y, width, height);
-      c.strokeStyle = "#c5bda9";
-      c.strokeRect(x + 0.5, y + 0.5, width - 1, height - 1);
-      c.font = "18px Georgia, serif";
+      c.font = font(20);
+      const width = Math.max(96, Math.min(360, Math.max(...choice.options.map((option) => c.measureText(displayText(option)).width), 0) + 48));
+      const height = choice.options.length * 24 + 24;
+      const x = this.width - width;
+      const y = Math.max(0, 360 - height);
+      this.drawWindow(x, y, width, height);
       choice.options.forEach((option, index) => {
-        c.fillStyle = index === choice.selected ? "#fff" : "#aaa";
-        c.fillText(`${index === choice.selected ? "›" : " "} ${option}`, x + 18, y + 30 + index * 30);
+        const rowY = y + 12 + index * 24;
+        if (index === choice.selected) this.drawCursor(x + 12, rowY, width - 24, 24);
+        c.fillStyle = "#f4f4f4";
+        c.fillText(displayText(option), x + 16, rowY + 19);
       });
     }
     promptText(label, maxLength, value = "") {
       return new Promise((resolve) => {
         const form = document.createElement("form");
         form.dataset.bsModal = "name-input";
-        form.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;background:#000c;color:#eee;font:18px Georgia,serif";
+        form.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#000c;color:#eee;font:18px Arial,"Noto Sans","Segoe UI",sans-serif';
         form.innerHTML = `<label style="display:grid;gap:10px;width:min(360px,80%)">${label}<input maxlength="${Number(maxLength) || 12}" style="padding:10px;background:#100d0e;color:#fff;border:1px solid #866"><button style="padding:9px;background:#28181c;color:#fff;border:1px solid #744">Confirm</button></label>`;
         const input = form.querySelector("input");
         let settled = false;
@@ -4027,7 +4791,7 @@
       return new Promise((resolve) => {
         const form = document.createElement("form");
         form.dataset.bsModal = "resource-retry";
-        form.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;background:#000d;color:#eee;font:16px Georgia,serif;z-index:30";
+        form.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#000d;color:#eee;font:16px Arial,"Noto Sans","Segoe UI",sans-serif;z-index:30';
         form.innerHTML = `<section style="width:min(480px,86%);padding:20px;border:1px solid #744;background:#100c0d"><strong></strong><p style="color:#b9acad;overflow-wrap:anywhere"></p><button value="retry">Retry</button><button value="cancel">Cancel</button></section>`;
         form.querySelector("strong").textContent = label;
         form.querySelector("p").textContent = detail;
@@ -4077,7 +4841,8 @@
     const baseY = big ? 0 : Math.floor(index / 4) * 4;
     const cardinal = [2, 4, 6, 8].includes(direction) ? direction : direction < 5 ? 2 : 8;
     const row = { 2: 0, 4: 1, 6: 2, 8: 3 }[cardinal];
-    return { sx: (baseX + clamp2(pattern, 0, 2)) * width, sy: (baseY + row) * height, width, height };
+    const renderedPattern = Number(pattern) < 3 ? clamp2(Number(pattern) || 0, 0, 2) : 1;
+    return { sx: (baseX + renderedPattern) * width, sy: (baseY + row) * height, width, height };
   }
   var FLOOR_AUTOTILE_TABLE = [
     [[2, 4], [1, 4], [2, 3], [1, 3]],
@@ -4151,8 +4916,14 @@
   function clamp2(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
+  function displayText(value) {
+    return String(value ?? "").normalize("NFC");
+  }
+  function font(size = 20) {
+    return `${size}px Arial, "Noto Sans", "Segoe UI", sans-serif`;
+  }
   function wrapText(context, text, x, y, width, lineHeight) {
-    for (const paragraph of String(text).split("\n")) {
+    for (const paragraph of displayText(text).split("\n")) {
       let line = "";
       for (const word of paragraph.split(/\s+/)) {
         const test = line ? `${line} ${word}` : word;
@@ -4165,6 +4936,21 @@
       context.fillText(line, x, y);
       y += lineHeight;
     }
+  }
+  async function waitForFonts() {
+    try {
+      await globalThis.document?.fonts?.ready;
+      await globalThis.document?.fonts?.load?.("20px Arial", "Cậu cần gì? Đường Đừng Thánh Người");
+    } catch {
+    }
+  }
+  function formatPlaytime(seconds = 0) {
+    const total = Math.max(0, Math.floor(Number(seconds) || 0));
+    return `${String(Math.floor(total / 3600)).padStart(2, "0")}:${String(Math.floor(total / 60) % 60).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+  }
+  function formatTimestamp(value) {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
   }
   function waitFrames(frames) {
     return new Promise((resolve) => setTimeout(resolve, Math.max(0, Number(frames) || 0) * 1e3 / 60));
@@ -4182,47 +4968,160 @@
   }
 
   // runtime/save/indexeddb.js
-  var DATABASE = "black-souls-sillytavern";
-  var STORE = "saves";
+  var SAVE_DATABASE = "black-souls-sillytavern";
+  var SAVE_SCHEMA = "black-souls-st-save-v2";
+  var SAVE_SLOT_COUNT = 16;
+  var DATABASE_VERSION = 2;
+  var STORES = Object.freeze({ SAVES: "saves", METADATA: "metadata", SETTINGS: "settings" });
   var SaveStore = class {
-    async save(slot, state) {
-      const record = { slot, schema: "black-souls-st-save-v1", savedAt: (/* @__PURE__ */ new Date()).toISOString(), state };
+    constructor({ runtimeVersion = "dev", dataVersion = "black-souls-normalized-data-v1" } = {}) {
+      this.runtimeVersion = runtimeVersion;
+      this.dataVersion = dataVersion;
+    }
+    async save(slot, state, metadata = {}) {
+      const safeSlot = validateSlot(slot);
+      const savedAt = (/* @__PURE__ */ new Date()).toISOString();
+      const display = makeDisplayMetadata(safeSlot, state, savedAt, metadata);
+      const record = {
+        slot: safeSlot,
+        schema: SAVE_SCHEMA,
+        gameVersion: this.runtimeVersion,
+        dataVersion: this.dataVersion,
+        savedAt,
+        metadata: display,
+        state
+      };
       const database = await openDatabase().catch(() => null);
       if (!database) {
-        memorySaves.set(slot, record);
-        return;
+        memorySaves.set(safeSlot, record);
+        memoryMetadata.set(safeSlot, display);
+        return display;
       }
-      await request(database.transaction(STORE, "readwrite").objectStore(STORE).put(record));
+      const transaction = database.transaction([STORES.SAVES, STORES.METADATA], "readwrite");
+      transaction.objectStore(STORES.SAVES).put(record);
+      transaction.objectStore(STORES.METADATA).put(display);
+      await transactionDone(transaction);
+      return display;
     }
     async load(slot) {
+      const safeSlot = validateSlot(slot);
       const database = await openDatabase().catch(() => null);
-      const record = database ? await request(database.transaction(STORE).objectStore(STORE).get(slot)) : memorySaves.get(slot);
+      const record = database ? await request(database.transaction(STORES.SAVES).objectStore(STORES.SAVES).get(safeSlot)) : memorySaves.get(safeSlot);
       if (!record) return null;
-      if (record.schema !== "black-souls-st-save-v1") throw new Error(`Unsupported save schema: ${record.schema}`);
-      return record.state;
+      if (![SAVE_SCHEMA, "black-souls-st-save-v1"].includes(record.schema)) throw new Error(`Unsupported save schema: ${record.schema}`);
+      return structuredClone(record.state);
     }
     async has(slot) {
+      const safeSlot = validateSlot(slot);
       const database = await openDatabase().catch(() => null);
-      return database ? Boolean(await request(database.transaction(STORE).objectStore(STORE).getKey(slot))) : memorySaves.has(slot);
+      return database ? Boolean(await request(database.transaction(STORES.SAVES).objectStore(STORES.SAVES).getKey(safeSlot))) : memorySaves.has(safeSlot);
+    }
+    async any() {
+      return (await this.list()).some((entry) => !entry.empty);
+    }
+    async list() {
+      const database = await openDatabase().catch(() => null);
+      const records = database ? await request(database.transaction(STORES.SAVES).objectStore(STORES.SAVES).getAll()) : [...memorySaves.values()];
+      const bySlot = new Map(records.map((record) => [Number(record.slot), record]));
+      return Array.from({ length: SAVE_SLOT_COUNT }, (_, index) => {
+        const slot = index + 1;
+        const record = bySlot.get(slot);
+        if (!record) return { slot, empty: true };
+        return { ...record.metadata ?? makeDisplayMetadata(slot, record.state, record.savedAt), slot, empty: false, schema: record.schema };
+      });
+    }
+    async latestSlot() {
+      const records = (await this.list()).filter((entry) => !entry.empty);
+      return records.sort((a, b) => Date.parse(b.savedAt ?? 0) - Date.parse(a.savedAt ?? 0))[0]?.slot ?? 1;
+    }
+    async export(slot) {
+      const safeSlot = validateSlot(slot);
+      const database = await openDatabase().catch(() => null);
+      const record = database ? await request(database.transaction(STORES.SAVES).objectStore(STORES.SAVES).get(safeSlot)) : memorySaves.get(safeSlot);
+      if (!record) throw new Error(`Save slot ${safeSlot} is empty.`);
+      return JSON.stringify({ format: "black-souls-browser-save-export-v1", exportedAt: (/* @__PURE__ */ new Date()).toISOString(), record }, null, 2);
+    }
+    async import(serialized, targetSlot = null) {
+      const payload = typeof serialized === "string" ? JSON.parse(serialized) : serialized;
+      if (payload?.format !== "black-souls-browser-save-export-v1" || !payload.record?.state) throw new Error("Unsupported BLACK SOULS save export.");
+      const slot = validateSlot(targetSlot ?? payload.record.slot);
+      return this.save(slot, structuredClone(payload.record.state), payload.record.metadata ?? {});
+    }
+    async setting(key, value) {
+      const database = await openDatabase().catch(() => null);
+      if (arguments.length === 1) {
+        if (!database) return memorySettings.get(String(key));
+        return (await request(database.transaction(STORES.SETTINGS).objectStore(STORES.SETTINGS).get(String(key))))?.value;
+      }
+      const record = { key: String(key), value };
+      if (!database) {
+        memorySettings.set(String(key), value);
+        return value;
+      }
+      await request(database.transaction(STORES.SETTINGS, "readwrite").objectStore(STORES.SETTINGS).put(record));
+      return value;
     }
   };
   var databasePromise;
   var memorySaves = /* @__PURE__ */ new Map();
+  var memoryMetadata = /* @__PURE__ */ new Map();
+  var memorySettings = /* @__PURE__ */ new Map();
   function openDatabase() {
+    if (!globalThis.indexedDB?.open) return Promise.reject(new Error("IndexedDB is unavailable."));
     if (!databasePromise) {
       databasePromise = new Promise((resolve, reject) => {
-        const opening = indexedDB.open(DATABASE, 1);
-        opening.onupgradeneeded = () => opening.result.createObjectStore(STORE, { keyPath: "slot" });
+        const opening = globalThis.indexedDB.open(SAVE_DATABASE, DATABASE_VERSION);
+        opening.onupgradeneeded = () => {
+          const database = opening.result;
+          if (!database.objectStoreNames.contains(STORES.SAVES)) database.createObjectStore(STORES.SAVES, { keyPath: "slot" });
+          if (!database.objectStoreNames.contains(STORES.METADATA)) database.createObjectStore(STORES.METADATA, { keyPath: "slot" });
+          if (!database.objectStoreNames.contains(STORES.SETTINGS)) database.createObjectStore(STORES.SETTINGS, { keyPath: "key" });
+        };
         opening.onsuccess = () => resolve(opening.result);
         opening.onerror = () => reject(opening.error);
+        opening.onblocked = () => reject(new Error("Save database upgrade is blocked by another BLACK SOULS tab."));
       });
     }
     return databasePromise;
+  }
+  function makeDisplayMetadata(slot, state = {}, savedAt = (/* @__PURE__ */ new Date()).toISOString(), overrides = {}) {
+    const actorId = state.party?.members?.[0];
+    const actor = state.actors?.[actorId] ?? {};
+    return {
+      slot,
+      playerName: normalizeText(overrides.playerName ?? actor.name ?? ""),
+      level: Number(overrides.level ?? actor.level ?? 1),
+      playtimeSeconds: Number(overrides.playtimeSeconds ?? state.system?.playtimeSeconds ?? state.playtimeSeconds ?? 0),
+      location: normalizeText(overrides.location ?? state.mapName ?? `Map ${String(state.mapId ?? 0).padStart(3, "0")}`),
+      mapId: Number(state.mapId ?? 0),
+      x: Number(state.x ?? 0),
+      y: Number(state.y ?? 0),
+      partyCharacters: (state.party?.members ?? []).map((id) => {
+        const member = state.actors?.[id] ?? {};
+        return { actorId: id, characterName: member.characterName ?? "", characterIndex: Number(member.characterIndex ?? 0) };
+      }),
+      savedAt
+    };
+  }
+  function validateSlot(value) {
+    const slot = Number(value);
+    if (!Number.isInteger(slot) || slot < 1 || slot > SAVE_SLOT_COUNT) throw new RangeError(`Save slot must be between 1 and ${SAVE_SLOT_COUNT}.`);
+    return slot;
+  }
+  function normalizeText(value) {
+    return String(value ?? "").normalize("NFC");
   }
   function request(value) {
     return new Promise((resolve, reject) => {
       value.onsuccess = () => resolve(value.result);
       value.onerror = () => reject(value.error);
+    });
+  }
+  function transactionDone(transaction) {
+    return new Promise((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error ?? new Error("Save transaction was aborted."));
     });
   }
 
@@ -4259,8 +5158,11 @@
         <div class="bs-progress" role="status" aria-live="polite"><div class="bs-progress-card"><strong>BLACK SOULS</strong><span>Loading game data...</span><i></i></div></div>
         <nav class="bs-toolbar" aria-label="BLACK SOULS host controls">
           <button data-action="fullscreen" title="Fullscreen">⛶</button>
+          <button data-action="export-save" title="Export browser save">Export Save</button>
+          <button data-action="import-save" title="Import browser save">Import Save</button>
           <button data-action="exit" title="Exit to SillyTavern">Exit to SillyTavern</button>
           <button data-action="diagnostics" aria-expanded="false" title="Developer diagnostics">⋯</button>
+          <input data-bs-save-import type="file" accept="application/json,.json" hidden>
         </nav>
         <output class="bs-status" aria-live="polite" hidden></output>
         <aside class="bs-diagnostics" hidden><pre></pre></aside>
@@ -4290,7 +5192,7 @@
           ...this.manifest.streaming
         });
         const renderer = new CanvasRenderer(this.stage, loader, this.manifest.engine);
-        const saves = new SaveStore();
+        const saves = new SaveStore({ runtimeVersion: this.manifest.version, dataVersion: this.manifest.data.schema });
         this.engine = new GameEngine({
           loader,
           renderer,
@@ -4330,6 +5232,8 @@
             else await this.root.requestFullscreen?.();
           }
           if (action === "exit") await this.pause();
+          if (action === "export-save") await this.exportSaveFile();
+          if (action === "import-save") this.root.querySelector("[data-bs-save-import]")?.click();
           if (action === "resume") await this.resume();
           if (action === "diagnostics") this.toggleDiagnostics(event.target.closest("button"));
           if (action !== "exit") this.focusGame();
@@ -4344,6 +5248,19 @@
         this.refreshDiagnostics();
       };
       this.root.addEventListener("click", this.onClick);
+      this.onSaveImport = async (event) => {
+        const file = event.target.files?.[0];
+        if (!file || !this.engine) return;
+        try {
+          await this.engine.importSave(await file.text());
+          this.setStatus("Đã nhập dữ liệu lưu.");
+        } catch (error) {
+          this.setStatus(error.message, true);
+        } finally {
+          event.target.value = "";
+        }
+      };
+      this.root.querySelector("[data-bs-save-import]")?.addEventListener("change", this.onSaveImport);
       document.addEventListener("fullscreenchange", this.onFullscreenChange);
     }
     handleSceneChange(scene) {
@@ -4437,6 +5354,12 @@
     async loadSave(slot) {
       return this.engine.load(slot);
     }
+    async exportSave(slot) {
+      return this.engine.exportSave(slot);
+    }
+    async importSave(serialized, slot) {
+      return this.engine.importSave(serialized, slot);
+    }
     async reset() {
       return this.engine.newGame();
     }
@@ -4455,18 +5378,31 @@
       clearTimeout(this.statusTimer);
       clearInterval(this.diagnosticsTimer);
       this.root?.removeEventListener("click", this.onClick);
+      this.root?.querySelector("[data-bs-save-import]")?.removeEventListener("change", this.onSaveImport);
       document.removeEventListener("fullscreenchange", this.onFullscreenChange);
       if (document.fullscreenElement === this.root) await document.exitFullscreen?.();
       await this.engine?.destroy();
       this.setLifecycle("UNMOUNT");
       this.root?.remove();
     }
+    async exportSaveFile() {
+      if (!this.engine) return;
+      const serialized = await this.engine.exportSave();
+      const blob = new Blob([serialized], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `Black_Souls_Save_${String(this.engine.lastSaveSlot ?? 1).padStart(2, "0")}.json`;
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      this.setStatus("Đã xuất dữ liệu lưu.");
+    }
   };
   var styles = `
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
-  body { margin: 0; background: #000; color: #e9e5dd; font: 14px/1.4 Georgia, serif; }
+  body { margin: 0; background: #000; color: #e9e5dd; font: 14px/1.4 Arial, "Noto Sans", "Segoe UI", sans-serif; }
   .black-souls-host { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; background: #000; }
   .bs-viewport { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: #000; }
   .bs-stage { position: relative; width: min(100vw, calc(100vh * 4 / 3)); height: min(100vh, calc(100vw * 3 / 4)); aspect-ratio: 4 / 3; outline: none; background: #000; }
@@ -4518,6 +5454,8 @@
     unmount,
     loadSave: (slot) => activeHost?.loadSave(slot),
     save: (slot) => activeHost?.save(slot),
+    exportSave: (slot) => activeHost?.exportSave(slot),
+    importSave: (serialized, slot) => activeHost?.importSave(serialized, slot),
     reset: () => activeHost?.reset(),
     pause: () => activeHost?.pause(),
     resume: () => activeHost?.resume(),
