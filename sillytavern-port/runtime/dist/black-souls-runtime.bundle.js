@@ -1,6 +1,6 @@
-/* BLACK SOULS browser runtime 0.8.0; source 7a810cc47ec820116c0700210729377126184a69 */
+/* BLACK SOULS browser runtime 0.9.0; source c5661976c3032a8a96a7a26e4af51cce6497a71f */
 (() => {
-  // runtime/core/input.js
+  // sillytavern-port/runtime/core/input.js
   var axes = /* @__PURE__ */ new Map([
     ["ArrowDown", [0, 1]],
     ["s", [0, 1]],
@@ -154,7 +154,7 @@
     }
   };
 
-  // runtime/map/collision.js
+  // sillytavern-port/runtime/map/collision.js
   var directionBit = { 2: 1, 4: 2, 6: 4, 8: 8 };
   var CollisionMap = class {
     constructor(map, tileset) {
@@ -182,7 +182,7 @@
     }
   };
 
-  // runtime/map/interpreter.js
+  // sillytavern-port/runtime/map/interpreter.js
   var EventInterpreter = class {
     constructor(engine) {
       this.engine = engine;
@@ -744,7 +744,7 @@
     return summary.length > 180 ? `${summary.slice(0, 177)}...` : summary;
   }
 
-  // runtime/audio/audio-manager.js
+  // sillytavern-port/runtime/audio/audio-manager.js
   var AudioManager = class {
     constructor(loader, onDiagnostic = () => {
     }) {
@@ -861,7 +861,7 @@
     element.preload = "auto";
   }
 
-  // runtime/core/lifecycle.js
+  // sillytavern-port/runtime/core/lifecycle.js
   var HOST_STATES = Object.freeze({
     UNINITIALIZED: "UNINITIALIZED",
     LOADING: "LOADING",
@@ -897,7 +897,7 @@
     return current;
   }
 
-  // runtime/game/party-system.js
+  // sillytavern-port/runtime/game/party-system.js
   var PARAM_NAMES = ["mhp", "mmp", "atk", "def", "mat", "mdf", "agi", "luk"];
   var STORE_NAMES = { item: "items", weapon: "weapons", armor: "armors" };
   var DATABASE_NAMES = { item: "items", weapon: "weapons", armor: "armors" };
@@ -1134,10 +1134,14 @@
     return Math.max(min, Math.min(max, Number(value) || 0));
   }
 
-  // runtime/game/combat-system.js
+  // sillytavern-port/runtime/game/combat-system.js
   var MAX_AP = 4e3;
   var FRAME_AP_GAIN = 10;
+  var REFRESH_FRAME = 3;
   var DIFFICULTY_VARIABLE_ID = 60;
+  var START_AP_RATES = Object.freeze({ preemptive: [40, 30], normal: [30, 40], surprise: [0, 10], escapeFailed: [0, 10] });
+  var NO_MIRROR_TROOPS = /* @__PURE__ */ new Set([136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 165, 166, 167, 168, 169, 170, 171, 176, 177, 178, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 220, 221, 222, 223, 224, 225, 69, 70, 71, 72, 73, 134, 226, 227, 228, 229, 231, 232, 233, 235, 236, 240, 26, 164, 255, 256, 257, 263, 135, 289, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 259, 260, 317, 318, 314, 315, 172]);
+  var NO_ZOOM_TROOPS = /* @__PURE__ */ new Set([153, 26]);
   var DIFFICULTY_RATES = Object.freeze({
     mhp: [1, 1.5, 1.7, 2, 2.2, 2.5, 2.7, 3, 6, 7],
     mmp: [1, 1.5, 1.7, 2, 2.2, 2.5, 2.7, 3, 3.5, 7],
@@ -1178,9 +1182,12 @@
           hit: 0.95,
           eva: 0.05,
           cri: 0.04,
-          ap: Math.floor(MAX_AP * 0.3),
+          faceName: actor.faceName ?? this.database.actors[actorId]?.face_name ?? "",
+          faceIndex: actor.faceIndex ?? this.database.actors[actorId]?.face_index ?? 0,
+          ap: 0,
           chant: null,
-          guarding: false
+          guarding: false,
+          turnCount: 1
         };
       });
       const difficulty = difficultyIndex(state);
@@ -1203,14 +1210,13 @@
           hit: Number(enemy.hit ?? 95) / 100,
           eva: Number(enemy.eva ?? 5) / 100,
           cri: Number(enemy.cri ?? 4) / 100,
-          ap: Math.floor(MAX_AP * 0.4),
+          ap: 0,
           chant: null,
-          guarding: false
+          guarding: false,
+          turnCount: 1
         };
       });
-      if (preemptive) for (const enemy of enemies) enemy.ap = 0;
-      if (surprise) for (const actor of actors) actor.ap = 0;
-      return {
+      const battle = {
         troopId,
         troopName: troop.name,
         canEscape,
@@ -1225,15 +1231,30 @@
         enemies,
         selectedCommand: 0,
         selectedTarget: 0,
-        commands: ["Attack", "Skills", "Items", "Defend", "Escape"],
+        commands: [],
+        commandDefinitions: [],
         log: [`${troop.name} appeared.`],
         frames: 0,
         escapeAttempts: 0,
         result: null,
         rngSeed: (2654435769 ^ troopId ^ difficulty << 16) >>> 0,
         difficulty,
-        compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, smartEnemyAi: true, casting: true, castInterruption: true, difficultyVariable: DIFFICULTY_VARIABLE_ID, symbolContactCondition: true }
+        compatibility: { maxAp: MAX_AP, frameApGain: FRAME_AP_GAIN, refreshFrame: REFRESH_FRAME, smartEnemyAi: true, casting: true, castInterruption: true, dynamicActorCommands: true, difficultyVariable: DIFFICULTY_VARIABLE_ID, symbolContactCondition: true },
+        mistEnabled: !state.switches?.[5],
+        endRecoveryApplied: false
       };
+      for (const enemy of enemies) {
+        const visualSeed = Number(troopId) * 1103515245 + Number(enemy.enemyId) * 12345 + enemy.index * 2654435761 >>> 0;
+        enemy.mirror = !NO_MIRROR_TROOPS.has(Number(troopId)) && visualSeed % 3 === 0;
+        enemy.perspectiveScale = NO_ZOOM_TROOPS.has(Number(troopId)) ? 1 : (Number(enemy.y) - 480 * 0.65) * 5e-3 + 1;
+        enemy.breathPeriod = 150 + visualSeed % 30;
+        enemy.breathOffset = (visualSeed >>> 8) % enemy.breathPeriod;
+      }
+      const actorMode = preemptive ? 1 : surprise ? -1 : 0;
+      const enemyMode = -actorMode;
+      for (const actor of actors) actor.ap = this.startAp(state, actor, actorMode, battle);
+      for (const enemy of enemies) enemy.ap = this.startAp(state, enemy, enemyMode, battle);
+      return battle;
     }
     update(state, frames = 1) {
       const battle = state.battle;
@@ -1241,21 +1262,28 @@
       for (let frame = 0; frame < frames && !battle.result; frame += 1) {
         battle.frames += 1;
         for (const battler of [...battle.actors, ...battle.enemies]) {
-          if (battler.hp <= 0 || battler.ap >= MAX_AP) continue;
-          if (battler.chant) {
-            battler.chant.remaining -= 1;
-            if (battler.chant.remaining <= 0) this.resolveChant(state, battler);
-            continue;
-          }
-          battler.ap = Math.min(MAX_AP, battler.ap + battler.parameters.agi + FRAME_AP_GAIN);
+          if (battler.hp <= 0 || !battler.chant && battler.ap >= MAX_AP) continue;
+          if (battle.frames % REFRESH_FRAME !== 0) continue;
+          const point = this.apGainPoint(state, battler, Boolean(battler.chant)) * REFRESH_FRAME;
+          if (battler.chant) battler.chant.elapsed = Math.min(battler.chant.total, battler.chant.elapsed + point);
+          else battler.ap = Math.min(MAX_AP, battler.ap + point);
         }
-        const actor = battle.actors.find((entry) => entry.hp > 0 && entry.ap >= MAX_AP);
+        const completedChant = [...battle.actors, ...battle.enemies].find((entry) => entry.hp > 0 && entry.chant && entry.chant.elapsed >= entry.chant.total);
+        if (completedChant) {
+          this.resolveChant(state, completedChant);
+          this.checkResult(state);
+          continue;
+        }
+        const actor = battle.actors.find((entry) => entry.hp > 0 && !entry.chant && entry.ap >= MAX_AP);
         if (actor) {
           battle.phase = "actor-command";
           battle.activeActor = actor.index;
+          battle.commandDefinitions = this.actorCommands(state, actor);
+          battle.commands = battle.commandDefinitions.map((command) => command.name);
+          battle.selectedCommand = 0;
           break;
         }
-        const enemy = battle.enemies.find((entry) => entry.hp > 0 && entry.ap >= MAX_AP);
+        const enemy = battle.enemies.find((entry) => entry.hp > 0 && !entry.chant && entry.ap >= MAX_AP);
         if (enemy) this.enemyAction(state, enemy);
         this.checkResult(state);
       }
@@ -1268,18 +1296,23 @@
       if (symbol === "escape") return this.escape(state);
       if (symbol === "guard") {
         actor.guarding = true;
-        actor.ap = 0;
+        this.finishAction(state, actor, this.database.skills[2]);
         battle.phase = "running";
         battle.log.push(`${actor.name} defended.`);
         return { accepted: true };
       }
       if (symbol === "item") {
-        const result2 = this.party.useItem(state, Number(payload.itemId), actor.actorId);
-        if (!result2.used) return { accepted: false, reason: result2.reason };
-        Object.assign(actor, { hp: state.actors[actor.actorId].hp, mp: state.actors[actor.actorId].mp, tp: state.actors[actor.actorId].tp, states: [...state.actors[actor.actorId].states] });
-        actor.ap = 0;
+        const itemId = Number(payload.itemId);
+        const item = this.database.items[itemId];
+        if (!item || this.party.quantity(state, "item", itemId) < 1) return { accepted: false, reason: "unavailable" };
+        const targets2 = this.targetsForSkill(battle, actor, item, targetIndex);
+        const result2 = targets2.map((target) => this.applySkill(state, actor, target, item));
+        if (item.consumable) this.party.gain(state, "item", itemId, -1);
+        this.applyUserEffect(state, actor, item);
+        this.finishAction(state, actor, item);
         battle.phase = "running";
-        battle.log.push(`${actor.name} used ${this.database.items[payload.itemId]?.name}.`);
+        battle.log.push(`${actor.name} used ${item.name}.`);
+        this.checkResult(state);
         return { accepted: true, result: result2 };
       }
       const skillId = symbol === "skill" ? Number(payload.skillId) : this.attackSkillId(state, actor.actorId);
@@ -1290,8 +1323,8 @@
       actor.tp -= Number(skill.tp_cost ?? 0);
       const chant = chantMetadata(skill.note);
       if (chant) {
-        actor.chant = { skillId, targetIndex, remaining: chant.frames, total: chant.frames };
-        actor.ap = 0;
+        const total = Math.max(1, chant.base + randomIntInclusive(battle, chant.random));
+        actor.chant = { skillId, targetIndex, type: chant.type, elapsed: 0, total };
         battle.phase = "running";
         battle.log.push(`${actor.name} began casting ${skill.name}.`);
         return { accepted: true, chanting: true };
@@ -1299,29 +1332,31 @@
       const targets = this.targetsForSkill(battle, actor, skill, targetIndex);
       const result = [];
       for (let repeat = 0; repeat < Math.max(1, Number(skill.repeats) || 1); repeat += 1) for (const target of targets) result.push(this.applySkill(state, actor, target, skill));
+      this.applyUserEffect(state, actor, skill);
       actor.tp = Math.min(100, actor.tp + Number(skill.tp_gain ?? 0));
       this.syncActor(state, actor);
-      actor.ap = 0;
+      this.finishAction(state, actor, skill);
       actor.guarding = false;
       battle.phase = "running";
       this.checkResult(state);
       return { accepted: true, result };
     }
     attackSkillId(state, actorId) {
-      const actor = state.actors[actorId];
-      for (const equipped of actor?.equips ?? []) {
-        if (equipped.kind !== "weapon" || !equipped.id) continue;
-        const match = /<攻撃ID変更:(\d+)>/.exec(String(this.database.weapons[equipped.id]?.note ?? ""));
-        if (match) return Number(match[1]);
-      }
-      return 1;
+      const battler = state.battle?.actors?.find((entry) => entry.actorId === actorId) ?? { side: "actor", actorId, states: state.actors[actorId]?.states ?? [] };
+      const candidates = this.featureObjects(state, battler).flatMap((object) => [...String(object.note ?? "").matchAll(/<攻撃ID変更[：:](\d+)>/g)].map((match) => Number(match[1])));
+      if (!candidates.length) return 1;
+      return [...new Set(candidates)].sort((left, right) => {
+        const priority = attackSkillPriority(this.database.skills[right]) - attackSkillPriority(this.database.skills[left]);
+        return priority || right - left;
+      })[0];
     }
     enemyAction(state, enemy) {
       const battle = state.battle;
       const data = this.database.enemies[enemy.enemyId];
       const action = this.selectEnemyAction(state, enemy, data.actions ?? []);
       const skill = this.database.skills[action?.skill_id ?? 1];
-      const target = this.targetsForSkill(battle, enemy, skill, 0)[0];
+      const targetIndex = action?._smartTargets?.[Math.floor(nextRandom(battle) * action._smartTargets.length)] ?? 0;
+      const target = this.targetsForSkill(battle, enemy, skill, targetIndex)[0];
       if (!target || !skill) return;
       if (enemy.mp < Number(skill.mp_cost ?? 0) || enemy.tp < Number(skill.tp_cost ?? 0)) {
         enemy.ap = 0;
@@ -1331,29 +1366,54 @@
       enemy.tp -= Number(skill.tp_cost ?? 0);
       const chant = chantMetadata(skill.note);
       if (chant) {
-        enemy.chant = { skillId: skill.id, targetIndex: target.index, remaining: chant.frames, total: chant.frames };
-        enemy.ap = 0;
+        const total = Math.max(1, chant.base + randomIntInclusive(battle, chant.random));
+        enemy.chant = { skillId: skill.id, targetIndex: target.index, type: chant.type, elapsed: 0, total };
         battle.log.push(`${enemy.name} began casting ${skill.name}.`);
         return;
       }
       for (let repeat = 0; repeat < Math.max(1, Number(skill.repeats) || 1); repeat += 1) for (const resolved of this.targetsForSkill(battle, enemy, skill, target.index)) this.applySkill(state, enemy, resolved, skill);
+      this.applyUserEffect(state, enemy, skill);
       enemy.tp = Math.min(100, enemy.tp + Number(skill.tp_gain ?? 0));
-      enemy.ap = 0;
+      this.finishAction(state, enemy, skill);
       enemy.guarding = false;
     }
     selectEnemyAction(state, enemy, actions) {
-      const forced = actions.filter((action) => action.rating === 10 && this.actionCondition(state, enemy, action));
-      const candidates = forced.length ? forced : actions.filter((action) => action.rating !== 1 && action.rating !== 10 && this.actionCondition(state, enemy, action));
-      return candidates.sort((a, b) => b.rating - a.rating)[0] ?? actions.find((action) => action.skill_id === 1) ?? actions[0];
+      const battle = state.battle;
+      const data = this.database.enemies[enemy.enemyId];
+      let forced = actions.filter((action) => Number(action.rating) === 10 && this.skillUsable(enemy, this.database.skills[action.skill_id]));
+      const exclusions = actions.filter((action) => Number(action.rating) === 1 && this.skillUsable(enemy, this.database.skills[action.skill_id]));
+      if (String(data?.note ?? "").includes("賢くランダム")) forced = shuffleWithBattle(forced, battle);
+      for (const action of forced) {
+        const skill = this.database.skills[action.skill_id];
+        const targets = this.smartTargets(state, enemy, action, skill, exclusions);
+        if (targets.length) return { ...action, _smartTargets: targets };
+      }
+      const candidates = actions.filter((action) => ![1, 10].includes(Number(action.rating)) && this.actionCondition(state, enemy, action) && this.skillUsable(enemy, this.database.skills[action.skill_id]));
+      if (!candidates.length) return actions.find((action) => Number(action.skill_id) === 1) ?? actions[0];
+      const ratingMax = Math.max(...candidates.map((action) => Number(action.rating) || 0));
+      const ratingZero = ratingMax - 3;
+      const weighted = candidates.filter((action) => Number(action.rating) > ratingZero);
+      const sum = weighted.reduce((total, action) => total + Number(action.rating) - ratingZero, 0);
+      let roll = Math.floor(nextRandom(battle) * Math.max(1, sum));
+      for (const action of weighted) {
+        roll -= Number(action.rating) - ratingZero;
+        if (roll < 0) return action;
+      }
+      return weighted.at(-1);
     }
     actionCondition(state, enemy, action) {
       const rate = enemy.hp / Math.max(1, enemy.parameters.mhp);
       const mpRate = enemy.mp / Math.max(1, enemy.parameters.mmp);
-      if (action.condition_type === 0) return true;
-      if (action.condition_type === 2) return rate >= action.condition_param1 && rate <= action.condition_param2;
-      if (action.condition_type === 3) return mpRate >= action.condition_param1 && mpRate <= action.condition_param2;
-      if (action.condition_type === 4) return enemy.states.includes(Number(action.condition_param1));
-      if (action.condition_type === 6) return Boolean(state.switches[action.condition_param1]);
+      const type = Number(action.condition_type);
+      const p1 = Number(action.condition_param1);
+      const p2 = Number(action.condition_param2);
+      if (type === 0) return true;
+      if (type === 1) return p2 === 0 ? enemy.turnCount === p1 : enemy.turnCount > 0 && enemy.turnCount >= p1 && enemy.turnCount % p2 === p1 % p2;
+      if (type === 2) return rate >= p1 && rate <= p2;
+      if (type === 3) return mpRate >= p1 && mpRate <= p2;
+      if (type === 4) return enemy.states.includes(p1);
+      if (type === 5) return Math.max(...state.battle.actors.map((actor) => Number(state.actors[actor.actorId]?.level) || 1)) >= p1;
+      if (type === 6) return Boolean(state.switches[p1]);
       return false;
     }
     resolveChant(state, battler) {
@@ -1363,6 +1423,8 @@
       const skill = this.database.skills[chant.skillId];
       const targets = this.targetsForSkill(battle, battler, skill, chant.targetIndex);
       for (let repeat = 0; repeat < Math.max(1, Number(skill.repeats) || 1); repeat += 1) for (const target of targets) if (target?.hp > 0) this.applySkill(state, battler, target, skill);
+      this.applyUserEffect(state, battler, skill);
+      this.finishAction(state, battler, skill);
     }
     targetsForSkill(battle, subject, skill, targetIndex = 0) {
       const scope = Number(skill?.scope ?? 1);
@@ -1379,14 +1441,14 @@
       return [selected?.hp > 0 ? selected : opponents.find((entry) => entry.hp > 0)].filter(Boolean);
     }
     applySkill(state, subject, target, skill) {
-      if (!target || target.hp <= 0) return null;
+      if (!target || target.hp <= 0 && ![9, 10].includes(Number(skill?.scope))) return null;
       const physical = Number(skill.hit_type ?? 0) === 1;
       const hitChance = Math.max(0, Math.min(1, Number(skill.success_rate ?? 100) / 100 * (physical ? subject.hit ?? 0.95 : 1) * (1 - (target.eva ?? 0))));
       if (nextRandom(state.battle) >= hitChance) {
         state.battle.log.push(`${subject.name} used ${skill.name}, but missed ${target.name}.`);
         return { skillId: skill.id, missed: true };
       }
-      const raw = evaluateFormula(skill.damage?.formula, subject.parameters, target.parameters, state.variables);
+      const raw = evaluateFormula(skill.damage?.formula, { ...subject.parameters, hp: subject.hp, mp: subject.mp, tp: subject.tp }, { ...target.parameters, hp: target.hp, mp: target.mp, tp: target.tp }, state.variables);
       const damageType = Number(skill.damage?.type ?? 0);
       const variance = Math.max(0, Number(skill.damage?.variance ?? 0)) / 100;
       let amount = Math.max(0, Math.floor(Math.abs(raw) * (1 + (nextRandom(state.battle) * 2 - 1) * variance)));
@@ -1394,34 +1456,75 @@
       if (critical) amount = Math.floor(amount * DIFFICULTY_RATES.critical[state.battle?.difficulty ?? 0]);
       const before = target.hp;
       const applied = Math.max(1, target.guarding && [1, 5].includes(damageType) ? Math.floor(amount / 2) : amount);
-      if ([1, 5].includes(damageType)) target.hp = Math.max(0, target.hp - applied);
+      if ([1, 5].includes(damageType)) {
+        const guts = target.states.includes(59) && applied <= 999999 && target.hp <= applied && target.hp > 1;
+        target.hp = guts ? 1 : Math.max(0, target.hp - applied);
+      }
       if ([2, 6].includes(damageType)) target.mp = Math.max(0, target.mp - amount);
-      if (damageType === 3) target.hp = Math.min(target.parameters.mhp, target.hp + amount);
-      if (damageType === 4) target.mp = Math.min(target.parameters.mmp, target.mp + amount);
+      if (damageType === 3) this.applyRecovery(state, target, "hp", amount);
+      if (damageType === 4) this.applyRecovery(state, target, "mp", amount);
       if (damageType === 5) subject.hp = Math.min(subject.parameters.mhp, subject.hp + Math.max(0, before - target.hp));
       if (damageType === 6) subject.mp = Math.min(subject.parameters.mmp, subject.mp + amount);
       for (const effect of skill.effects ?? []) {
-        if (effect.code === 21 && effect.value1 >= 1 && !target.states.includes(effect.data_id)) target.states.push(effect.data_id);
-        if (effect.code === 22 && effect.value1 >= 1) target.states = target.states.filter((id) => id !== effect.data_id);
+        if (effect.code === 11) this.applyRecovery(state, target, "hp", Math.floor(target.parameters.mhp * Number(effect.value1 || 0) + Number(effect.value2 || 0)));
+        if (effect.code === 12) this.applyRecovery(state, target, "mp", Math.floor(target.parameters.mmp * Number(effect.value1 || 0) + Number(effect.value2 || 0)));
+        if (effect.code === 13) target.tp = clamp2(target.tp + Math.floor(100 * Number(effect.value1 || 0) + Number(effect.value2 || 0)), 0, 100);
+        if (effect.code === 21 && nextRandom(state.battle) < Math.max(0, Number(effect.value1) || 0) && !target.states.includes(effect.data_id)) {
+          target.states.push(effect.data_id);
+          this.applyStateApControl(state, target, Number(effect.data_id));
+        }
+        if (effect.code === 22 && nextRandom(state.battle) < Math.max(0, Number(effect.value1) || 0)) target.states = target.states.filter((id) => id !== effect.data_id);
       }
-      if (target.hp <= 0) this.tryAutoResurrection(target);
-      if (target.chant && target.hp < before) {
-        target.chant = null;
-        state.battle.log.push(`${target.name}'s casting was interrupted.`);
-      }
+      if (target.hp <= 0) this.tryAutoResurrection(state, target);
       this.syncActor(state, target);
       const dealt = Math.max(0, before - target.hp);
       state.battle.log.push(`${critical ? "Critical! " : ""}${subject.name} used ${skill.name}: ${dealt} damage to ${target.name}.`);
       return { skillId: skill.id, subject: subject.name, target: target.name, damage: dealt, hp: target.hp, critical };
     }
-    tryAutoResurrection(target) {
-      const stateId = target.states.find((id) => /<自動蘇生:/.test(String(this.database.states[id]?.note ?? "")));
-      if (!stateId) return false;
-      const match = /<自動蘇生:([^,>]+),/.exec(String(this.database.states[stateId]?.note ?? ""));
-      const value = Number(match?.[1] ?? 0);
-      target.hp = Math.max(1, value > 100 ? value : Math.floor(target.parameters.mhp * value / 100));
-      target.states = target.states.filter((id) => id !== stateId);
-      return true;
+    tryAutoResurrection(state, target) {
+      for (const object of this.featureObjects(state, target)) {
+        for (const match of String(object.note ?? "").matchAll(/<自動蘇生[：:]([^>]+)>/g)) {
+          const [hpExpression, animationText, chanceExpression = "100"] = match[1].split(/\s*,\s*/);
+          const chance = recoveryExpression(chanceExpression, target, state.variables);
+          if (chance <= nextRandom(state.battle) * 100) continue;
+          const hp = Math.floor(recoveryExpression(hpExpression, target, state.variables));
+          if (hp <= 0) continue;
+          target.hp = clamp2(hp, 1, target.parameters.mhp);
+          target.resurrectionAnimationId = Number(animationText) || 0;
+          this.breakResurrectionFeature(state, target, object);
+          state.battle.log.push(`${target.name} resurrected with ${target.hp} HP.`);
+          return true;
+        }
+      }
+      return false;
+    }
+    breakResurrectionFeature(state, target, feature) {
+      const match = /<自動蘇生破損[：:]([^>]+)>/.exec(String(feature.note ?? ""));
+      if (!match || recoveryExpression(match[1], target, state.variables) <= nextRandom(state.battle) * 100) return;
+      const stateId = target.states.find((id) => this.database.states[id] === feature);
+      if (stateId) target.states = target.states.filter((id) => id !== stateId);
+      if (target.side === "actor") {
+        const actor = state.actors[target.actorId];
+        const equip = actor.equips.find((entry) => entry.id && this.party.data(entry.kind, entry.id) === feature);
+        if (equip) Object.assign(equip, { id: 0 });
+      }
+    }
+    applyRecovery(state, target, kind, amount) {
+      if (amount <= 0) return;
+      const notes = this.featureNotes(state, target);
+      const prefix = kind === "hp" ? "HP" : "MP";
+      const voidChance = notes.reduce((sum, note) => sum + noteNumber(note, new RegExp(`<${prefix}回復無効[：:](\\d+)>`), 0), 0);
+      const reverseChance = notes.reduce((sum, note) => sum + noteNumber(note, new RegExp(`<${prefix}回復反転[：:](\\d+)>`), 0), 0);
+      if (voidChance > nextRandom(state.battle) * 100) return;
+      const reverse3 = reverseChance > nextRandom(state.battle) * 100;
+      const maximum = kind === "hp" ? target.parameters.mhp : target.parameters.mmp;
+      target[kind] = reverse3 ? Math.max(0, target[kind] - amount) : Math.min(maximum, target[kind] + amount);
+    }
+    applyUserEffect(state, subject, object) {
+      const match = /<使用者効果\s*(\d+)\s*>/.exec(String(object?.note ?? ""));
+      if (!match || subject.hp <= 0) return;
+      const reaction = this.database.skills[Number(match[1])];
+      if (reaction) this.applySkill(state, subject, subject, reaction);
     }
     escape(state) {
       const battle = state.battle;
@@ -1432,9 +1535,10 @@
       if (battle.escapeAttempts > 1 || actorAgi >= enemyAgi) {
         battle.result = "escape";
         battle.phase = "finished";
+        this.applyBattleEndRecovery(state, battle);
         return { accepted: true, escaped: true };
       }
-      for (const actor of battle.actors) actor.ap = Math.floor(MAX_AP * 0.1);
+      for (const actor of battle.actors) actor.ap = this.startAp(state, actor, 2, battle);
       battle.phase = "running";
       battle.log.push("Escape failed.");
       return { accepted: true, escaped: false };
@@ -1458,6 +1562,7 @@
       } else if (battle.actors.every((entry) => entry.hp <= 0)) {
         battle.result = battle.canLose ? "lose" : "gameover";
         battle.phase = "finished";
+        this.applyBattleEndRecovery(state, battle);
       }
       return battle.result;
     }
@@ -1471,12 +1576,17 @@
       });
     }
     applyBattleEndRecovery(state, battle) {
+      if (battle.endRecoveryApplied) return;
+      battle.endRecoveryApplied = true;
       for (const battler of battle.actors) {
         const actor = state.actors[battler.actorId];
-        const notes = [this.database.actors[battler.actorId]?.note, ...actor.equips.map((entry) => entry.id ? this.party.data(entry.kind, entry.id)?.note : ""), ...actor.states.map((id) => this.database.states[id]?.note)].join("\n");
-        for (const match of notes.matchAll(/<戦闘終了後HP回復:(\d+)>/g)) actor.hp = Math.min(this.party.parameters(state, battler.actorId).mhp, actor.hp + Number(match[1]));
-        for (const match of notes.matchAll(/<戦闘終了後MP回復:(\d+)>/g)) actor.mp = Math.min(this.party.parameters(state, battler.actorId).mmp, actor.mp + Number(match[1]));
-        for (const match of notes.matchAll(/<戦闘終了後ステート解除:(\d+)>/g)) actor.states = actor.states.filter((id) => id !== Number(match[1]));
+        const notes = this.featureNotes(state, battler).join("\n");
+        const parameters = this.party.parameters(state, battler.actorId);
+        for (const match of notes.matchAll(/<戦闘終了後HP回復[：:]([^>]+)>/g)) actor.hp = clamp2(actor.hp + Math.floor(recoveryExpression(match[1], { ...battler, parameters }, state.variables)), 0, parameters.mhp);
+        for (const match of notes.matchAll(/<戦闘終了後MP回復[：:]([^>]+)>/g)) actor.mp = clamp2(actor.mp + Math.floor(recoveryExpression(match[1], { ...battler, parameters }, state.variables)), 0, parameters.mmp);
+        for (const match of notes.matchAll(/<戦闘終了後TP回復[：:]([^>]+)>/g)) actor.tp = clamp2(actor.tp + Math.floor(recoveryExpression(match[1], { ...battler, parameters }, state.variables)), 0, 100);
+        for (const match of notes.matchAll(/<戦闘終了後ステート解除[：:]([^>]+)>/g)) actor.states = actor.states.filter((id) => id !== Math.floor(recoveryExpression(match[1], { ...battler, parameters }, state.variables)));
+        Object.assign(battler, { hp: actor.hp, mp: actor.mp, tp: actor.tp, states: [...actor.states] });
       }
     }
     syncActor(state, battler) {
@@ -1484,14 +1594,100 @@
       const actor = state.actors[battler.actorId];
       Object.assign(actor, { hp: battler.hp, mp: battler.mp, tp: battler.tp, states: [...battler.states] });
     }
+    startAp(state, battler, mode, battle) {
+      const rates = mode === 1 ? START_AP_RATES.preemptive : mode === -1 ? START_AP_RATES.surprise : mode === 2 ? START_AP_RATES.escapeFailed : START_AP_RATES.normal;
+      let base = rates[0];
+      let range = rates[1];
+      for (const note of this.featureNotes(state, battler)) {
+        const modeText = mode === 2 ? null : String(mode);
+        const pattern = modeText == null ? /<逃走ＡＰ=\[(\-?\d+),(\-?\d+)\]>/g : new RegExp(`<開始ＡＰ=${modeText.replace("-", "\\-")},\\[(\\-?\\d+),(\\-?\\d+)\\]>`, "g");
+        for (const match of note.matchAll(pattern)) {
+          base += Number(match[1]);
+          range += Number(match[2]);
+        }
+      }
+      base = clamp2(base, 0, 100);
+      range = clamp2(range, 0, 100);
+      return Math.floor(MAX_AP * (base + randomIntInclusive(battle, range)) / 100);
+    }
+    apGainPoint(state, battler, chanting) {
+      let plus = 0;
+      let agiRate = 1;
+      let frameRate = 1;
+      const type = battler.chant?.type;
+      for (const note of this.featureNotes(state, battler)) {
+        frameRate *= notePercent(note, /<フレーム速度=(\d+)>/, 1);
+        frameRate *= notePercent(note, chanting ? /<詠唱フレーム速度=(\d+)>/ : /<ＡＰフレーム速度=(\d+)>/, 1);
+        if (!chanting || chantTypeIncluded(note, type)) {
+          plus += noteNumber(note, chanting ? /<詠唱敏捷=(\-?\d+)>/ : /<ＡＰ敏捷=(\-?\d+)>/, 0);
+          agiRate *= notePercent(note, chanting ? /<詠唱敏捷率=(\d+)>/ : /<ＡＰ敏捷率=(\d+)>/, 1);
+        }
+      }
+      return Math.max(0, (Math.max(5, (Number(battler.parameters.agi) + plus) * agiRate) + FRAME_AP_GAIN) * frameRate);
+    }
+    finishAction(state, battler, object) {
+      const next = nextApMetadata(object?.note);
+      battler.ap = Math.floor(MAX_AP * (next.base + randomIntInclusive(state.battle, next.random)) / 100);
+      battler.turnCount = Number(battler.turnCount ?? 1) + 1;
+      battler.chant = null;
+      this.syncActor(state, battler);
+    }
+    actorCommands(state, battler) {
+      const terms = this.database.system?.terms?.commands ?? [];
+      const definitions = [{ name: terms[2] || "Attack", symbol: "attack", ext: null }];
+      const features = this.featureObjects(state, battler).flatMap((object) => object?.features ?? []);
+      const sealed = new Set(features.filter((feature) => Number(feature.code) === 42).map((feature) => Number(feature.data_id)));
+      const skillTypes = [...new Set(features.filter((feature) => Number(feature.code) === 41).map((feature) => Number(feature.data_id)))].filter((id) => !sealed.has(id)).sort((a, b) => a - b);
+      for (const id of skillTypes) definitions.push({ name: this.database.system?.skill_types?.[id] || `${terms[5] || "Skill"} ${id}`, symbol: "skill", ext: id });
+      definitions.push({ name: terms[3] || "Defend", symbol: "guard", ext: null }, { name: terms[4] || "Item", symbol: "item", ext: null }, { name: terms[1] || "Escape", symbol: "escape", ext: null });
+      return definitions;
+    }
+    featureObjects(state, battler) {
+      if (battler.side === "enemy") return [this.database.enemies[battler.enemyId], ...battler.states.map((id) => this.database.states[id])].filter(Boolean);
+      const actor = state.actors[battler.actorId];
+      const data = this.database.actors[battler.actorId];
+      return [data, this.database.classes[data?.class_id], ...(actor?.equips ?? []).map((entry) => entry.id ? this.party.data(entry.kind, entry.id) : null), ...(actor?.states ?? []).map((id) => this.database.states[id])].filter(Boolean);
+    }
+    featureNotes(state, battler) {
+      return this.featureObjects(state, battler).map((object) => String(object.note ?? ""));
+    }
+    skillUsable(battler, skill) {
+      return Boolean(skill) && battler.hp > 0 && battler.mp >= Number(skill.mp_cost ?? 0) && battler.tp >= Number(skill.tp_cost ?? 0);
+    }
+    smartTargets(state, enemy, action, skill, exclusions) {
+      const scope = Number(skill?.scope ?? 0);
+      const targets = scope >= 1 && scope <= 6 ? state.battle.actors : scope >= 7 && scope <= 10 ? state.battle.enemies : [];
+      if (!targets.length || ![2, 3, 4].includes(Number(action.condition_type))) return [];
+      return targets.filter((target) => target.hp > 0 && targetCondition(target, action)).filter((target) => exclusions.every((blocked) => !targetCondition(target, blocked))).map((target) => target.index);
+    }
+    applyStateApControl(state, target, stateId) {
+      const note = String(this.database.states[stateId]?.note ?? "");
+      if (target.chant && /<詠唱キャンセル>/.test(note)) {
+        target.chant = null;
+        state.battle.log.push(`${target.name}'s casting was interrupted.`);
+      }
+      const chant = /<詠唱増減=(0|1),\[(\-?\d+),(\d+)\]>/.exec(note);
+      if (target.chant && chant) {
+        const value = target.chant.total * (Number(chant[2]) + randomIntInclusive(state.battle, Number(chant[3]))) / 100;
+        target.chant.elapsed = clamp2(chant[1] === "0" ? value : target.chant.elapsed + value, 0, target.chant.total);
+      }
+      const ap = /<ＡＰ増減=(0|1),\[(\-?\d+),(\d+)\]>/.exec(note);
+      if (!target.chant && ap) {
+        const value = MAX_AP * (Number(ap[2]) + randomIntInclusive(state.battle, Number(ap[3]))) / 100;
+        target.ap = clamp2(ap[1] === "0" ? value : target.ap + value, 0, MAX_AP);
+      }
+    }
   };
   function chantMetadata(note = "") {
-    const match = /<(?:(?:詠唱)|chant)[：:]\s*(\d+)(?:\s*,\s*(\d+))?>/i.exec(String(note));
+    const source = String(note);
+    const exact = /<詠唱=(\d+),\[(\-?\d+),(\d+)\]>/.exec(source);
+    if (exact) return { type: Number(exact[1]), base: Number(exact[2]), random: Number(exact[3]), frames: Math.max(1, Number(exact[2]) + Math.floor(Number(exact[3]) / 2)) };
+    const match = /<(?:(?:詠唱)|chant)[：:]\s*(\d+)(?:\s*,\s*(\d+))?>/i.exec(source);
     if (!match) return null;
-    return { frames: Math.max(1, Number(match[1]) + Math.floor(Number(match[2] ?? 0) / 2)) };
+    return { type: 0, base: Number(match[1]), random: Number(match[2] ?? 0), frames: Math.max(1, Number(match[1]) + Math.floor(Number(match[2] ?? 0) / 2)) };
   }
   function evaluateFormula(formula = "0", subject, target, variables = {}) {
-    let expression = String(formula).replace(/\ba\.(mhp|mmp|atk|def|mat|mdf|agi|luk)\b/g, (_, key) => String(Number(subject[key]) || 0)).replace(/\bb\.(mhp|mmp|atk|def|mat|mdf|agi|luk)\b/g, (_, key) => String(Number(target[key]) || 0)).replace(/\bv\[(\d+)\]/g, (_, id) => String(Number(variables[id]) || 0));
+    let expression = String(formula).replace(/\ba\.(mhp|mmp|atk|def|mat|mdf|agi|luk)\b/g, (_, key) => String(Number(subject[key]) || 0)).replace(/\bb\.(mhp|mmp|atk|def|mat|mdf|agi|luk)\b/g, (_, key) => String(Number(target[key]) || 0)).replace(/\ba\.(hp|mp|tp)\b/g, (_, key) => String(Number(subject[key]) || 0)).replace(/\bb\.(hp|mp|tp)\b/g, (_, key) => String(Number(target[key]) || 0)).replace(/\bv\[(\d+)\]/g, (_, id) => String(Number(variables[id]) || 0));
     if (!/^[\d\s+\-*/%().]+$/.test(expression)) return 0;
     try {
       return Number(Function(`"use strict"; return (${expression});`)()) || 0;
@@ -1522,6 +1718,62 @@
     if (battle) battle.rngSeed = value >>> 0;
     return (value >>> 0) / 4294967296;
   }
+  function randomIntInclusive(battle, max) {
+    return Math.floor(nextRandom(battle) * (Math.max(0, Number(max) || 0) + 1));
+  }
+  function nextApMetadata(note = "") {
+    const match = /<行動後ＡＰ=\[(\d+),(\d+)\]>/.exec(String(note));
+    return match ? { base: Number(match[1]), random: Number(match[2]) } : { base: 0, random: 0 };
+  }
+  function attackSkillPriority(skill) {
+    const match = /<攻撃ID優先度変更[：:](\-?\d+)>/.exec(String(skill?.note ?? ""));
+    return Number(match?.[1]) || 0;
+  }
+  function recoveryExpression(source, battler, variables = {}) {
+    const parameters = battler?.parameters ?? {};
+    let expression = String(source).replace(/\bself\.(mhp|mmp|hp|mp|tp|max_tp)\b/g, (_, key) => String(key === "max_tp" ? 100 : Number(parameters[key] ?? battler?.[key]) || 0)).replace(/\b(mhp|mmp|max_tp|hp|mp|tp)\b/g, (_, key) => String(key === "max_tp" ? 100 : Number(parameters[key] ?? battler?.[key]) || 0)).replace(/\$game_variables\[(\d+)\]/g, (_, id) => String(Number(variables[id]) || 0));
+    if (!/^[\d\s+\-*/%().]+$/.test(expression)) return 0;
+    try {
+      return Number(Function(`"use strict"; return (${expression});`)()) || 0;
+    } catch {
+      return 0;
+    }
+  }
+  function noteNumber(note, pattern, fallback) {
+    const match = pattern.exec(note);
+    return match ? Number(match[1]) : fallback;
+  }
+  function notePercent(note, pattern, fallback) {
+    const match = pattern.exec(note);
+    return match ? Number(match[1]) * 0.01 : fallback;
+  }
+  function chantTypeIncluded(note, type) {
+    const match = /<詠唱敏捷タイプ=\[([\d,]+)\]>/.exec(note);
+    return !match || match[1].split(",").map(Number).includes(Number(type));
+  }
+  function targetCondition(target, action) {
+    const type = Number(action.condition_type);
+    const p1 = Number(action.condition_param1);
+    const p2 = Number(action.condition_param2);
+    if (type === 2) {
+      const rate = target.hp / Math.max(1, target.parameters.mhp);
+      return rate >= p1 && rate <= p2;
+    }
+    if (type === 3) {
+      const rate = target.mp / Math.max(1, target.parameters.mmp);
+      return rate >= p1 && rate <= p2;
+    }
+    if (type === 4) return target.states.includes(p1);
+    return false;
+  }
+  function shuffleWithBattle(entries, battle) {
+    const result = [...entries];
+    for (let index = result.length - 1; index > 0; index -= 1) {
+      const other = Math.floor(nextRandom(battle) * (index + 1));
+      [result[index], result[other]] = [result[other], result[index]];
+    }
+    return result;
+  }
   function pickAlive(entries, battle) {
     const alive = entries.filter((entry) => entry.hp > 0);
     return alive[Math.floor(nextRandom(battle) * alive.length)];
@@ -1529,8 +1781,72 @@
   function average(values) {
     return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
   }
+  function clamp2(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
-  // runtime/map/event-system.js
+  // sillytavern-port/runtime/map/event-mobility.js
+  var EVENT_MOBILITY = Object.freeze({
+    STATIC_PROP: "STATIC_PROP",
+    STATIC_DECORATION: "STATIC_DECORATION",
+    INTERACTABLE_STATIC: "INTERACTABLE_STATIC",
+    AUTONOMOUS_RANDOM: "AUTONOMOUS_RANDOM",
+    AUTONOMOUS_APPROACH: "AUTONOMOUS_APPROACH",
+    CUSTOM_ROUTE: "CUSTOM_ROUTE",
+    SYMBOL_ENEMY: "SYMBOL_ENEMY",
+    CUTSCENE_ACTOR: "CUTSCENE_ACTOR",
+    OTHER: "OTHER"
+  });
+  var OBJECT_GRAPHIC = /^(?:!|14遺体|Damage|Door|Gate|Chest)|(?:corpse|blood|bottle|遺体|死体|血|瓶)/i;
+  function symbolIdFromMoveRoute(page) {
+    for (const command of page?.move_route?.list ?? []) {
+      if (Number(command.code) !== 45) continue;
+      const match = /(?:^|\s)enable_symbol_encount\((\d+)\)/.exec(String(command.parameters?.[0] ?? ""));
+      if (match) return Number(match[1]);
+    }
+    return null;
+  }
+  function classifyEventPage(event, page) {
+    if (!page) return { classification: EVENT_MOBILITY.OTHER, evidence: ["missing page"] };
+    const moveType = Number(page.move_type) || 0;
+    const graphic = page.graphic ?? {};
+    const name = String(graphic.character_name ?? "");
+    const tileId = Number(graphic.tile_id) || 0;
+    const trigger = Number(page.trigger);
+    const symbolId = symbolIdFromMoveRoute(page);
+    const routeCodes = (page.move_route?.list ?? []).map((command) => Number(command.code));
+    const eventCodes = (page.list ?? []).map((command) => Number(command.code));
+    const hasEventBody = eventCodes.some((code) => code !== 0);
+    const hasForcedRoute = eventCodes.includes(205);
+    const evidence = [
+      `move_type=${moveType}`,
+      `trigger=${Number.isFinite(trigger) ? trigger : "none"}`,
+      `graphic=${name || (tileId ? `tile:${tileId}` : "none")}`,
+      `route_codes=[${routeCodes.join(",")}]`
+    ];
+    if (symbolId != null) return { classification: EVENT_MOBILITY.SYMBOL_ENEMY, symbolId, evidence: [...evidence, `enable_symbol_encount(${symbolId})`] };
+    if (moveType === 1) return { classification: EVENT_MOBILITY.AUTONOMOUS_RANDOM, symbolId: null, evidence };
+    if (moveType === 2) return { classification: EVENT_MOBILITY.AUTONOMOUS_APPROACH, symbolId: null, evidence };
+    if (moveType === 3) return { classification: EVENT_MOBILITY.CUSTOM_ROUTE, symbolId: null, evidence };
+    if ((trigger === 3 || trigger === 4) && (name || hasForcedRoute)) return { classification: EVENT_MOBILITY.CUTSCENE_ACTOR, symbolId: null, evidence: [...evidence, hasForcedRoute ? "event command 205" : `trigger=${trigger}`] };
+    if (tileId > 0 || OBJECT_GRAPHIC.test(name)) {
+      const classification = hasEventBody && trigger === 0 ? EVENT_MOBILITY.INTERACTABLE_STATIC : EVENT_MOBILITY.STATIC_PROP;
+      return { classification, symbolId: null, evidence: [...evidence, tileId > 0 ? "tile graphic" : "object/corpse graphic"] };
+    }
+    if (hasEventBody && trigger === 0) return { classification: EVENT_MOBILITY.INTERACTABLE_STATIC, symbolId: null, evidence: [...evidence, "action-trigger event body"] };
+    if (name) return { classification: EVENT_MOBILITY.STATIC_DECORATION, symbolId: null, evidence: [...evidence, "visible fixed page"] };
+    return { classification: EVENT_MOBILITY.OTHER, symbolId: null, evidence: [...evidence, hasEventBody ? "invisible event controller" : "empty page"] };
+  }
+  function isAutonomousMobility(classification) {
+    return [
+      EVENT_MOBILITY.AUTONOMOUS_RANDOM,
+      EVENT_MOBILITY.AUTONOMOUS_APPROACH,
+      EVENT_MOBILITY.CUSTOM_ROUTE,
+      EVENT_MOBILITY.SYMBOL_ENEMY
+    ].includes(classification);
+  }
+
+  // sillytavern-port/runtime/map/event-system.js
   var DIRECTIONS = Object.freeze({
     1: [-1, 1],
     2: [0, 1],
@@ -1601,21 +1917,22 @@
       runtime.locked = false;
       runtime.symbolForming = false;
       runtime.symbolId = null;
+      delete runtime.motion;
+      runtime.realX = runtime.x;
+      runtime.realY = runtime.y;
       if (pageIndex < 0) {
         Object.assign(runtime, { through: true, trigger: null, priority: 0, transparent: true });
         return null;
       }
       const page = event.pages[pageIndex];
       const graphic = page.graphic ?? {};
-      if (runtime.originalDirection == null || runtime.originalDirection !== graphic.direction) {
-        runtime.direction = Number(graphic.direction) || 2;
-        runtime.originalDirection = runtime.direction;
-        runtime.prelockDirection = 0;
-      }
-      if (runtime.originalPattern == null || runtime.originalPattern !== graphic.pattern) {
-        runtime.pattern = Number(graphic.pattern) || 0;
-        runtime.originalPattern = runtime.pattern;
-      }
+      runtime.direction = Number(graphic.direction) || 2;
+      runtime.originalDirection = runtime.direction;
+      runtime.prelockDirection = 0;
+      runtime.pattern = Number(graphic.pattern) || 0;
+      runtime.originalPattern = runtime.pattern;
+      runtime.graphic = structuredClone(graphic);
+      const mobility = classifyEventPage(event, page);
       Object.assign(runtime, {
         moveType: Number(page.move_type) || 0,
         moveSpeed: Number(page.move_speed) || 0,
@@ -1629,7 +1946,9 @@
         transparent: false,
         moveRoute: page.move_route ?? null,
         uninhibited: isUninhibited(event, page),
-        originOpacity: Number(runtime.originOpacity ?? runtime.opacity ?? 255)
+        originOpacity: Number(runtime.originOpacity ?? runtime.opacity ?? 255),
+        mobilityClass: mobility.classification,
+        mobilityEvidence: mobility.evidence
       });
       const symbolId = symbolIdFromPage(page);
       if (symbolId != null && SYMBOL_SETTINGS[symbolId]) {
@@ -1673,6 +1992,7 @@
       }
     }
     updateAutonomousMovement(event, runtime) {
+      if (!isAutonomousMobility(runtime.mobilityClass)) return;
       if (runtime.moveType === 1) {
         const roll = this.randomInt(6);
         if (roll <= 1) this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)]);
@@ -1754,7 +2074,7 @@
         else if (runtime.symbolForming && !reacting) this.endForming(event, runtime, setting, "distance");
         runtime.symbolForming = reacting;
       }
-      runtime.opacity = setting.visibilityDistance === 0 ? runtime.originOpacity : clamp2(runtime.originOpacity - 50 * (this.distanceToPlayer(runtime) - setting.visibilityDistance), 0, 255);
+      runtime.opacity = setting.visibilityDistance === 0 ? runtime.originOpacity : clamp3(runtime.originOpacity - 50 * (this.distanceToPlayer(runtime) - setting.visibilityDistance), 0, 255);
     }
     updateSymbolMovement(event, runtime) {
       const setting = SYMBOL_SETTINGS[runtime.symbolId];
@@ -2023,12 +2343,7 @@
     return 30 * (5 - Number(moveFrequency ?? 3));
   }
   function symbolIdFromPage(page) {
-    for (const command of page?.move_route?.list ?? []) {
-      if (command.code !== 45) continue;
-      const match = /(?:^|\s)enable_symbol_encount\((\d+)\)/.exec(String(command.parameters?.[0] ?? ""));
-      if (match) return Number(match[1]);
-    }
-    return null;
+    return symbolIdFromMoveRoute(page);
   }
   function activePageIndex(engine, event) {
     for (let index = (event.pages?.length ?? 0) - 1; index >= 0; index -= 1) if (engine.conditionsMet(event.pages[index].condition, event.id)) return index;
@@ -2065,11 +2380,11 @@
   function approach(current, target, distance) {
     return current < target ? Math.min(current + distance, target) : current > target ? Math.max(current - distance, target) : target;
   }
-  function clamp2(value, min, max) {
+  function clamp3(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  // runtime/core/game-engine.js
+  // sillytavern-port/runtime/core/game-engine.js
   var GameEngine = class {
     constructor({ loader, renderer, saves, status, onSceneChange = () => {
     }, onExitRequest = () => {
@@ -2800,8 +3115,11 @@
       const movement = this.input.takeDirection();
       if (movement?.[1]) battle.selectedCommand = cycle(battle.selectedCommand, Math.sign(movement[1]), battle.commands.length);
       if (!this.input.takeConfirm()) return;
-      const symbol = ["attack", "skill", "item", "guard", "escape"][battle.selectedCommand];
-      const payload = symbol === "skill" ? { skillId: this.state.actors[battle.actors[battle.activeActor].actorId].skills[0] ?? 1 } : symbol === "item" ? { itemId: this.party.inventoryEntries(this.state, ["item"])[0]?.id } : {};
+      const definition = battle.commandDefinitions?.[battle.selectedCommand] ?? { symbol: ["attack", "skill", "item", "guard", "escape"][battle.selectedCommand] };
+      const symbol = definition.symbol;
+      const active = battle.actors[battle.activeActor];
+      const actor = this.state.actors[active.actorId];
+      const payload = symbol === "skill" ? { skillId: actor.skills.map((id) => this.database.skills[id]).find((skill) => Number(skill?.stype_id) === Number(definition.ext) && active.mp >= Number(skill.mp_cost ?? 0) && active.tp >= Number(skill.tp_cost ?? 0))?.id } : symbol === "item" ? { itemId: this.party.inventoryEntries(this.state, ["item"])[0]?.id } : {};
       const result = this.combat.actorCommand(this.state, symbol, battle.selectedTarget, payload);
       if (!result.accepted) this.status(`Battle command unavailable: ${result.reason ?? "invalid"}.`);
     }
@@ -3112,8 +3430,8 @@
       if (!this.map || !this.state) return;
       const realX = Number.isFinite(this.state.realX) ? this.state.realX : this.state.x;
       const realY = Number.isFinite(this.state.realY) ? this.state.realY : this.state.y;
-      this.state.displayX = clamp3(realX - 9.5, 0, Math.max(0, Number(this.map.width) - 20));
-      this.state.displayY = clamp3(realY - 7, 0, Math.max(0, Number(this.map.height) - 15));
+      this.state.displayX = clamp4(realX - 9.5, 0, Math.max(0, Number(this.map.width) - 20));
+      this.state.displayY = clamp4(realY - 7, 0, Math.max(0, Number(this.map.height) - 15));
     }
     updatePlaytime(deltaSeconds = 1 / 60) {
       if (!this.state?.system || this.state.scene === "TITLE") return;
@@ -3235,7 +3553,8 @@
       return Object.values(map?.events ?? {}).flatMap((event) => {
         const page = this.activePage(event);
         const override = this.state.eventOverrides?.[`${this.state.mapId},${event.id}`] ?? {};
-        const graphic = override.graphic ?? page?.graphic;
+        const runtime = map === this.map ? this.events?.refresh?.(event) : null;
+        const graphic = runtime?.graphic ?? override.graphic ?? page?.graphic;
         if (!graphic?.character_name || override.transparent) return [];
         const position = routePosition(override, event);
         return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, blendType: override.blendType ?? 0, priority: override.priority ?? page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];
@@ -3421,7 +3740,7 @@
   function clampIndex(value, length) {
     return length ? Math.max(0, Math.min(length - 1, Number(value) || 0)) : 0;
   }
-  function clamp3(value, min, max) {
+  function clamp4(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
   function approach2(current, target, distance) {
@@ -3447,7 +3766,7 @@
     return { activeElement: active?.tagName ?? null, gameHasFocus: active === stage, inputCaptureEnabled: !active || !/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName) };
   }
 
-  // runtime/streaming/prefetch-manager.js
+  // sillytavern-port/runtime/streaming/prefetch-manager.js
   var PREFETCH_PRIORITY = Object.freeze({ CRITICAL: 0, HIGH: 1, NORMAL: 2, LOW: 3, IDLE: 4 });
   var DEFAULT_TIMEOUTS = Object.freeze({ json: 1e4, image: 18e3, audio: 3e4, binary: 18e3 });
   var PrefetchManager = class {
@@ -4070,7 +4389,7 @@
     return [...result.values()];
   }
 
-  // runtime/assets/asset-resolver.js
+  // sillytavern-port/runtime/assets/asset-resolver.js
   var LFS_SIGNATURE = "version https://git-lfs.github.com/spec/v1";
   var AssetError = class extends Error {
     constructor(code, message, diagnostics = {}) {
@@ -4305,7 +4624,7 @@
     return /\.(?:png|jpe?g)$/i.test(path) ? "image" : /\.(?:ogg|wav|mp3)$/i.test(path) ? "audio" : "binary";
   }
 
-  // runtime/data/loader.js
+  // sillytavern-port/runtime/data/loader.js
   var DataLoader = class {
     constructor(dataBaseUrl, runtimeBaseUrl, assetConfig, progress = () => {
     }, onDiagnostic = () => {
@@ -4443,8 +4762,8 @@
     return ["127.0.0.1", "localhost", "[::1]"].includes(new URL(url).hostname);
   }
 
-  // runtime/render/canvas-renderer.js
-  var TILE_ID = { A5: 1536, A1: 2048, A2: 2816, A3: 4352, A4: 5888 };
+  // sillytavern-port/runtime/render/canvas-renderer.js
+  var TILE_ID = Object.freeze({ B: 0, C: 256, D: 512, E: 768, A5: 1536, A1: 2048, A2: 2816, A3: 4352, A4: 5888, MAX: 8192 });
   var CanvasRenderer = class {
     constructor(stage, loader, engineConfig) {
       this.stage = stage;
@@ -4584,16 +4903,18 @@
     async setBattle(battle) {
       const battleback1Path = battle.battleback1 ? `Graphics/Battlebacks1/${battle.battleback1}.png` : null;
       const battleback2Path = battle.battleback2 ? `Graphics/Battlebacks2/${battle.battleback2}.png` : null;
-      const [battleback1, battleback2] = await Promise.all([
+      const [battleback1, battleback2, mist] = await Promise.all([
         battleback1Path ? this.loader.image(battleback1Path, { optional: true }) : null,
-        battleback2Path ? this.loader.image(battleback2Path, { optional: true }) : null
+        battleback2Path ? this.loader.image(battleback2Path, { optional: true }) : null,
+        battle.mistEnabled ? this.loader.image("Graphics/System/mist.png", { optional: true }) : null
       ]);
       const enemies = /* @__PURE__ */ new Map();
       await Promise.all([...new Set(battle.enemies.map((enemy) => enemy.battlerName).filter(Boolean))].map(async (name) => {
         const image = await this.loader.image(`Graphics/Battlers/${name}.png`);
         enemies.set(name, image);
       }));
-      this.battleGraphics = { battleback1, battleback2, battleback1Path, battleback2Path, enemies };
+      await Promise.all([...new Set(battle.actors.map((actor) => actor.faceName).filter(Boolean))].map((name) => this.prepareFace(name)));
+      this.battleGraphics = { battleback1, battleback2, battleback1Path, battleback2Path, enemies, mist };
     }
     clearBattle() {
       this.battleGraphics = null;
@@ -4655,15 +4976,11 @@
         this.activeFrame.visibleRange = { startX: window2.startX, endX: window2.endX, startY: window2.startY, endY: window2.endY, marginTiles: window2.margin };
       }
       const upper = [];
-      for (let z = 0; z < 3; z += 1) for (let mapY = window2.startY; mapY <= window2.endY; mapY += 1) for (let mapX = window2.startX; mapX <= window2.endX; mapX += 1) {
-        const dx = mapX * this.tileSize - window2.pixelX;
-        const dy = mapY * this.tileSize - window2.pixelY;
-        const tileId = this.tileAt(mapX, mapY, z);
-        const args = [tileId, dx, dy];
-        if (this.isUpper(tileId)) upper.push(args);
-        else this.drawTile(...args);
-      }
+      this.drawMapLayer(0, window2, upper);
+      this.drawMapLayer(1, window2, upper);
       this.drawShadows(window2);
+      this.drawTableEdges(window2);
+      this.drawMapLayer(2, window2, upper);
       const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: "event" }));
       if (!state.transparent) sprites.push({ x: playerX, y: playerY, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: "player" });
       sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === "event" ? -1 : 1));
@@ -4966,39 +5283,60 @@
       c.fillRect(0, 0, this.width, this.height);
       if (this.battleGraphics?.battleback1) c.drawImage(this.battleGraphics.battleback1, 0, 0, this.width, this.height);
       if (this.battleGraphics?.battleback2) c.drawImage(this.battleGraphics.battleback2, 0, 0, this.width, this.height);
+      if (battle?.mistEnabled && this.battleGraphics?.mist) this.drawBattleMist(battle, this.battleGraphics.mist);
       for (const enemy of battle?.enemies ?? []) {
         if (enemy.hp <= 0) continue;
         const image = this.battleGraphics?.enemies?.get(enemy.battlerName);
         if (!image) continue;
-        const scale = Math.min(1, 260 / Math.max(image.width, image.height));
-        const width = image.width * scale;
-        const height = image.height * scale;
-        c.drawImage(image, enemy.x - width / 2, enemy.y - height, width, height);
+        const baseScale = Math.min(1, 260 / Math.max(image.width, image.height));
+        const breath = 1 + Math.sin(Math.PI * 2 * (battle.frames + enemy.breathOffset) / Math.max(1, enemy.breathPeriod)) * 75e-4 + 75e-4;
+        const perspective = Math.max(0.25, Number(enemy.perspectiveScale) || 1);
+        const width = image.width * baseScale * perspective;
+        const height = image.height * baseScale * perspective * breath;
+        c.save();
+        c.translate(enemy.x, enemy.y);
+        c.scale(enemy.mirror ? -1 : 1, 1);
+        c.drawImage(image, -width / 2, -height, width, height);
+        c.restore();
         c.fillStyle = "#17080a";
-        c.fillRect(enemy.x - 55, enemy.y + 4, 110, 7);
-        c.fillStyle = "#8d1f29";
-        c.fillRect(enemy.x - 55, enemy.y + 4, 110 * enemy.hp / Math.max(1, enemy.parameters.mhp), 7);
+        c.fillRect(enemy.x - 40, Math.min(320, enemy.y - height + 15), 80, 4);
+        c.fillStyle = "#d0a055";
+        c.fillRect(enemy.x - 40, Math.min(320, enemy.y - height + 15), 80 * enemy.hp / Math.max(1, enemy.parameters.mhp), 4);
+        const enemyAp = enemy.chant ? enemy.chant.elapsed / Math.max(1, enemy.chant.total) : enemy.ap / 4e3;
+        c.globalAlpha = 0.5;
+        c.fillStyle = "#202040";
+        c.fillRect(enemy.x - 50, enemy.y - 10, 100, 6);
+        c.fillStyle = enemy.chant ? "#be78d0" : "#7e9fe8";
+        c.fillRect(enemy.x - 50, enemy.y - 10, 100 * Math.min(1, enemyAp), 6);
+        c.globalAlpha = 1;
         c.fillStyle = "#eee";
         c.font = font(13);
         c.textAlign = "center";
         c.fillText(displayText(enemy.name), enemy.x, enemy.y + 28);
         c.textAlign = "left";
       }
-      this.drawWindow(0, 360, 128, 120);
+      const commandRows = Math.max(4, Math.min(8, battle?.commands?.length ?? 4));
+      const commandHeight = 24 + commandRows * 24;
+      const commandY = 480 - commandHeight;
+      this.drawWindow(0, commandY, 128, commandHeight);
       this.drawWindow(128, 360, 512, 120);
       c.font = font(17);
       c.fillStyle = "#f4f4f4";
-      const actor = battle?.actors?.[0];
+      const actor = battle?.actors?.[battle?.activeActor ?? 0] ?? battle?.actors?.[0];
       if (actor) {
+        const face = this.faceImages.get(actor.faceName);
+        if (face) c.drawImage(face, actor.faceIndex % 4 * 96, Math.floor(actor.faceIndex / 4) * 96 + 38, 96, 24, 142, 365, 96, 24);
         c.fillText(displayText(actor.name), 142, 387);
         this.drawGauge(330, 375, 120, 8, actor.hp, actor.parameters.mhp, "#dc5b60", "#79202d");
         this.drawGauge(468, 375, 80, 8, actor.mp, actor.parameters.mmp, "#5c87d9", "#253e7c");
         c.fillText(`HP ${actor.hp}/${actor.parameters.mhp}`, 320, 408);
         c.fillText(`MP ${actor.mp}/${actor.parameters.mmp}`, 466, 408);
-        c.fillText(`AP ${Math.floor(actor.ap)}/4000`, 320, 437);
+        const actorAp = actor.chant ? actor.chant.elapsed / Math.max(1, actor.chant.total) : actor.ap / 4e3;
+        this.drawGauge(320, 419, 230, 8, actorAp, 1, actor.chant ? "#bd74cb" : "#7e9fe8", actor.chant ? "#6b3573" : "#334c89");
+        c.fillText(`AP ${Math.floor(Math.min(1, actorAp) * 100)}%`, 320, 449);
       }
-      if (battle?.phase === "actor-command") (battle.commands ?? []).slice(0, 4).forEach((command, index) => {
-        const y = 372 + index * 24;
+      if (battle?.phase === "actor-command") (battle.commands ?? []).slice(0, 8).forEach((command, index) => {
+        const y = commandY + 12 + index * 24;
         if (index === battle.selectedCommand) this.drawCursor(12, y, 104, 24);
         c.fillStyle = "#f4f4f4";
         c.fillText(displayText(command), 16, y + 19);
@@ -5007,6 +5345,23 @@
         c.fillStyle = "#c9c2ba";
         c.fillText(displayText(battle?.log?.at(-1) ?? ""), 146, 462);
       }
+    }
+    drawBattleMist(battle, image) {
+      const c = this.context;
+      c.save();
+      c.globalCompositeOperation = "lighter";
+      for (let index = 0; index < 10; index += 1) {
+        const z = 20 + (battle.frames + index * 57) % 580;
+        const baseX = 160 + (index * 131 + battle.troopId * 17) % 320;
+        const x = (baseX - 320) * z / 128 + baseX;
+        const y = z / 4 + 160;
+        const scale = z * 3e-3 + 0.25;
+        c.globalAlpha = Math.max(0, Math.min(1, (z >= 536 ? (600 - z) * 4 : z) / 255));
+        const width = image.width * scale;
+        const height = image.height * scale;
+        c.drawImage(image, x - width / 2, y - height / 2, width, height);
+      }
+      c.restore();
     }
     async showPicture(id, name, parameters = {}) {
       const image = await this.loader.image(`Graphics/Pictures/${name}.png`);
@@ -5047,7 +5402,7 @@
         c.drawImage(picture.image, -width / 2, -height / 2, width, height);
         const tone = picture.tone;
         if (tone && (Number(tone.red ?? tone[0]) < 0 || Number(tone.green ?? tone[1]) < 0 || Number(tone.blue ?? tone[2]) < 0)) {
-          const darkness = clamp4(-(Number(tone.red ?? tone[0] ?? 0) + Number(tone.green ?? tone[1] ?? 0) + Number(tone.blue ?? tone[2] ?? 0)) / 765, 0, 1);
+          const darkness = clamp5(-(Number(tone.red ?? tone[0] ?? 0) + Number(tone.green ?? tone[1] ?? 0) + Number(tone.blue ?? tone[2] ?? 0)) / 765, 0, 1);
           c.globalCompositeOperation = "source-atop";
           c.fillStyle = `rgba(0,0,0,${darkness})`;
           c.fillRect(-width / 2, -height / 2, width, height);
@@ -5076,7 +5431,7 @@
       const now = performance.now();
       if (this.screenTone) {
         const tone = this.screenTone.tone ?? {};
-        const darkness = clamp4(-(Number(tone.red) + Number(tone.green) + Number(tone.blue)) / (255 * 3), 0, 1);
+        const darkness = clamp5(-(Number(tone.red) + Number(tone.green) + Number(tone.blue)) / (255 * 3), 0, 1);
         if (darkness > 0) {
           c.fillStyle = `rgba(0,0,0,${darkness})`;
           c.fillRect(0, 0, this.width, this.height);
@@ -5085,7 +5440,7 @@
       if (this.screenFlash) {
         const color = this.screenFlash.color ?? {};
         const duration = Math.max(1, this.screenFlash.until - this.screenFlash.began);
-        const alpha = clamp4((this.screenFlash.until - now) / duration, 0, 1) * (Number(color.alpha ?? 255) / 255);
+        const alpha = clamp5((this.screenFlash.until - now) / duration, 0, 1) * (Number(color.alpha ?? 255) / 255);
         if (alpha > 0) {
           c.fillStyle = `rgba(${color.red ?? 255},${color.green ?? 255},${color.blue ?? 255},${alpha})`;
           c.fillRect(0, 0, this.width, this.height);
@@ -5153,7 +5508,7 @@
       this.context.drawImage(this.iconSet, id % 16 * 24, Math.floor(id / 16) * 24, 24, 24, x, y, 24, 24);
     }
     drawGauge(x, y, width, height, value = 0, maximum = 1, color1 = "#fff", color2 = "#888") {
-      const ratio2 = clamp4(Number(value) / Math.max(1, Number(maximum)), 0, 1);
+      const ratio2 = clamp5(Number(value) / Math.max(1, Number(maximum)), 0, 1);
       const gradient = this.context.createLinearGradient(x, y, x + width, y);
       gradient.addColorStop(0, color2);
       gradient.addColorStop(1, color1);
@@ -5187,18 +5542,32 @@
         return 0;
       }
       if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) return 0;
-      const value = this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height];
+      const value = this.map.data.data[vxAceTileDataIndex(this.map.width, this.map.height, x, y, z)];
       if (value == null && this.activeFrame) this.activeFrame.missingTileSamples += 1;
       return value ?? 0;
+    }
+    drawMapLayer(z, window2, upper) {
+      for (let mapY = window2.startY; mapY <= window2.endY; mapY += 1) for (let mapX = window2.startX; mapX <= window2.endX; mapX += 1) {
+        const dx = mapX * this.tileSize - window2.pixelX;
+        const dy = mapY * this.tileSize - window2.pixelY;
+        const tileId = this.tileAt(mapX, mapY, z);
+        const args = [tileId, dx, dy, { x: mapX, y: mapY, z }];
+        if (this.isUpper(tileId)) upper.push(args);
+        else this.drawTile(...args);
+      }
     }
     isUpper(tileId) {
       return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 16);
     }
-    drawTile(tileId, dx, dy) {
+    drawTile(tileId, dx, dy, mapPosition = null) {
       if (tileId <= 0) return;
       if (this.activeFrame) {
         this.activeFrame.tileDraws += 1;
         this.activeFrame.drawCalls += 1;
+        const inspector = this.activeFrame.tileInspector ??= [];
+        if (inspector.length < 96 && !inspector.some((entry) => entry.tileId === tileId)) {
+          inspector.push({ ...mapPosition, ...resolveVxAceTile(tileId, Math.floor(performance.now() / 400)), flags: tilesetFlagTraits(this.tileset?.flags?.data?.[tileId] ?? 0) });
+        }
       }
       if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy);
       if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5);
@@ -5212,61 +5581,10 @@
       this.context.drawImage(sheet, localId % 8 * 32, Math.floor(localId / 8) * 32, 32, 32, dx, dy, 32, 32);
     }
     drawAutotile(tileId, dx, dy) {
-      const kind = Math.floor((tileId - TILE_ID.A1) / 48);
-      const shape = (tileId - TILE_ID.A1) % 48;
-      const tx = kind % 8;
-      const ty = Math.floor(kind / 8);
-      let sheetIndex = 0;
-      let bx = 0;
-      let by = 0;
-      let table = FLOOR_AUTOTILE_TABLE;
-      const animationFrame = Math.floor(performance.now() / 400) % 4;
-      if (tileId >= TILE_ID.A4) {
-        sheetIndex = 3;
-        bx = tx * 2;
-        by = Math.floor((ty - 10) * 2.5 + (ty % 2 === 1 ? 0.5 : 0));
-        if (ty % 2 === 1) table = WALL_AUTOTILE_TABLE;
-      } else if (tileId >= TILE_ID.A3) {
-        sheetIndex = 2;
-        bx = tx * 2;
-        by = (ty - 6) * 2;
-        table = WALL_AUTOTILE_TABLE;
-      } else if (tileId >= TILE_ID.A2) {
-        sheetIndex = 1;
-        bx = tx * 2;
-        by = (ty - 2) * 3;
-      } else {
-        const waterFrame = [0, 1, 2, 1][animationFrame];
-        if (kind === 0) {
-          bx = waterFrame * 2;
-          by = 0;
-        } else if (kind === 1) {
-          bx = waterFrame * 2;
-          by = 3;
-        } else if (kind === 2) {
-          bx = 6;
-          by = 0;
-        } else if (kind === 3) {
-          bx = 6;
-          by = 3;
-        } else {
-          bx = Math.floor(tx / 4) * 8;
-          by = ty * 6 + Math.floor(tx / 2) % 2 * 3;
-          if (kind % 2 === 0) bx += waterFrame * 2;
-          else {
-            bx += 6;
-            by += animationFrame % 3;
-            table = WATERFALL_AUTOTILE_TABLE;
-          }
-        }
-      }
-      const sheet = this.sheets[sheetIndex];
+      const resolved = resolveVxAceTile(tileId, Math.floor(performance.now() / 400));
+      const sheet = this.sheets[resolved.sheetIndex];
       if (!sheet) return;
-      const quarters = table[shape % table.length];
-      for (let index = 0; index < 4; index += 1) {
-        const [qsx, qsy] = quarters[index];
-        this.context.drawImage(sheet, (bx + qsx) * 16, (by + qsy) * 16, 16, 16, dx + index % 2 * 16, dy + Math.floor(index / 2) * 16, 16, 16);
-      }
+      for (const quarter of resolved.quarters) this.context.drawImage(sheet, quarter.sx, quarter.sy, 16, 16, dx + quarter.dx, dy + quarter.dy, 16, 16);
     }
     drawShadows(window2) {
       const offset = this.map.width * this.map.height * 3;
@@ -5276,6 +5594,20 @@
         const dx = mx * this.tileSize - window2.pixelX;
         const dy = my * this.tileSize - window2.pixelY;
         for (let q = 0; q < 4; q += 1) if (bits & 1 << q) this.context.fillRect(dx + q % 2 * 16, dy + Math.floor(q / 2) * 16, 16, 16);
+      }
+    }
+    drawTableEdges(window2) {
+      for (let mapY = window2.startY; mapY <= window2.endY; mapY += 1) for (let mapX = window2.startX; mapX <= window2.endX; mapX += 1) {
+        const upperTileId = this.tileAt(mapX, mapY - 1, 1);
+        const tileId = this.tileAt(mapX, mapY, 1);
+        if (!this.isTable(upperTileId) || this.isTable(tileId)) continue;
+        const resolved = resolveVxAceTile(upperTileId, Math.floor(performance.now() / 400));
+        if (resolved.family !== "A2") continue;
+        const sheet = this.sheets[resolved.sheetIndex];
+        if (!sheet) continue;
+        const dx = mapX * this.tileSize - window2.pixelX;
+        const dy = mapY * this.tileSize - window2.pixelY;
+        for (const quarter of resolved.quarters.slice(2)) this.context.drawImage(sheet, quarter.sx, quarter.sy + 8, 16, 8, dx + quarter.dx, dy, 16, 8);
       }
     }
     drawCharacter(sprite, cameraX, cameraY) {
@@ -5289,7 +5621,7 @@
       const shift = graphic.character_name.startsWith("!") ? 0 : 4;
       const dx = Math.round(x - frame.width / 2);
       const dy = Math.round(y - frame.height - shift);
-      const opacity = clamp4(Number(sprite.opacity ?? 255) / 255, 0, 1);
+      const opacity = clamp5(Number(sprite.opacity ?? 255) / 255, 0, 1);
       this.context.save();
       this.context.globalAlpha = opacity;
       this.context.globalCompositeOperation = Number(sprite.blendType) === 1 ? "lighter" : Number(sprite.blendType) === 2 ? "multiply" : "source-over";
@@ -5306,6 +5638,9 @@
       for (let z = 2; z >= 0; z -= 1) if ((this.tileset?.flags?.data?.[this.tileAt(x, y, z)] ?? 0) & 64) return true;
       return false;
     }
+    isTable(tileId) {
+      return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 128);
+    }
     drawFog() {
       if (!this.fog) return;
       const { image, x, y, zoom, opacity, blend } = this.fog;
@@ -5313,7 +5648,7 @@
       const width = image.width * scale;
       const height = image.height * scale;
       this.context.save();
-      this.context.globalAlpha = clamp4(opacity / 255, 0, 1);
+      this.context.globalAlpha = clamp5(opacity / 255, 0, 1);
       this.context.globalCompositeOperation = blend === 1 ? "lighter" : blend === 2 ? "multiply" : "source-over";
       for (let dx = x % width - width; dx < this.width; dx += width) for (let dy = y % height - height; dy < this.height; dy += height) this.context.drawImage(image, dx, dy, width, height);
       this.context.restore();
@@ -5492,8 +5827,8 @@
   function computeTileWindow({ displayX, displayY, playerX = 0, playerY = 0, mapWidth, mapHeight, width = 640, height = 480, tileSize = 32, margin = 2 }) {
     const viewportTilesX = width / tileSize;
     const viewportTilesY = height / tileSize;
-    const logicalX = clamp4(Number.isFinite(displayX) ? displayX : playerX - (viewportTilesX - 1) / 2, 0, Math.max(0, mapWidth - viewportTilesX));
-    const logicalY = clamp4(Number.isFinite(displayY) ? displayY : playerY - (viewportTilesY - 1) / 2, 0, Math.max(0, mapHeight - viewportTilesY));
+    const logicalX = clamp5(Number.isFinite(displayX) ? displayX : playerX - (viewportTilesX - 1) / 2, 0, Math.max(0, mapWidth - viewportTilesX));
+    const logicalY = clamp5(Number.isFinite(displayY) ? displayY : playerY - (viewportTilesY - 1) / 2, 0, Math.max(0, mapHeight - viewportTilesY));
     const pixelX = Math.round(logicalX * tileSize);
     const pixelY = Math.round(logicalY * tileSize);
     const cameraX = pixelX / tileSize;
@@ -5512,6 +5847,94 @@
       endY: Math.min(mapHeight - 1, Math.ceil((pixelY + height) / tileSize) + margin)
     };
   }
+  function vxAceTileDataIndex(width, height, x, y, z) {
+    return x + y * width + z * width * height;
+  }
+  function tilesetFlagTraits(flag = 0) {
+    return {
+      raw: Number(flag) || 0,
+      passage: Number(flag) & 15,
+      star: Boolean(Number(flag) & 16),
+      ladder: Boolean(Number(flag) & 32),
+      bush: Boolean(Number(flag) & 64),
+      counter: Boolean(Number(flag) & 128),
+      damageFloor: Boolean(Number(flag) & 256),
+      terrainTag: Number(flag) >> 12 & 15
+    };
+  }
+  function resolveVxAceTile(tileId, animationTick = 0) {
+    tileId = Number(tileId) || 0;
+    if (tileId <= 0) return { tileId, family: "EMPTY", sheetIndex: null, source: null, quarters: [] };
+    if (tileId < TILE_ID.A5) {
+      const sheetIndex2 = 5 + Math.floor(tileId / 256);
+      const localId = tileId % 256;
+      return { tileId, family: ["B", "C", "D", "E"][Math.floor(tileId / 256)] ?? "UNUSED", sheetIndex: sheetIndex2, localId, source: { x: localId % 8 * 32, y: Math.floor(localId / 8) * 32, width: 32, height: 32 }, quarters: [] };
+    }
+    if (tileId < TILE_ID.A1) {
+      const localId = tileId - TILE_ID.A5;
+      return { tileId, family: "A5", sheetIndex: 4, localId, source: { x: localId % 8 * 32, y: Math.floor(localId / 8) * 32, width: 32, height: 32 }, quarters: [] };
+    }
+    const kind = Math.floor((tileId - TILE_ID.A1) / 48);
+    const shape = (tileId - TILE_ID.A1) % 48;
+    const tx = kind % 8;
+    const ty = Math.floor(kind / 8);
+    let family = "A1";
+    let sheetIndex = 0;
+    let bx = 0;
+    let by = 0;
+    let table = FLOOR_AUTOTILE_TABLE;
+    let tableName = "floor";
+    const surfaceFrame = [0, 1, 2, 1][Math.abs(Math.floor(animationTick)) % 4];
+    const waterfallFrame = Math.abs(Math.floor(animationTick)) % 3;
+    if (tileId >= TILE_ID.A4) {
+      family = "A4";
+      sheetIndex = 3;
+      bx = tx * 2;
+      by = Math.floor((ty - 10) * 2.5 + (ty % 2 === 1 ? 0.5 : 0));
+      if (ty % 2 === 1) {
+        table = WALL_AUTOTILE_TABLE;
+        tableName = "wall";
+      }
+    } else if (tileId >= TILE_ID.A3) {
+      family = "A3";
+      sheetIndex = 2;
+      bx = tx * 2;
+      by = (ty - 6) * 2;
+      table = WALL_AUTOTILE_TABLE;
+      tableName = "wall";
+    } else if (tileId >= TILE_ID.A2) {
+      family = "A2";
+      sheetIndex = 1;
+      bx = tx * 2;
+      by = (ty - 2) * 3;
+    } else if (kind === 0) {
+      bx = surfaceFrame * 2;
+      by = 0;
+    } else if (kind === 1) {
+      bx = surfaceFrame * 2;
+      by = 3;
+    } else if (kind === 2) {
+      bx = 6;
+      by = 0;
+    } else if (kind === 3) {
+      bx = 6;
+      by = 3;
+    } else {
+      bx = Math.floor(tx / 4) * 8;
+      by = ty * 6 + Math.floor(tx / 2) % 2 * 3;
+      if (kind % 2 === 0) bx += surfaceFrame * 2;
+      else {
+        bx += 6;
+        by += waterfallFrame;
+        table = WATERFALL_AUTOTILE_TABLE;
+        tableName = "waterfall";
+      }
+    }
+    const tableShape = table[shape];
+    if (!tableShape) return { tileId, family, sheetIndex, kind, shape, table: tableName, base: { x: bx, y: by }, source: null, quarters: [], invalidShape: true };
+    const quarters = tableShape.map(([qsx, qsy], index) => ({ sx: (bx + qsx) * 16, sy: (by + qsy) * 16, dx: index % 2 * 16, dy: Math.floor(index / 2) * 16 }));
+    return { tileId, family, sheetIndex, kind, shape, table: tableName, animation: { tick: animationTick, surfaceFrame, waterfallFrame }, base: { x: bx, y: by }, source: null, quarters };
+  }
   function characterFrame(image, name, index, direction, pattern) {
     const big = name.replace(/^!/, "").startsWith("$");
     const width = image.width / (big ? 3 : 12);
@@ -5520,7 +5943,7 @@
     const baseY = big ? 0 : Math.floor(index / 4) * 4;
     const cardinal = [2, 4, 6, 8].includes(direction) ? direction : direction < 5 ? 2 : 8;
     const row = { 2: 0, 4: 1, 6: 2, 8: 3 }[cardinal];
-    const renderedPattern = Number(pattern) < 3 ? clamp4(Number(pattern) || 0, 0, 2) : 1;
+    const renderedPattern = Number(pattern) < 3 ? clamp5(Number(pattern) || 0, 0, 2) : 1;
     return { sx: (baseX + renderedPattern) * width, sy: (baseY + row) * height, width, height };
   }
   var FLOOR_AUTOTILE_TABLE = [
@@ -5592,7 +6015,7 @@
     [[0, 0], [3, 0], [0, 3], [3, 3]]
   ];
   var WATERFALL_AUTOTILE_TABLE = [[[2, 0], [1, 0], [2, 1], [1, 1]], [[0, 0], [1, 0], [0, 1], [1, 1]], [[2, 0], [3, 0], [2, 1], [3, 1]], [[0, 0], [3, 0], [0, 1], [3, 1]]];
-  function clamp4(value, min, max) {
+  function clamp5(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
   function displayText(value) {
@@ -5638,7 +6061,7 @@
     const transition = picture.transition;
     if (!transition) return;
     const now = performance.now();
-    const progress = clamp4((now - transition.began) / Math.max(1, transition.until - transition.began), 0, 1);
+    const progress = clamp5((now - transition.began) / Math.max(1, transition.until - transition.began), 0, 1);
     for (const [key, target] of Object.entries(transition.target)) {
       const start = transition.from[key];
       picture[key] = Number.isFinite(Number(start)) && Number.isFinite(Number(target)) ? Number(start) + (Number(target) - Number(start)) * progress : progress >= 1 ? target : start;
@@ -5646,7 +6069,7 @@
     if (progress >= 1) delete picture.transition;
   }
 
-  // runtime/save/indexeddb.js
+  // sillytavern-port/runtime/save/indexeddb.js
   var SAVE_DATABASE = "black-souls-sillytavern";
   var SAVE_SCHEMA = "black-souls-st-save-v2";
   var SAVE_SLOT_COUNT = 16;
@@ -5804,7 +6227,7 @@
     });
   }
 
-  // runtime/host.js
+  // sillytavern-port/runtime/host.js
   var BlackSoulsHost = class {
     constructor({ manifest, manifestUrl, runtimeBaseUrl, releaseRef, target = document.body, dataBaseUrl, assetDevelopmentBaseUrl, onLoaderState = () => {
     }, onHostState = () => {
@@ -6111,7 +6534,7 @@
   @media (pointer: coarse) { .bs-toolbar { opacity: .7; } }
 `;
 
-  // runtime/bootstrap.js
+  // sillytavern-port/runtime/bootstrap.js
   var activeHost = null;
   async function mount(options = {}) {
     if (activeHost) await activeHost.unmount();
