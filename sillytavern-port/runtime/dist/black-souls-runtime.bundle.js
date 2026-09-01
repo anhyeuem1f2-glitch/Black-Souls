@@ -1,4 +1,4 @@
-/* BLACK SOULS browser runtime 0.9.0; source c5661976c3032a8a96a7a26e4af51cce6497a71f */
+/* BLACK SOULS browser runtime 0.9.0; source 26efb7d872ba0c35f3d68bb96ec2676d03f8161f */
 (() => {
   // sillytavern-port/runtime/core/input.js
   var axes = /* @__PURE__ */ new Map([
