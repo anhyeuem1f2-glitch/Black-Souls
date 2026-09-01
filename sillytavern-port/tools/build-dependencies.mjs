@@ -75,6 +75,7 @@ for (let troopId = 1; troopId < database.Troops.length; troopId += 1) {
     }
   }
   addAudio(dependencies, 'BGM', database.System.battle_bgm, `troop:${troopId}:battle-bgm`, 'COMBAT_AUDIO', 'critical');
+  addAsset(dependencies, 'Graphics/System/mist', `troop:${troopId}:script:153`, 'COMBAT_GRAPHICS', 'normal');
   addAudio(dependencies, 'ME', database.System.battle_end_me, `troop:${troopId}:battle-end`, 'COMBAT_AUDIO', 'normal');
   for (const page of troop.pages ?? []) scanCommands(page.list, dependencies, `troop:${troopId}:page`);
   finish(dependencies);

@@ -8,8 +8,9 @@ import { CombatSystem } from '../runtime/game/combat-system.js';
 import { PartySystem } from '../runtime/game/party-system.js';
 import { CollisionMap } from '../runtime/map/collision.js';
 import { GameEventSystem, SYMBOL_SETTINGS, stopCountThreshold, symbolIdFromPage } from '../runtime/map/event-system.js';
+import { EVENT_MOBILITY, classifyEventPage } from '../runtime/map/event-mobility.js';
 import { EventInterpreter } from '../runtime/map/interpreter.js';
-import { CanvasRenderer, computeTileWindow } from '../runtime/render/canvas-renderer.js';
+import { CanvasRenderer, TILE_ID, computeTileWindow, resolveVxAceTile, tilesetFlagTraits, vxAceTileDataIndex } from '../runtime/render/canvas-renderer.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const json = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
@@ -51,6 +52,43 @@ test('renderer presents complete backbuffer frames and retains the previous fram
   } finally { globalThis.document = originalDocument; }
 });
 
+test('VX Ace B-E, A5, A1-A4 tile IDs resolve to exact sheets, quarters, and independent animations', () => {
+  assert.deepEqual(resolveVxAceTile(1).source, { x: 32, y: 0, width: 32, height: 32 });
+  assert.equal(resolveVxAceTile(1).sheetIndex, 5); assert.equal(resolveVxAceTile(256).sheetIndex, 6);
+  assert.equal(resolveVxAceTile(512).sheetIndex, 7); assert.equal(resolveVxAceTile(768).sheetIndex, 8);
+  assert.deepEqual(resolveVxAceTile(TILE_ID.A5 + 9).source, { x: 32, y: 32, width: 32, height: 32 });
+  assert.equal(resolveVxAceTile(TILE_ID.A1, 2).family, 'A1'); assert.equal(resolveVxAceTile(TILE_ID.A1, 2).base.x, 4);
+  const waterfall = resolveVxAceTile(TILE_ID.A1 + 5 * 48, 4);
+  assert.equal(waterfall.table, 'waterfall'); assert.equal(waterfall.animation.surfaceFrame, 0); assert.equal(waterfall.animation.waterfallFrame, 1);
+  assert.equal(resolveVxAceTile(TILE_ID.A2).sheetIndex, 1); assert.equal(resolveVxAceTile(TILE_ID.A3).table, 'wall');
+  assert.deepEqual(resolveVxAceTile(TILE_ID.A4).base, { x: 0, y: 0 });
+  assert.equal(resolveVxAceTile(TILE_ID.A4 + 8 * 48).table, 'wall');
+  for (const id of [TILE_ID.A1, TILE_ID.A2 + 47, TILE_ID.A3 + 15, TILE_ID.A4 + 47]) assert.equal(resolveVxAceTile(id).quarters.length, 4);
+});
+
+test('VX Ace Table indexing and all tileset flag semantics remain separate from region data', () => {
+  assert.equal(vxAceTileDataIndex(60, 62, 7, 19, 0), 1147);
+  assert.equal(vxAceTileDataIndex(60, 62, 7, 19, 3), 12307);
+  assert.deepEqual(tilesetFlagTraits(0x51f3), { raw: 0x51f3, passage: 3, star: true, ladder: true, bush: true, counter: true, damageFloor: true, terrainTag: 5 });
+});
+
+test('real opening, library, forest, and dungeon maps contain only valid VX Ace tile source resolutions', async () => {
+  const mapIds = [7, 10, 18, 97, 98, 101];
+  const maps = await Promise.all(mapIds.map((id) => json(`generated/maps/${String(id).padStart(3, '0')}.json`)));
+  const families = new Set();
+  for (const map of maps) {
+    const size = map.width * map.height;
+    for (let z = 0; z < 3; z += 1) for (let offset = 0; offset < size; offset += 1) {
+      const tileId = Number(map.data.data[offset + z * size]) || 0; if (!tileId) continue;
+      const resolved = resolveVxAceTile(tileId, 0); families.add(resolved.family);
+      assert.notEqual(resolved.invalidShape, true, `Map ${mapIds[maps.indexOf(map)]} tile ${tileId}`);
+      assert.ok(resolved.sheetIndex >= 0 && resolved.sheetIndex <= 8);
+    }
+  }
+  assert.equal(['A1', 'A2', 'A3', 'A4', 'A5'].every((family) => families.has(family)), true);
+  assert.equal([...families].some((family) => ['B', 'C', 'D', 'E'].includes(family)), true);
+});
+
 test('Map 98 event 16 retains its original symbol profile, page refresh, and collision settings', async () => {
   const map = await json('generated/maps/098.json'); const event = map.events['16'];
   assert.equal(symbolIdFromPage(event.pages[0]), 1);
@@ -67,6 +105,64 @@ test('Map 98 event 16 retains its original symbol profile, page refresh, and col
   engine.state.selfSwitches['98,16,D'] = true;
   runtime = engine.events.refresh(event);
   assert.equal(runtime.pageIndex, 2, 'last valid page wins');
+});
+
+test('all original event pages have an evidence-backed mobility classification', async () => {
+  const index = await json('generated/event-mobility-index.json');
+  assert.equal(index.schema, 'black-souls-event-mobility-v1');
+  assert.equal(index.mapCount, 150); assert.equal(index.pageCount, 6444);
+  assert.equal(index.pages.every((page) => Object.values(EVENT_MOBILITY).includes(page.classification) && page.evidence.length >= 4), true);
+  const alice = index.pages.find((page) => page.mapId === 97 && page.eventId === 1 && page.pageIndex === 1);
+  const pig = index.pages.find((page) => page.mapId === 98 && page.eventId === 13 && page.pageIndex === 0);
+  const bottle = index.pages.find((page) => page.mapId === 125 && page.eventId === 22 && page.pageIndex === 0);
+  const hostile = index.pages.find((page) => page.mapId === 98 && page.eventId === 16 && page.pageIndex === 0);
+  assert.equal(alice.classification, EVENT_MOBILITY.STATIC_PROP);
+  assert.equal(pig.classification, EVENT_MOBILITY.INTERACTABLE_STATIC);
+  assert.equal(bottle.classification, EVENT_MOBILITY.STATIC_PROP);
+  assert.equal(hostile.classification, EVENT_MOBILITY.SYMBOL_ENEMY);
+  assert.equal(hostile.symbolId, 1);
+});
+
+test('real Alice blood, pig corpse, and bottle pages remain fixed for 300 frames while eligible movers move', async () => {
+  const [map97, map98, map125, map53] = await Promise.all([
+    json('generated/maps/097.json'), json('generated/maps/098.json'), json('generated/maps/125.json'), json('generated/maps/053.json'),
+  ]);
+  const staticFixtures = [
+    { map: map97, mapId: 97, eventId: 1, switches: { 14: true }, label: 'Alice blood/corpse page' },
+    { map: map98, mapId: 98, eventId: 13, switches: { 6: true }, label: 'butcher-pig corpse' },
+    { map: map125, mapId: 125, eventId: 22, switches: {}, label: 'bottle/environment prop' },
+  ];
+  for (const fixture of staticFixtures) {
+    const engine = minimalEventEngine(fixture.map, { mapId: fixture.mapId, x: 0, y: 0 });
+    Object.assign(engine.state.switches, fixture.switches); engine.events.setupMap(fixture.map, fixture.mapId);
+    const event = fixture.map.events[fixture.eventId]; const runtime = engine.events.runtime(fixture.eventId, event); const start = [runtime.x, runtime.y];
+    for (let frame = 0; frame < 300; frame += 1) engine.events.update(1 / 60);
+    assert.deepEqual([runtime.x, runtime.y], start, fixture.label);
+  }
+
+  const npcEngine = minimalEventEngine(map53, { mapId: 53, x: 40, y: 40 }); npcEngine.events.setupMap(map53, 53); npcEngine.events.randomInt = () => 0;
+  const npc = map53.events['6']; const npcRuntime = npcEngine.events.runtime(6, npc); npcRuntime.uninhibited = true; const npcStart = [npcRuntime.x, npcRuntime.y];
+  for (let frame = 0; frame < 300; frame += 1) npcEngine.events.update(1 / 60);
+  assert.notDeepEqual([npcRuntime.x, npcRuntime.y], npcStart, 'real random-movement dwarf remains autonomous');
+
+  const hostileEngine = minimalEventEngine(map98, { mapId: 98, x: 7, y: 19 }); hostileEngine.state.displayY = 12; hostileEngine.events.setupMap(map98, 98); hostileEngine.events.randomInt = () => 0;
+  const hostile = map98.events['16']; const hostileRuntime = hostileEngine.events.runtime(16, hostile); const hostileStart = [hostileRuntime.x, hostileRuntime.y];
+  hostileEngine.interpreter.run = async () => {};
+  for (let frame = 0; frame < 300; frame += 1) hostileEngine.events.update(1 / 60);
+  assert.notDeepEqual([hostileRuntime.x, hostileRuntime.y], hostileStart, 'real hostile symbol remains eligible to chase');
+});
+
+test('page setup discards stale forced-route motion and graphic state before Alice becomes a fixed corpse', async () => {
+  const map = await json('generated/maps/097.json'); const event = map.events['1'];
+  const engine = minimalEventEngine(map, { mapId: 97, x: 12, y: 18 }); engine.events.setupMap(map, 97);
+  const runtime = engine.events.runtime(1, event);
+  runtime.graphic = { character_name: '$c_54b', character_index: 0, direction: 6, pattern: 2 };
+  runtime.motion = { fromX: 15, fromY: 18, toX: 16, toY: 18 }; runtime.x = 16; runtime.realX = 15.5;
+  engine.state.switches[14] = true; engine.events.refresh(event);
+  assert.equal(runtime.pageIndex, 1); assert.equal(runtime.graphic.character_name, '14遺体');
+  assert.equal(runtime.mobilityClass, EVENT_MOBILITY.STATIC_PROP); assert.equal(runtime.motion, undefined);
+  assert.deepEqual([runtime.realX, runtime.realY], [runtime.x, runtime.y]);
+  assert.equal(classifyEventPage(event, event.pages[1]).classification, EVENT_MOBILITY.STATIC_PROP);
 });
 
 test('normal-priority events block the player while through and below-priority events do not', () => {

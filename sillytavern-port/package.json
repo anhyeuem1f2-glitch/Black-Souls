@@ -1,11 +1,12 @@
 {
   "name": "black-souls-sillytavern-port",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
   "scripts": {
     "extract": "node tools/extract.mjs",
     "audit": "node tools/audit.mjs",
+    "build:event-mobility": "node tools/build-event-mobility.mjs",
     "build:assets": "node tools/build-assets.mjs",
     "build:prefetch": "node tools/build-prefetch.mjs",
     "build:dependencies": "node tools/build-dependencies.mjs",
@@ -13,7 +14,7 @@
     "build:loader-smoke": "node tools/build-loader-smoke.mjs",
     "build:card": "node tools/build-card.mjs",
     "validate:release": "node tools/validate-release.mjs",
-    "build": "node tools/extract.mjs && node tools/audit.mjs && node tools/build-assets.mjs && node tools/build-prefetch.mjs && node tools/build-dependencies.mjs && node tools/build-runtime.mjs",
+    "build": "node tools/extract.mjs && node tools/audit.mjs && node tools/build-event-mobility.mjs && node tools/build-assets.mjs && node tools/build-prefetch.mjs && node tools/build-dependencies.mjs && node tools/build-runtime.mjs",
     "test": "node --test"
   },
   "engines": {

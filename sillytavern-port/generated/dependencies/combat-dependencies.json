@@ -34,6 +34,13 @@
           "criticality": "critical",
           "source": "troop:1:enemy:1",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:1:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -73,6 +80,13 @@
           "criticality": "critical",
           "source": "troop:2:enemy:1",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:2:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -110,6 +124,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:3:enemy:2",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:3:script:153",
           "present": true
         }
       ],
@@ -149,6 +170,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:4:enemy:1",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:4:script:153",
           "present": true
         }
       ],
@@ -197,6 +225,13 @@
           "criticality": "critical",
           "source": "troop:5:enemy:1",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:5:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -235,6 +270,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:6:enemy:3",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:6:script:153",
           "present": true
         }
       ],
@@ -283,6 +325,13 @@
           "criticality": "critical",
           "source": "troop:7:enemy:4",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:7:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -322,6 +371,13 @@
           "criticality": "critical",
           "source": "troop:8:enemy:3",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:8:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -360,6 +416,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:9:enemy:3",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:9:script:153",
           "present": true
         }
       ],
@@ -407,6 +470,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:10:enemy:4",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:10:script:153",
           "present": true
         }
       ],
@@ -464,6 +534,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:11:enemy:5",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:11:script:153",
           "present": true
         }
       ],
@@ -530,6 +607,13 @@
           "criticality": "critical",
           "source": "troop:12:enemy:5",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:12:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -576,6 +660,13 @@
           "criticality": "critical",
           "source": "troop:13:enemy:5",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:13:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -621,6 +712,13 @@
           "criticality": "critical",
           "source": "troop:14:enemy:6",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:14:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -668,6 +766,13 @@
           "criticality": "critical",
           "source": "troop:15:enemy:7",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:15:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -705,6 +810,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:16:enemy:9",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:16:script:153",
           "present": true
         }
       ],
@@ -753,6 +865,13 @@
           "criticality": "critical",
           "source": "troop:17:enemy:8",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:17:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -799,6 +918,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:18:enemy:8",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:18:script:153",
           "present": true
         }
       ],
@@ -847,6 +973,13 @@
           "criticality": "critical",
           "source": "troop:19:enemy:7",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:19:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -893,6 +1026,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:20:enemy:7",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:20:script:153",
           "present": true
         }
       ],
@@ -949,6 +1089,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:21:enemy:10",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:21:script:153",
           "present": true
         }
       ],
@@ -1017,6 +1164,13 @@
           "criticality": "critical",
           "source": "troop:22:enemy:12",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:22:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1055,6 +1209,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:23:enemy:11",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:23:script:153",
           "present": true
         }
       ],
@@ -1096,6 +1257,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:24:enemy:12",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:24:script:153",
           "present": true
         }
       ],
@@ -1152,6 +1320,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:25:enemy:10",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:25:script:153",
           "present": true
         }
       ],
@@ -1248,6 +1423,13 @@
           "criticality": "critical",
           "source": "troop:26:enemy:13",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:26:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1304,6 +1486,13 @@
           "criticality": "critical",
           "source": "troop:27:enemy:37",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:27:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1342,6 +1531,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:28:enemy:38",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:28:script:153",
           "present": true
         }
       ],
@@ -1407,6 +1603,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:29:enemy:38",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:29:script:153",
           "present": true
         }
       ],
@@ -1499,6 +1702,13 @@
           "criticality": "critical",
           "source": "troop:30:enemy:39",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:30:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1562,6 +1772,13 @@
           "criticality": "critical",
           "source": "troop:31:enemy:39",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:31:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1600,6 +1817,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:32:enemy:38",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:32:script:153",
           "present": true
         }
       ],
@@ -1666,6 +1890,13 @@
           "criticality": "critical",
           "source": "troop:33:enemy:38",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:33:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1713,6 +1944,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:34:enemy:40",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:34:script:153",
           "present": true
         }
       ],
@@ -1762,6 +2000,13 @@
           "criticality": "critical",
           "source": "troop:35:enemy:40",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:35:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1809,6 +2054,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:36:enemy:41",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:36:script:153",
           "present": true
         }
       ],
@@ -1880,6 +2132,13 @@
           "criticality": "critical",
           "source": "troop:37:enemy:42",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:37:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1937,6 +2196,13 @@
           "criticality": "critical",
           "source": "troop:38:enemy:43",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:38:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -1993,6 +2259,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:39:enemy:43",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:39:script:153",
           "present": true
         }
       ],
@@ -2084,6 +2357,13 @@
           "criticality": "critical",
           "source": "troop:40:enemy:41",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:40:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2159,6 +2439,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:41:enemy:43",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:41:script:153",
           "present": true
         }
       ],
@@ -2259,6 +2546,13 @@
           "criticality": "critical",
           "source": "troop:42:enemy:43",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:42:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2325,6 +2619,13 @@
           "criticality": "critical",
           "source": "troop:43:enemy:41",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:43:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2378,6 +2679,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:44:enemy:21",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:44:script:153",
           "present": true
         }
       ],
@@ -2433,6 +2741,13 @@
           "criticality": "critical",
           "source": "troop:45:enemy:21",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:45:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2479,6 +2794,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:46:enemy:22",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:46:script:153",
           "present": true
         }
       ],
@@ -2567,6 +2889,13 @@
           "criticality": "critical",
           "source": "troop:47:enemy:22",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:47:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2630,6 +2959,13 @@
           "criticality": "critical",
           "source": "troop:48:enemy:22",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:48:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2667,6 +3003,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:49:enemy:23",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:49:script:153",
           "present": true
         }
       ],
@@ -2708,6 +3051,13 @@
           "criticality": "critical",
           "source": "troop:50:enemy:24",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:50:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2747,6 +3097,13 @@
           "criticality": "critical",
           "source": "troop:51:enemy:25",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:51:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2785,6 +3142,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:52:enemy:25",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:52:script:153",
           "present": true
         }
       ],
@@ -2833,6 +3197,13 @@
           "criticality": "critical",
           "source": "troop:53:enemy:25",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:53:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2880,6 +3251,13 @@
           "criticality": "critical",
           "source": "troop:54:enemy:25",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:54:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2918,6 +3296,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:55:enemy:27",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:55:script:153",
           "present": true
         }
       ],
@@ -2959,6 +3344,13 @@
           "criticality": "critical",
           "source": "troop:56:enemy:28",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:56:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -2998,6 +3390,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:57:enemy:29",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:57:script:153",
           "present": true
         }
       ],
@@ -3047,6 +3446,13 @@
           "criticality": "critical",
           "source": "troop:58:enemy:28",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:58:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3086,6 +3492,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:59:enemy:28",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:59:script:153",
           "present": true
         }
       ],
@@ -3141,6 +3554,13 @@
           "criticality": "critical",
           "source": "troop:60:enemy:30",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:60:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3195,6 +3615,13 @@
           "criticality": "critical",
           "source": "troop:61:enemy:30",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:61:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3234,6 +3661,13 @@
           "criticality": "critical",
           "source": "troop:62:enemy:31",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:62:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3272,6 +3706,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:63:enemy:32",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:63:script:153",
           "present": true
         }
       ],
@@ -3319,6 +3760,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:64:enemy:31",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:64:script:153",
           "present": true
         }
       ],
@@ -3377,6 +3825,13 @@
           "criticality": "critical",
           "source": "troop:65:enemy:33",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:65:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3415,6 +3870,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:66:enemy:31",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:66:script:153",
           "present": true
         }
       ],
@@ -3473,6 +3935,13 @@
           "criticality": "critical",
           "source": "troop:67:enemy:33",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:67:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3519,6 +3988,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:68:enemy:69",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:68:script:153",
           "present": true
         }
       ],
@@ -3575,6 +4051,13 @@
           "criticality": "critical",
           "source": "troop:69:enemy:166",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:69:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3600,6 +4083,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:70:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:70:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3646,6 +4136,13 @@
           "criticality": "critical",
           "source": "troop:71:enemy:168",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:71:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3685,6 +4182,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:72:enemy:147",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:72:script:153",
           "present": true
         }
       ],
@@ -3756,6 +4260,13 @@
           "criticality": "critical",
           "source": "troop:73:enemy:146",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:73:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3803,6 +4314,13 @@
           "criticality": "critical",
           "source": "troop:74:enemy:69",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:74:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3842,6 +4360,13 @@
           "criticality": "critical",
           "source": "troop:75:enemy:34",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:75:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -3880,6 +4405,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:76:enemy:34",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:76:script:153",
           "present": true
         }
       ],
@@ -3947,6 +4479,13 @@
           "criticality": "critical",
           "source": "troop:77:enemy:35",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:77:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4013,6 +4552,13 @@
           "criticality": "critical",
           "source": "troop:78:enemy:35",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:78:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4059,6 +4605,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:79:enemy:36",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:79:script:153",
           "present": true
         }
       ],
@@ -4134,6 +4687,13 @@
           "criticality": "critical",
           "source": "troop:80:enemy:36",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:80:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4171,6 +4731,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:81:enemy:36",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:81:script:153",
           "present": true
         }
       ],
@@ -4228,6 +4795,13 @@
           "criticality": "critical",
           "source": "troop:82:enemy:44",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:82:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4266,6 +4840,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:83:enemy:45",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:83:script:153",
           "present": true
         }
       ],
@@ -4332,6 +4913,13 @@
           "criticality": "critical",
           "source": "troop:84:enemy:45",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:84:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4370,6 +4958,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:85:enemy:45",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:85:script:153",
           "present": true
         }
       ],
@@ -4451,6 +5046,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:86:enemy:46",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:86:script:153",
           "present": true
         }
       ],
@@ -4541,6 +5143,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:87:enemy:45",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:87:script:153",
           "present": true
         }
       ],
@@ -4640,6 +5249,13 @@
           "criticality": "critical",
           "source": "troop:88:enemy:46",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:88:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4694,6 +5310,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:89:enemy:47",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:89:script:153",
           "present": true
         }
       ],
@@ -4750,6 +5373,13 @@
           "criticality": "critical",
           "source": "troop:90:enemy:47",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:90:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4804,6 +5434,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:91:enemy:47",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:91:script:153",
           "present": true
         }
       ],
@@ -4887,6 +5524,13 @@
           "criticality": "critical",
           "source": "troop:92:enemy:49",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:92:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4949,6 +5593,13 @@
           "criticality": "critical",
           "source": "troop:93:enemy:49",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:93:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -4996,6 +5647,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:94:enemy:50",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:94:script:153",
           "present": true
         }
       ],
@@ -5071,6 +5729,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:95:enemy:50",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:95:script:153",
           "present": true
         }
       ],
@@ -5154,6 +5819,13 @@
           "criticality": "critical",
           "source": "troop:96:enemy:49",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:96:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5215,6 +5887,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:97:enemy:49",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:97:script:153",
           "present": true
         }
       ],
@@ -5285,6 +5964,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:98:enemy:51",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:98:script:153",
           "present": true
         }
       ],
@@ -5382,6 +6068,13 @@
           "criticality": "critical",
           "source": "troop:99:enemy:51",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:99:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5477,6 +6170,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:100:enemy:51",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:100:script:153",
           "present": true
         }
       ],
@@ -5594,6 +6294,13 @@
           "criticality": "critical",
           "source": "troop:101:enemy:51",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:101:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5649,6 +6356,13 @@
           "criticality": "critical",
           "source": "troop:102:enemy:52",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:102:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5695,6 +6409,13 @@
           "criticality": "critical",
           "source": "troop:103:enemy:53",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:103:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5740,6 +6461,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:104:enemy:53",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:104:script:153",
           "present": true
         }
       ],
@@ -5788,6 +6516,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:105:enemy:54",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:105:script:153",
           "present": true
         }
       ],
@@ -5855,6 +6590,13 @@
           "criticality": "critical",
           "source": "troop:106:enemy:54",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:106:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5921,6 +6663,13 @@
           "criticality": "critical",
           "source": "troop:107:enemy:54",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:107:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -5967,6 +6716,13 @@
           "criticality": "critical",
           "source": "troop:108:enemy:53",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:108:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6004,6 +6760,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:109:enemy:55",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:109:script:153",
           "present": true
         }
       ],
@@ -6043,6 +6806,13 @@
           "criticality": "critical",
           "source": "troop:110:enemy:55",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:110:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6080,6 +6850,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:111:enemy:56",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:111:script:153",
           "present": true
         }
       ],
@@ -6137,6 +6914,13 @@
           "criticality": "critical",
           "source": "troop:112:enemy:57",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:112:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6183,6 +6967,13 @@
           "criticality": "critical",
           "source": "troop:113:enemy:57",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:113:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6224,6 +7015,13 @@
           "criticality": "critical",
           "source": "troop:114:enemy:58",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:114:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6264,6 +7062,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:115:enemy:58",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:115:script:153",
           "present": true
         }
       ],
@@ -6311,6 +7116,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:116:enemy:56",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:116:script:153",
           "present": true
         }
       ],
@@ -6371,6 +7183,13 @@
           "criticality": "critical",
           "source": "troop:117:enemy:58",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:117:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6426,6 +7245,13 @@
           "criticality": "critical",
           "source": "troop:118:enemy:47",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:118:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6465,6 +7291,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:119:enemy:60",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:119:script:153",
           "present": true
         }
       ],
@@ -6521,6 +7354,13 @@
           "criticality": "critical",
           "source": "troop:120:enemy:61",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:120:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6576,6 +7416,13 @@
           "criticality": "critical",
           "source": "troop:121:enemy:62",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:121:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6630,6 +7477,13 @@
           "criticality": "critical",
           "source": "troop:122:enemy:63",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:122:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6675,6 +7529,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:123:enemy:64",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:123:script:153",
           "present": true
         }
       ],
@@ -6739,6 +7600,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:124:enemy:65",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:124:script:153",
           "present": true
         }
       ],
@@ -6820,6 +7688,13 @@
           "criticality": "critical",
           "source": "troop:125:enemy:63",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:125:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6875,6 +7750,13 @@
           "criticality": "critical",
           "source": "troop:126:enemy:61",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:126:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -6920,6 +7802,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:127:enemy:64",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:127:script:153",
           "present": true
         }
       ],
@@ -6992,6 +7881,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:128:enemy:64",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:128:script:153",
           "present": true
         }
       ],
@@ -7084,6 +7980,13 @@
           "criticality": "critical",
           "source": "troop:129:enemy:65",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:129:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7155,6 +8058,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:130:enemy:64",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:130:script:153",
           "present": true
         }
       ],
@@ -7247,6 +8157,13 @@
           "criticality": "critical",
           "source": "troop:131:enemy:65",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:131:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7302,6 +8219,13 @@
           "criticality": "critical",
           "source": "troop:132:enemy:62",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:132:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7347,6 +8271,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:133:enemy:64",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:133:script:153",
           "present": true
         }
       ],
@@ -7413,6 +8344,13 @@
           "criticality": "critical",
           "source": "troop:134:enemy:116",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:134:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7477,6 +8415,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:135:enemy:115",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:135:script:153",
           "present": true
         }
       ],
@@ -7551,6 +8496,13 @@
           "criticality": "critical",
           "source": "troop:136:enemy:118",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:136:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7607,6 +8559,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:137:enemy:121",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:137:script:153",
           "present": true
         }
       ],
@@ -7674,6 +8633,13 @@
           "criticality": "critical",
           "source": "troop:138:enemy:122",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:138:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7733,6 +8699,13 @@
           "criticality": "normal",
           "source": "troop:139:skill:22:animation:34",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:139:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -7803,6 +8776,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:140:enemy:144",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:140:script:153",
           "present": true
         }
       ],
@@ -7913,6 +8893,13 @@
           "criticality": "critical",
           "source": "troop:141:enemy:151",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:141:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8008,6 +8995,13 @@
           "criticality": "critical",
           "source": "troop:142:enemy:123",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:142:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8080,6 +9074,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:143:enemy:152",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:143:script:153",
           "present": true
         }
       ],
@@ -8155,6 +9156,13 @@
           "criticality": "critical",
           "source": "troop:144:enemy:153",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:144:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8219,6 +9227,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:145:enemy:154",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:145:script:153",
           "present": true
         }
       ],
@@ -8285,6 +9300,13 @@
           "criticality": "critical",
           "source": "troop:146:enemy:155",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:146:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8339,6 +9361,13 @@
           "criticality": "normal",
           "source": "troop:147:skill:173:animation:5",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:147:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8413,6 +9442,13 @@
           "criticality": "critical",
           "source": "troop:148:enemy:157",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:148:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8469,6 +9505,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:149:enemy:158",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:149:script:153",
           "present": true
         }
       ],
@@ -8589,6 +9632,13 @@
           "criticality": "critical",
           "source": "troop:150:enemy:160",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:150:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8655,6 +9705,13 @@
           "criticality": "critical",
           "source": "troop:151:enemy:161",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:151:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8712,6 +9769,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:152:enemy:125",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:152:script:153",
           "present": true
         }
       ],
@@ -8847,6 +9911,13 @@
           "criticality": "critical",
           "source": "troop:153:enemy:126",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:153:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8897,6 +9968,13 @@
           "criticality": "critical",
           "source": "troop:154:enemy:129",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:154:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -8941,6 +10019,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:155:enemy:130",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:155:script:153",
           "present": true
         }
       ],
@@ -9112,6 +10197,13 @@
           "criticality": "critical",
           "source": "troop:156:enemy:131",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:156:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9195,6 +10287,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:157:enemy:135",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:157:script:153",
           "present": true
         }
       ],
@@ -9315,6 +10414,13 @@
           "criticality": "critical",
           "source": "troop:158:enemy:139",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:158:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9359,6 +10465,13 @@
           "domain": "AUDIO",
           "criticality": "normal",
           "source": "troop:159:page:command:5:code:250"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:159:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9449,6 +10562,13 @@
           "criticality": "critical",
           "source": "troop:160:enemy:140",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:160:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9513,6 +10633,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:161:enemy:218",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:161:script:153",
           "present": true
         }
       ],
@@ -9580,6 +10707,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:162:enemy:127",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:162:script:153",
           "present": true
         }
       ],
@@ -9713,6 +10847,13 @@
           "criticality": "critical",
           "source": "troop:163:enemy:184",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:163:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9787,6 +10928,13 @@
           "criticality": "critical",
           "source": "troop:164:enemy:216",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:164:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9859,6 +11007,13 @@
           "criticality": "critical",
           "source": "troop:165:enemy:227",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:165:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9884,6 +11039,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:166:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:166:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9940,6 +11102,13 @@
           "criticality": "critical",
           "source": "troop:167:enemy:163",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:167:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -9977,6 +11146,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:168:enemy:164",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:168:script:153",
           "present": true
         }
       ],
@@ -10025,6 +11201,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:169:enemy:165",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:169:script:153",
           "present": true
         }
       ],
@@ -10083,6 +11266,13 @@
           "criticality": "critical",
           "source": "troop:170:enemy:185",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:170:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10137,6 +11327,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:171:enemy:175",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:171:script:153",
           "present": true
         }
       ],
@@ -10222,6 +11419,13 @@
           "criticality": "critical",
           "source": "troop:172:enemy:176",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:172:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10268,6 +11472,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:173:enemy:67",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:173:script:153",
           "present": true
         }
       ],
@@ -10316,6 +11527,13 @@
           "criticality": "critical",
           "source": "troop:174:enemy:67",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:174:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10362,6 +11580,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:175:enemy:67",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:175:script:153",
           "present": true
         }
       ],
@@ -10453,6 +11678,13 @@
           "criticality": "critical",
           "source": "troop:176:enemy:128",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:176:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10498,6 +11730,13 @@
           "criticality": "critical",
           "source": "troop:177:enemy:177",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:177:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10578,6 +11817,13 @@
           "criticality": "critical",
           "source": "troop:178:enemy:71",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:178:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10603,6 +11849,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:179:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:179:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10664,6 +11917,13 @@
           "criticality": "normal",
           "source": "troop:180:skill:211:animation:28",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:180:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10689,6 +11949,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:181:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:181:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10745,6 +12012,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:182:enemy:66",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:182:script:153",
           "present": true
         }
       ],
@@ -10803,6 +12077,13 @@
           "criticality": "critical",
           "source": "troop:183:enemy:66",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:183:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10860,6 +12141,13 @@
           "criticality": "critical",
           "source": "troop:184:enemy:66",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:184:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10885,6 +12173,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:185:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:185:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -10987,6 +12282,13 @@
           "criticality": "critical",
           "source": "troop:186:enemy:180",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:186:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11058,6 +12360,13 @@
           "criticality": "critical",
           "source": "troop:187:enemy:181",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:187:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11083,6 +12392,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:188:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:188:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11207,6 +12523,13 @@
           "criticality": "critical",
           "source": "troop:189:enemy:181",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:189:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11305,6 +12628,13 @@
           "criticality": "critical",
           "source": "troop:190:enemy:187",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:190:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11385,6 +12715,13 @@
           "criticality": "critical",
           "source": "troop:191:enemy:188",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:191:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11436,6 +12773,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:192:enemy:189",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:192:script:153",
           "present": true
         }
       ],
@@ -11537,6 +12881,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:193:enemy:190",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:193:script:153",
           "present": true
         }
       ],
@@ -11669,6 +13020,13 @@
           "criticality": "critical",
           "source": "troop:194:enemy:191",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:194:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11733,6 +13091,13 @@
           "criticality": "critical",
           "source": "troop:195:enemy:193",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:195:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11796,6 +13161,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:196:enemy:194",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:196:script:153",
           "present": true
         }
       ],
@@ -11879,6 +13251,13 @@
           "criticality": "critical",
           "source": "troop:197:enemy:195",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:197:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -11904,6 +13283,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:198:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:198:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12019,6 +13405,13 @@
           "criticality": "critical",
           "source": "troop:199:enemy:196",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:199:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12078,6 +13471,13 @@
           "criticality": "critical",
           "source": "troop:200:enemy:203",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:200:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12133,6 +13533,13 @@
           "criticality": "critical",
           "source": "troop:201:enemy:167",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:201:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12158,6 +13565,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:202:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:202:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12203,6 +13617,13 @@
           "criticality": "critical",
           "source": "troop:203:enemy:200",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:203:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12248,6 +13669,13 @@
           "criticality": "critical",
           "source": "troop:204:enemy:201",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:204:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12293,6 +13721,13 @@
           "criticality": "critical",
           "source": "troop:205:enemy:202",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:205:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12318,6 +13753,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:206:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:206:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12343,6 +13785,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:207:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:207:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12380,6 +13829,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:208:enemy:70",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:208:script:153",
           "present": true
         }
       ],
@@ -12437,6 +13893,13 @@
           "criticality": "critical",
           "source": "troop:209:enemy:73",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:209:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12475,6 +13938,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:210:enemy:74",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:210:script:153",
           "present": true
         }
       ],
@@ -12531,6 +14001,13 @@
           "criticality": "critical",
           "source": "troop:211:enemy:75",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:211:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12583,6 +14060,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:212:enemy:76",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:212:script:153",
           "present": true
         }
       ],
@@ -12665,6 +14149,13 @@
           "criticality": "critical",
           "source": "troop:213:enemy:75",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:213:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12717,6 +14208,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:214:enemy:76",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:214:script:153",
           "present": true
         }
       ],
@@ -12774,6 +14272,13 @@
           "criticality": "critical",
           "source": "troop:215:enemy:73",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:215:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12812,6 +14317,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:216:enemy:74",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:216:script:153",
           "present": true
         }
       ],
@@ -12878,6 +14390,13 @@
           "criticality": "critical",
           "source": "troop:217:enemy:75",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:217:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12931,6 +14450,13 @@
           "criticality": "critical",
           "source": "troop:218:enemy:76",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:218:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -12956,6 +14482,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:219:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:219:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13018,6 +14551,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:220:enemy:205",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:220:script:153",
           "present": true
         }
       ],
@@ -13103,6 +14643,13 @@
           "criticality": "critical",
           "source": "troop:221:enemy:207",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:221:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13185,6 +14732,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:222:enemy:217",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:222:script:153",
           "present": true
         }
       ],
@@ -13317,6 +14871,13 @@
           "criticality": "critical",
           "source": "troop:223:enemy:171",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:223:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13412,6 +14973,13 @@
           "criticality": "critical",
           "source": "troop:224:enemy:169",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:224:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13484,6 +15052,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:225:enemy:208",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:225:script:153",
           "present": true
         }
       ],
@@ -13572,6 +15147,13 @@
           "criticality": "critical",
           "source": "troop:226:enemy:212",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:226:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13654,6 +15236,13 @@
           "criticality": "critical",
           "source": "troop:227:enemy:215",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:227:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13716,6 +15305,13 @@
           "criticality": "normal",
           "source": "troop:228:skill:326:animation:50",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:228:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13814,6 +15410,13 @@
           "criticality": "critical",
           "source": "troop:229:enemy:210",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:229:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -13839,6 +15442,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:230:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:230:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14007,6 +15617,13 @@
           "criticality": "critical",
           "source": "troop:231:enemy:172",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:231:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14053,6 +15670,13 @@
           "criticality": "critical",
           "source": "troop:232:enemy:178",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:232:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14078,6 +15702,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:233:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:233:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14103,6 +15734,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:234:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:234:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14167,6 +15805,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:235:enemy:218",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:235:script:153",
           "present": true
         }
       ],
@@ -14292,6 +15937,13 @@
           "criticality": "critical",
           "source": "troop:236:enemy:220",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:236:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14317,6 +15969,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:237:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:237:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14342,6 +16001,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:238:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:238:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14367,6 +16033,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:239:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:239:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14458,6 +16131,13 @@
           "criticality": "critical",
           "source": "troop:240:enemy:225",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:240:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14483,6 +16163,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:241:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:241:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14521,6 +16208,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:242:enemy:78",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:242:script:153",
           "present": true
         }
       ],
@@ -14577,6 +16271,13 @@
           "criticality": "critical",
           "source": "troop:243:enemy:80",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:243:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14625,6 +16326,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:244:enemy:79",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:244:script:153",
           "present": true
         }
       ],
@@ -14698,6 +16406,13 @@
           "criticality": "critical",
           "source": "troop:245:enemy:81",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:245:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14746,6 +16461,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:246:enemy:79",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:246:script:153",
           "present": true
         }
       ],
@@ -14810,6 +16532,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:247:enemy:80",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:247:script:153",
           "present": true
         }
       ],
@@ -14910,6 +16639,13 @@
           "criticality": "critical",
           "source": "troop:248:enemy:81",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:248:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14959,6 +16695,13 @@
           "criticality": "critical",
           "source": "troop:249:enemy:79",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:249:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -14997,6 +16740,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:250:enemy:78",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:250:script:153",
           "present": true
         }
       ],
@@ -15070,6 +16820,13 @@
           "criticality": "critical",
           "source": "troop:251:enemy:81",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:251:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15141,6 +16898,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:252:enemy:81",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:252:script:153",
           "present": true
         }
       ],
@@ -15236,6 +17000,13 @@
           "criticality": "critical",
           "source": "troop:253:enemy:81",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:253:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15261,6 +17032,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:254:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:254:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15325,6 +17103,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:255:enemy:233",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:255:script:153",
           "present": true
         }
       ],
@@ -15406,6 +17191,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:256:enemy:232",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:256:script:153",
           "present": true
         }
       ],
@@ -15492,6 +17284,13 @@
           "criticality": "critical",
           "source": "troop:257:enemy:230",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:257:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15549,6 +17348,13 @@
           "criticality": "critical",
           "source": "troop:258:enemy:236",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:258:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15604,6 +17410,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:259:enemy:237",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:259:script:153",
           "present": true
         }
       ],
@@ -15661,6 +17474,13 @@
           "criticality": "critical",
           "source": "troop:260:enemy:240",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:260:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15686,6 +17506,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:261:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:261:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15711,6 +17538,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:262:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:262:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15810,6 +17644,13 @@
           "criticality": "critical",
           "source": "troop:263:enemy:238",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:263:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15835,6 +17676,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:264:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:264:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -15873,6 +17721,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:265:enemy:86",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:265:script:153",
           "present": true
         }
       ],
@@ -15926,6 +17781,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:266:enemy:87",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:266:script:153",
           "present": true
         }
       ],
@@ -16000,6 +17862,13 @@
           "criticality": "critical",
           "source": "troop:267:enemy:84",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:267:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16037,6 +17906,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:268:enemy:88",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:268:script:153",
           "present": true
         }
       ],
@@ -16085,6 +17961,13 @@
           "criticality": "critical",
           "source": "troop:269:enemy:89",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:269:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16122,6 +18005,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:270:enemy:90",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:270:script:153",
           "present": true
         }
       ],
@@ -16195,6 +18085,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:271:enemy:84",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:271:script:153",
           "present": true
         }
       ],
@@ -16286,6 +18183,13 @@
           "criticality": "critical",
           "source": "troop:272:enemy:87",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:272:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16333,6 +18237,13 @@
           "criticality": "critical",
           "source": "troop:273:enemy:90",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:273:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16370,6 +18281,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:274:enemy:88",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:274:script:153",
           "present": true
         }
       ],
@@ -16454,6 +18372,13 @@
           "criticality": "critical",
           "source": "troop:275:enemy:86",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:275:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16508,6 +18433,13 @@
           "criticality": "critical",
           "source": "troop:276:enemy:85",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:276:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16553,6 +18485,13 @@
           "criticality": "critical",
           "source": "troop:277:enemy:83",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:277:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16597,6 +18536,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:278:enemy:83",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:278:script:153",
           "present": true
         }
       ],
@@ -16679,6 +18625,13 @@
           "criticality": "critical",
           "source": "troop:279:enemy:90",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:279:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16725,6 +18678,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:280:enemy:89",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:280:script:153",
           "present": true
         }
       ],
@@ -16807,6 +18767,13 @@
           "criticality": "critical",
           "source": "troop:281:enemy:89",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:281:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -16853,6 +18820,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:282:enemy:90",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:282:script:153",
           "present": true
         }
       ],
@@ -16953,6 +18927,13 @@
           "criticality": "critical",
           "source": "troop:283:enemy:90",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:283:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17034,6 +19015,13 @@
           "criticality": "critical",
           "source": "troop:284:enemy:89",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:284:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17087,6 +19075,13 @@
           "criticality": "critical",
           "source": "troop:285:enemy:87",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:285:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17125,6 +19120,13 @@
           "criticality": "critical",
           "source": "troop:286:enemy:90",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:286:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17150,6 +19152,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:287:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:287:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17175,6 +19184,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:288:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:288:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17351,6 +19367,13 @@
           "criticality": "critical",
           "source": "troop:289:enemy:239",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:289:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17376,6 +19399,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:290:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:290:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17430,6 +19460,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:291:enemy:92",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:291:script:153",
           "present": true
         }
       ],
@@ -17486,6 +19523,13 @@
           "criticality": "critical",
           "source": "troop:292:enemy:92",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:292:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17541,6 +19585,13 @@
           "criticality": "critical",
           "source": "troop:293:enemy:92",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:293:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17594,6 +19645,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:294:enemy:94",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:294:script:153",
           "present": true
         }
       ],
@@ -17649,6 +19707,13 @@
           "criticality": "critical",
           "source": "troop:295:enemy:94",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:295:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17699,6 +19764,13 @@
           "criticality": "critical",
           "source": "troop:296:enemy:93",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:296:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17744,6 +19816,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:297:enemy:95",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:297:script:153",
           "present": true
         }
       ],
@@ -17817,6 +19896,13 @@
           "criticality": "critical",
           "source": "troop:298:enemy:95",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:298:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17889,6 +19975,13 @@
           "criticality": "critical",
           "source": "troop:299:enemy:95",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:299:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -17942,6 +20035,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:300:enemy:94",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:300:script:153",
           "present": true
         }
       ],
@@ -18015,6 +20115,13 @@
           "criticality": "critical",
           "source": "troop:301:enemy:95",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:301:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18040,6 +20147,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:302:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:302:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18065,6 +20179,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:303:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:303:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18157,6 +20278,13 @@
           "criticality": "critical",
           "source": "troop:304:enemy:243",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:304:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18238,6 +20366,13 @@
           "criticality": "critical",
           "source": "troop:305:enemy:244",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:305:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18276,6 +20411,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:306:enemy:246",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:306:script:153",
           "present": true
         }
       ],
@@ -18384,6 +20526,13 @@
           "criticality": "critical",
           "source": "troop:307:enemy:247",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:307:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18447,6 +20596,13 @@
           "criticality": "critical",
           "source": "troop:308:enemy:97",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:308:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18508,6 +20664,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:309:enemy:250",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:309:script:153",
           "present": true
         }
       ],
@@ -18582,6 +20745,13 @@
           "criticality": "critical",
           "source": "troop:310:enemy:118",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:310:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18607,6 +20777,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:311:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:311:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18632,6 +20809,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:312:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:312:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18780,6 +20964,13 @@
           "criticality": "normal",
           "source": "troop:313:skill:329:animation:197",
           "present": false
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:313:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18837,6 +21028,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:314:enemy:248",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:314:script:153",
           "present": true
         }
       ],
@@ -18903,6 +21101,13 @@
           "criticality": "critical",
           "source": "troop:315:enemy:218",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:315:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18928,6 +21133,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:316:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:316:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -18981,6 +21193,13 @@
           "domain": "COMBAT_GRAPHICS",
           "criticality": "critical",
           "source": "troop:317:enemy:299",
+          "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:317:script:153",
           "present": true
         }
       ],
@@ -19036,6 +21255,13 @@
           "criticality": "critical",
           "source": "troop:318:enemy:300",
           "present": true
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:318:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19061,6 +21287,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:319:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:319:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19086,6 +21319,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:320:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:320:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19111,6 +21351,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:321:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:321:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19136,6 +21383,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:322:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:322:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19161,6 +21415,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:323:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:323:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19186,6 +21447,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:324:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:324:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19211,6 +21479,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:325:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:325:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19236,6 +21511,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:326:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:326:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19261,6 +21543,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:327:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:327:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19286,6 +21575,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:328:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:328:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19311,6 +21607,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:329:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:329:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19336,6 +21639,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:330:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:330:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19361,6 +21671,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:331:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:331:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19386,6 +21703,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:332:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:332:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19411,6 +21735,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:333:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:333:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19436,6 +21767,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:334:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:334:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19461,6 +21799,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:335:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:335:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19486,6 +21831,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:336:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:336:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19511,6 +21863,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:337:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:337:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19536,6 +21895,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:338:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:338:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19561,6 +21927,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:339:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:339:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19586,6 +21959,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:340:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:340:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19611,6 +21991,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:341:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:341:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19636,6 +22023,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:342:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:342:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19661,6 +22055,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:343:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:343:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19686,6 +22087,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:344:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:344:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19711,6 +22119,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:345:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:345:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19736,6 +22151,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:346:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:346:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19761,6 +22183,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:347:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:347:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19786,6 +22215,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:348:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:348:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19811,6 +22247,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:349:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:349:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19836,6 +22279,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:350:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:350:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19861,6 +22311,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:351:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:351:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19886,6 +22343,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:352:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:352:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19911,6 +22375,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:353:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:353:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19936,6 +22407,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:354:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:354:script:153",
+          "present": true
         }
       ],
       "transfers": [],
@@ -19961,6 +22439,13 @@
           "domain": "COMBAT_AUDIO",
           "criticality": "normal",
           "source": "troop:355:battle-end"
+        },
+        {
+          "path": "Graphics/System/mist.png",
+          "domain": "COMBAT_GRAPHICS",
+          "criticality": "normal",
+          "source": "troop:355:script:153",
+          "present": true
         }
       ],
       "transfers": [],

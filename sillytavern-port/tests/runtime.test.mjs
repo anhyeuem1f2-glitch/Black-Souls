@@ -36,7 +36,7 @@ test('generated card is Chara Card V3 with an enabled TavernHelper script', asyn
   const card = JSON.parse(await readFile(join(root, 'card', 'Black_Souls_ST.json'), 'utf8'));
   assert.equal(card.spec, 'chara_card_v3');
   assert.equal(card.spec_version, '3.0');
-  assert.equal(card.data.character_version, '0.8.0');
+  assert.equal(card.data.character_version, '0.9.0');
   assert.equal(card.data.extensions.tavern_helper.scripts[0].enabled, true);
   assert.match(card.data.extensions.black_souls_release.ref, /^[0-9a-f]{40}$/);
   assert.match(card.data.extensions.black_souls_release.entrySha256, /^[0-9A-F]{64}$/);

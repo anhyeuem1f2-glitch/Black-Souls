@@ -1,21 +1,11 @@
 # Combat Compatibility
 
-The browser battle scene now consumes the original Troops, Enemies, Skills, States, Actors, Classes, Weapons, Armors, battleback, battler, animation, and audio data.
+The browser battle scene consumes the original Troops, Enemies, Skills, States, Actors, Classes, Weapons, Armors, battlebacks, battlers, faces, animations, audio, and Script153 mist asset.
 
-Implemented mechanics include:
+Implemented original-script systems include exact 4000-point ATB/AP timing and opening ranges, 3-frame refresh, typed chants and cancellation/AP states, dynamic actor commands/skill types, feature-wide weapon attack-ID priority, rating10/rating1 smart enemy AI and VX weighted actions, formula/cost/scope/repeat/guard/drain/critical handling, guts, healing null/reversal, auto-resurrection/breakage, user reaction skills, battle-end expression recovery, victory/escape/lose/game-over, rewards, and variable60 difficulty.
 
-- ATB/AP configuration from the original scripts: `MAX_AP = 4000`, `FRAME_AP_GAIN = 10`, actor start 30%, enemy start 40%;
-- actor commands for attack, skills, usable inventory items, defend, and escape;
-- original weapon attack-ID note overrides, MP/TP costs and gains, repeats, major target scopes, HP/MP damage/recovery/drain types, formulas, success/evasion, variance, guarding, and critical ×3;
-- rating-10/rating-1 smart-enemy action priority with database conditions, plus normal rating order;
-- casting metadata, delayed resolution, and damage interruption;
-- state add/remove effects and automatic-resurrection note handling;
-- victory/escape/lose/game-over branches, gold, EXP, drops, battle-end recovery tags, and return to the map interpreter;
-- enemy HP bars, battler images, battlebacks, party HP/MP/AP display, and combat log.
-- symbol-contact preemptive/surprise metadata, with the advantaged side receiving the original opening-initiative adjustment.
+The battle UI uses the source 640×480 arrangement: 4–8 row command window, original localized terms, actor face strip, HP/MP and percentage AP/chant gauges, enemy HP and translucent AP/chant bars. Original Script152 mirror/perspective/breath behavior and ten-sprite additive mist are applied.
 
-Difficulty uses original variable 60 and the exact ten-entry parameter/reward matrices from `162-周回敵の強さ.rb`, including Ruby-compatible parameter flooring, reward rounding, note-tag exemptions, zero normal EXP multipliers, unchanged drop multipliers, and critical multiplier 3.
+Automated acceptance builds real troop1 for smart-AI/reward coverage and runs real Map98 Event16 → troop3 `Lợn Đồ Tể` for symbol-contact battle entry, inventory/skill use, victory, rewards, and retained map encounter context.
 
-Automated acceptance builds real troop 1 (`Ám Hồn*3`), loads enemy battler `3`, selects original skill 157 over skill 1 by rating, advances AP, executes damage, reaches victory, applies gold/EXP/drop logic, and preserves party state. Live acceptance additionally enters real Map98 troop 3 through event 16, records the source-defined surprise condition, advances the ATB for 71 frames, accepts player guard input, and records `Lợn Đồ Tể` using Attack for 613 damage.
-
-Known limits: the full 600-line smart-target plugin, all buffs/debuffs/elements/features, every ATB state note tag, battle troop event pages, forced actions, enemy transforms, substitute/counter/reflect, and exact RGSS animation/SE choreography remain partial. `generated/dependencies/combat-dependencies.json` indexes all 355 troops so missing resources can be diagnosed even where mechanics are incomplete.
+The remaining general RGSS boundary is documented in `KNOWN_DIFFERENCES.md`; it does not replace the original battle loop with a generic turn-based approximation. See `BATTLE_SYSTEM_REVERSE_ENGINEERING.md` for the script-level mapping.

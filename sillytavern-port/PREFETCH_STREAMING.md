@@ -1,6 +1,6 @@
 # Prefetch and Streaming
 
-Release 0.8.0 routes normalized JSON, validated bytes, decoded images, and parsed maps through one `PrefetchManager`.
+Release 0.9.0 routes normalized JSON, validated bytes, decoded images, and parsed maps through one `PrefetchManager`.
 
 Policy: 8 concurrent requests with 2 slots reserved for `CRITICAL`; graph depth 2; interpreter lookahead 48 commands; JSON/image/audio/binary timeouts of 10/18/30/18 seconds. Byte, decoded-image, and parsed-object LRUs are 64/160/24 MiB. Loaded Window/IconSet/title resources are globally pinned; active-map critical resources remain pinned until the map changes.
 

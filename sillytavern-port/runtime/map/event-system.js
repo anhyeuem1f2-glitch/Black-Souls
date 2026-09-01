@@ -3,6 +3,8 @@ const DIRECTIONS = Object.freeze({
   6: [1, 0], 7: [-1, -1], 8: [0, -1], 9: [1, -1],
 });
 
+import { classifyEventPage, isAutonomousMobility, symbolIdFromMoveRoute } from './event-mobility.js';
+
 // Ported from generated/scripts/145-シンボル.rb. Keep the indices in the
 // same order as SYMBOL_SETTING_LIST so event-route calls remain data-driven.
 export const SYMBOL_SETTINGS = Object.freeze({
@@ -69,21 +71,22 @@ export class GameEventSystem {
     runtime.locked = false;
     runtime.symbolForming = false;
     runtime.symbolId = null;
+    delete runtime.motion;
+    runtime.realX = runtime.x;
+    runtime.realY = runtime.y;
     if (pageIndex < 0) {
       Object.assign(runtime, { through: true, trigger: null, priority: 0, transparent: true });
       return null;
     }
     const page = event.pages[pageIndex];
     const graphic = page.graphic ?? {};
-    if (runtime.originalDirection == null || runtime.originalDirection !== graphic.direction) {
-      runtime.direction = Number(graphic.direction) || 2;
-      runtime.originalDirection = runtime.direction;
-      runtime.prelockDirection = 0;
-    }
-    if (runtime.originalPattern == null || runtime.originalPattern !== graphic.pattern) {
-      runtime.pattern = Number(graphic.pattern) || 0;
-      runtime.originalPattern = runtime.pattern;
-    }
+    runtime.direction = Number(graphic.direction) || 2;
+    runtime.originalDirection = runtime.direction;
+    runtime.prelockDirection = 0;
+    runtime.pattern = Number(graphic.pattern) || 0;
+    runtime.originalPattern = runtime.pattern;
+    runtime.graphic = structuredClone(graphic);
+    const mobility = classifyEventPage(event, page);
     Object.assign(runtime, {
       moveType: Number(page.move_type) || 0,
       moveSpeed: Number(page.move_speed) || 0,
@@ -93,6 +96,7 @@ export class GameEventSystem {
       priority: Number(page.priority_type) || 0, trigger: Number(page.trigger),
       transparent: false, moveRoute: page.move_route ?? null,
       uninhibited: isUninhibited(event, page), originOpacity: Number(runtime.originOpacity ?? runtime.opacity ?? 255),
+      mobilityClass: mobility.classification, mobilityEvidence: mobility.evidence,
     });
     const symbolId = symbolIdFromPage(page);
     if (symbolId != null && SYMBOL_SETTINGS[symbolId]) {
@@ -137,6 +141,7 @@ export class GameEventSystem {
   }
 
   updateAutonomousMovement(event, runtime) {
+    if (!isAutonomousMobility(runtime.mobilityClass)) return;
     if (runtime.moveType === 1) {
       const roll = this.randomInt(6);
       if (roll <= 1) this.tryMove(event, runtime, [2, 4, 6, 8][this.randomInt(4)]);
@@ -474,12 +479,7 @@ export class GameEventSystem {
 
 export function stopCountThreshold(moveFrequency) { return 30 * (5 - Number(moveFrequency ?? 3)); }
 export function symbolIdFromPage(page) {
-  for (const command of page?.move_route?.list ?? []) {
-    if (command.code !== 45) continue;
-    const match = /(?:^|\s)enable_symbol_encount\((\d+)\)/.exec(String(command.parameters?.[0] ?? ''));
-    if (match) return Number(match[1]);
-  }
-  return null;
+  return symbolIdFromMoveRoute(page);
 }
 
 function activePageIndex(engine, event) {

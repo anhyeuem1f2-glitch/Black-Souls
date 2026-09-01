@@ -83,6 +83,7 @@ for (const actor of actors.filter(Boolean)) { if (actor.character_name) requireA
 const animations = await json(join(generatedRoot, 'database', 'Animations.json'));
 for (const animation of animations.filter(Boolean)) { if (animation.animation1_name) requireAsset(`Graphics/Animations/${animation.animation1_name}`, `animation:${animation.id}`); if (animation.animation2_name) requireAsset(`Graphics/Animations/${animation.animation2_name}`, `animation:${animation.id}`); }
 const system = await json(join(generatedRoot, 'database', 'System.json'));
+requireAsset('Graphics/System/mist', 'script:153:battle-mist');
 if (system.title1_name) requireAsset(`Graphics/Titles1/${system.title1_name}`, 'system:title1');
 if (system.title2_name) requireAsset(`Graphics/Titles2/${system.title2_name}`, 'system:title2');
 if (system.title_bgm?.name) requireAsset(`Audio/BGM/${system.title_bgm.name}`, 'system:title-bgm');

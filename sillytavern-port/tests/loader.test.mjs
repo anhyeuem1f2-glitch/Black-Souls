@@ -16,7 +16,7 @@ const bundleBytes = new TextEncoder().encode('window.BlackSoulsRuntime={mount(){
 const bundleHash = createHash('sha256').update(bundleBytes).digest('hex').toUpperCase();
 
 test('versioned runtime build manifest validates', () => {
-  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.8.0');
+  assert.equal(validateBuildManifest(buildManifest()).runtimeVersion, '0.9.0');
 });
 
 test('missing runtime entry is rejected', () => {
@@ -167,7 +167,7 @@ function candidate(overrides = {}) {
 
 function buildManifest(overrides = {}) {
   return {
-    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.8.0', sourceCommit: '1'.repeat(40),
+    schema: 'black-souls-runtime-build-v1', runtimeVersion: '0.9.0', sourceCommit: '1'.repeat(40),
     builtAt: '2026-08-31T00:00:00Z', entry: 'black-souls-runtime.bundle.js', entrySha256: bundleHash,
     entryBytes: bundleBytes.byteLength, runtimeManifest: '../manifest.json',
     dataVersion: 'black-souls-normalized-data-v1', dependencyIndexVersion: 'black-souls-game-dependency-index-v1',

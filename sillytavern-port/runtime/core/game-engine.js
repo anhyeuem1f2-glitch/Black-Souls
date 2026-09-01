@@ -616,8 +616,10 @@ export class GameEngine {
     const movement = this.input.takeDirection();
     if (movement?.[1]) battle.selectedCommand = cycle(battle.selectedCommand, Math.sign(movement[1]), battle.commands.length);
     if (!this.input.takeConfirm()) return;
-    const symbol = ['attack', 'skill', 'item', 'guard', 'escape'][battle.selectedCommand];
-    const payload = symbol === 'skill' ? { skillId: this.state.actors[battle.actors[battle.activeActor].actorId].skills[0] ?? 1 }
+    const definition = battle.commandDefinitions?.[battle.selectedCommand] ?? { symbol: ['attack', 'skill', 'item', 'guard', 'escape'][battle.selectedCommand] };
+    const symbol = definition.symbol;
+    const active = battle.actors[battle.activeActor]; const actor = this.state.actors[active.actorId];
+    const payload = symbol === 'skill' ? { skillId: actor.skills.map((id) => this.database.skills[id]).find((skill) => Number(skill?.stype_id) === Number(definition.ext) && active.mp >= Number(skill.mp_cost ?? 0) && active.tp >= Number(skill.tp_cost ?? 0))?.id }
       : symbol === 'item' ? { itemId: this.party.inventoryEntries(this.state, ['item'])[0]?.id } : {};
     const result = this.combat.actorCommand(this.state, symbol, battle.selectedTarget, payload);
     if (!result.accepted) this.status(`Battle command unavailable: ${result.reason ?? 'invalid'}.`);
@@ -983,7 +985,8 @@ export class GameEngine {
     return Object.values(map?.events ?? {}).flatMap((event) => {
       const page = this.activePage(event);
       const override = this.state.eventOverrides?.[`${this.state.mapId},${event.id}`] ?? {};
-      const graphic = override.graphic ?? page?.graphic;
+      const runtime = map === this.map ? this.events?.refresh?.(event) : null;
+      const graphic = runtime?.graphic ?? override.graphic ?? page?.graphic;
       if (!graphic?.character_name || override.transparent) return [];
       const position = routePosition(override, event);
       return [{ id: event.id, x: position.x, y: position.y, direction: override.direction ?? graphic.direction, pattern: override.pattern ?? graphic.pattern, opacity: override.opacity ?? 255, blendType: override.blendType ?? 0, priority: override.priority ?? page?.priority_type ?? 1, graphic, moveSpeed: override.moveSpeed ?? page?.move_speed ?? 3, moveFrequency: override.moveFrequency ?? page?.move_frequency ?? 3, page: { ...page, graphic } }];

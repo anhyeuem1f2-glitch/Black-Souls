@@ -69,11 +69,11 @@
       "switchId": 1,
       "assets": [
         {
-          "path": "Graphics/Animations/Light6",
+          "path": "Graphics/Animations/Light6.png",
           "domain": "ANIMATIONS",
           "criticality": "normal",
           "source": "common-event:3:command:59:code:212:animation:109",
-          "present": false
+          "present": true
         }
       ],
       "transfers": [],
@@ -808,7 +808,7 @@
       "switchId": 1,
       "assets": [
         {
-          "path": "Audio/SE/Slash7",
+          "path": "Audio/SE/Slash7.ogg",
           "domain": "AUDIO",
           "criticality": "normal",
           "source": "common-event:55:command:0:code:250"

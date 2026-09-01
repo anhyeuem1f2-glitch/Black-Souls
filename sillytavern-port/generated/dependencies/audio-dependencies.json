@@ -2330,7 +2330,7 @@
       "map:85:event:18:page:0:command:11:code:250",
       "map:85:event:18:page:0:command:3:code:250"
     ],
-    "Audio/SE/Move": [
+    "Audio/SE/Move.ogg": [
       "map:100:event:5:page:0:command:0:code:250",
       "map:100:event:6:page:0:command:0:code:250",
       "map:100:event:7:page:0:command:0:code:250",
@@ -2931,7 +2931,7 @@
       "map:77:event:11:page:2:command:0:code:250",
       "map:83:event:46:page:0:command:0:code:250"
     ],
-    "Audio/SE/Open3": [
+    "Audio/SE/Open3.ogg": [
       "map:114:event:19:page:0:command:0:code:250",
       "map:114:event:21:page:0:command:0:code:250",
       "map:114:event:22:page:0:command:0:code:250",
@@ -2969,11 +2969,11 @@
       "troop:313:page:command:5:code:250",
       "troop:315:page:command:5:code:250"
     ],
-    "Audio/SE/Slash7": [
+    "Audio/SE/Slash7.ogg": [
       "common-event:55:command:0:code:250",
       "map:98:event:10:page:0:command:32:code:250"
     ],
-    "Audio/SE/Slash9": [
+    "Audio/SE/Slash9.ogg": [
       "map:98:event:10:page:0:command:57:code:250"
     ],
     "Audio/SE/sounyu0.wav": [

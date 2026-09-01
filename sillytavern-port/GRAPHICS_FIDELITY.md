@@ -1,9 +1,9 @@
 # Graphics Fidelity
 
-The Canvas renderer preserves the VX Ace 640×480 viewport, 32 px tiles, nearest-neighbor scaling, A1–A5 autotiles, B–E upper tiles and priority, shadows, bush depth, regular/`$`/`!` character sheets, event priority, parallax/fog, pictures, animations, balloons, tone/flash/shake/weather, title layers, battlebacks, battlers, Window skin, IconSet, gauges, and face portraits.
+The Canvas renderer preserves the VX Ace 640×480 viewport, 32 px tiles, nearest-neighbor scaling, exact A1–A5/B–E tile addressing, autotile quarter composition, passage/star/table/shadow layering, bush depth, regular/`$`/`!` character sheets, event priority, parallax/fog, pictures, animations, balloons, tone/flash/shake/weather, title layers, battlebacks, battlers, Window skin, IconSet, gauges, and face portraits.
 
-Map 97's blood/corpse change remains data-driven: Event 1 plays `gucha004a`, turns on switch 14, and flashes red; switch 14 selects the `14遺体` pages for Events 1 and 3–6. The interpreter waits for newly active graphics before continuing. The original black tone is composited below the message/choice layer, preserving the skip prompt.
+Map97’s blood/corpse change remains data-driven: Event1 plays `gucha004a`, turns on switch14, and flashes red; switch14 selects `14遺体` pages for Events1 and3–6. Page setup resets the complete sprite state, so the new corpse graphic cannot inherit old movement or visual overrides. Map98 pig corpses and Map125 bottle props remain fixed because their actual pages have fixed movement, while valid autonomous and symbol events retain motion.
 
-The official VX Ace RTP subset now includes the opening's missing standard assets, including `Light6`, `Damage3`, `Monster1`, Dungeon A1/A2/A4/A5/C, and Map98 SE. The game repository's custom `Dungeon_B.png` is never replaced. All files are manifest-addressed, magic-byte validated, and decoded before critical use.
+Battle graphics now follow Scripts139 and 152–153: cropped actor face status, source battlebacks/battlers, enemy HP/AP gauges, 1/3 mirror eligibility, y-based perspective, breathing scale, and ten additive mist sprites disabled by switch5.
 
-Remaining pixel-level differences are limited to compatibility areas such as complete VX Ace tone math, terrain table edge cases, viewport wave effects, movie playback, and third-party Ruby-only window behavior. They are not used to substitute a web-style UI for the restored title/menu/status/item/equip/save/load/battle scenes.
+Assets remain manifest-addressed, magic-byte validated, and decoded before critical use. The game repository’s custom sheets are never replaced by RTP files. `AUTOTILE_COMPATIBILITY.md` and `EVENT_MOBILITY_AUDIT.md` contain the engine-level evidence.

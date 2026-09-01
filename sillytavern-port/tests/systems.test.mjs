@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { CombatSystem, DIFFICULTY_RATES, MAX_AP, chantMetadata } from '../runtime/game/combat-system.js';
+import { CombatSystem, DIFFICULTY_RATES, FRAME_AP_GAIN, MAX_AP, REFRESH_FRAME, START_AP_RATES, chantMetadata, nextApMetadata } from '../runtime/game/combat-system.js';
 import { PartySystem } from '../runtime/game/party-system.js';
 import { EventInterpreter } from '../runtime/map/interpreter.js';
 import { GameEngine } from '../runtime/core/game-engine.js';
@@ -68,8 +68,69 @@ test('real troop 1 executes MAX_AP combat, smart enemy selection, damage, victor
 });
 
 test('combat metadata supports casting and interrupt semantics from original note tags', () => {
-  assert.deepEqual(chantMetadata('<詠唱:120,20>'), { frames: 130 });
+  assert.deepEqual(chantMetadata('<詠唱:120,20>'), { type: 0, base: 120, random: 20, frames: 130 });
+  assert.deepEqual(chantMetadata('<詠唱=2,[4000,600]>'), { type: 2, base: 4000, random: 600, frames: 4300 });
+  assert.deepEqual(nextApMetadata('<行動後ＡＰ=[25,10]>'), { base: 25, random: 10 });
   assert.equal(MAX_AP, 4000);
+});
+
+test('ATB start ranges, three-frame refresh cadence, and actor commands match Scripts 122-131', async () => {
+  const { database, state, combat } = await realSystems();
+  const normal = combat.createBattle(state, 3); const actor = normal.actors[0]; const enemy = normal.enemies[0];
+  assert.ok(actor.ap >= MAX_AP * START_AP_RATES.normal[0] / 100 && actor.ap <= MAX_AP * 0.70);
+  assert.ok(enemy.ap >= MAX_AP * START_AP_RATES.normal[0] / 100 && enemy.ap <= MAX_AP * 0.70);
+  actor.ap = 0; enemy.ap = 0; state.battle = normal; const expected = (actor.parameters.agi + FRAME_AP_GAIN) * REFRESH_FRAME;
+  combat.update(state, 2); assert.equal(actor.ap, 0); combat.update(state, 1); assert.equal(actor.ap, expected);
+  const names = combat.actorCommands(state, actor).map((command) => command.name);
+  assert.deepEqual(names, [database.system.terms.commands[2], database.system.skill_types[1], database.system.skill_types[2], database.system.terms.commands[3], database.system.terms.commands[4], database.system.terms.commands[1]]);
+
+  const preemptive = combat.createBattle(state, 3, { preemptive: true });
+  assert.ok(preemptive.actors[0].ap >= 1600 && preemptive.actors[0].ap <= 2800); assert.ok(preemptive.enemies[0].ap >= 0 && preemptive.enemies[0].ap <= 400);
+  const surprise = combat.createBattle(state, 3, { surprise: true });
+  assert.ok(surprise.actors[0].ap >= 0 && surprise.actors[0].ap <= 400); assert.ok(surprise.enemies[0].ap >= 1600 && surprise.enemies[0].ap <= 2800);
+});
+
+test('real early troop 3 accepts an item and an actor skill, awards rewards, and preserves the map-owned state', async () => {
+  const { party, state, combat } = await realSystems(); state.mapId = 98; state.x = 6; state.y = 19; state.scene = 'BATTLE';
+  party.gain(state, 'item', 3, 1); state.actors[1].hp = Math.max(1, state.actors[1].hp - 200);
+  state.battle = combat.createBattle(state, 3, { battleback1: 'Stone1', battleback2: 'Dungeon', encounter: { mapId: 98, eventId: 16 } });
+  const actor = state.battle.actors[0]; actor.hp = state.actors[1].hp; actor.ap = MAX_AP; state.battle.phase = 'actor-command'; state.battle.activeActor = 0;
+  const item = combat.actorCommand(state, 'item', 0, { itemId: 3 }); assert.equal(item.accepted, true); assert.equal(party.quantity(state, 'item', 3), 0);
+  actor.ap = MAX_AP; state.battle.phase = 'actor-command'; state.battle.activeActor = 0;
+  const skill = combat.actorCommand(state, 'skill', 0, { skillId: 163 }); assert.equal(skill.accepted, true); assert.equal(state.battle.result, 'victory');
+  assert.equal(state.battle.encounter.eventId, 16); assert.equal(state.mapId, 98); assert.deepEqual([state.x, state.y], [6, 19]);
+  assert.ok(state.battle.rewards.gold > 0); assert.ok(state.battle.log.some((line) => line.includes('Prey Upon')));
+});
+
+test('original custom battle note tags govern attack replacement, guts, resurrection, recovery, and user effects', async () => {
+  const { database, state, combat } = await realSystems();
+  state.battle = combat.createBattle(state, 3); const actor = state.battle.actors[0]; const enemy = state.battle.enemies[0];
+
+  state.actors[actor.actorId].equips[0] = { etypeId: 0, kind: 'weapon', id: 211 };
+  database.actors[actor.actorId].note += '\n<攻撃ID変更:286>';
+  assert.equal(combat.attackSkillId(state, actor.actorId), 286, 'equal-priority attack skills choose the highest original skill ID');
+
+  actor.hp = 100; actor.states = [59]; state.actors[actor.actorId].states = [59];
+  combat.applySkill(state, enemy, actor, database.skills[163]);
+  assert.equal(actor.hp, 1, 'state 59 leaves exactly one HP after otherwise-lethal damage');
+
+  actor.hp = 100; actor.states = [27]; state.actors[actor.actorId].states = [27];
+  combat.applySkill(state, enemy, actor, database.skills[163]);
+  assert.equal(actor.hp, Math.min(500, actor.parameters.mhp)); assert.ok(!actor.states.includes(27)); assert.equal(actor.resurrectionAnimationId, 42);
+
+  actor.hp = Math.max(1, actor.parameters.mhp - 200); actor.states = [55]; state.actors[actor.actorId].states = [55]; const weakenedHp = actor.hp;
+  combat.applySkill(state, actor, actor, database.items[3]);
+  assert.equal(actor.hp, weakenedHp, 'state 55 applies its real 100% HP recovery nullification');
+
+  actor.states = []; state.actors[actor.actorId].states = [];
+  combat.applyUserEffect(state, actor, database.skills[286]);
+  assert.ok(actor.states.includes(9), 'Bunker Shield applies skill 2 to its user');
+
+  database.actors[actor.actorId].note += '\n<戦闘終了後HP回復:mhp/5>\n<戦闘終了後MP回復:mmp/10>\n<戦闘終了後TP回復:max_tp/20>\n<戦闘終了後ステート解除:9>';
+  Object.assign(state.actors[actor.actorId], { hp: 1, mp: 0, tp: 0, states: [9] }); Object.assign(actor, { hp: 1, mp: 0, tp: 0, states: [9] });
+  combat.applyBattleEndRecovery(state, state.battle);
+  assert.equal(state.actors[actor.actorId].hp, 1 + Math.floor(actor.parameters.mhp / 5));
+  assert.equal(state.actors[actor.actorId].mp, Math.floor(actor.parameters.mmp / 10)); assert.equal(state.actors[actor.actorId].tp, 5); assert.ok(!state.actors[actor.actorId].states.includes(9));
 });
 
 test('difficulty variable 60 uses the original parameter and reward matrices', async () => {
@@ -182,7 +243,7 @@ test('whole-game dependency database includes every required index and reverse s
   assert.equal(index.counts.maps, 150); assert.equal(index.counts.events, 6444); assert.equal(index.counts.troops, 355); assert.equal(index.counts.synthesisRecipes, 15);
   for (const name of index.files) assert.ok(await readFile(join(root, 'generated', 'dependencies', name), 'utf8'));
   const reverse = await json('generated/dependencies/asset-reverse-index.json');
-  assert.ok(reverse.assets['Graphics/Tilesets/Dungeon_C']?.some((source) => source.includes('tileset')));
+  assert.ok(reverse.assets['Graphics/Tilesets/Dungeon_C.png']?.some((source) => source.includes('tileset')));
   assert.ok(reverse.assets['Graphics/Characters/14遺体.png']?.some((source) => source.includes('map:97')));
 });
 

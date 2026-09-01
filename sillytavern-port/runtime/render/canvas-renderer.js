@@ -1,4 +1,4 @@
-const TILE_ID = { A5: 1536, A1: 2048, A2: 2816, A3: 4352, A4: 5888 };
+export const TILE_ID = Object.freeze({ B: 0, C: 256, D: 512, E: 768, A5: 1536, A1: 2048, A2: 2816, A3: 4352, A4: 5888, MAX: 8192 });
 
 export class CanvasRenderer {
   constructor(stage, loader, engineConfig) {
@@ -114,16 +114,18 @@ export class CanvasRenderer {
   async setBattle(battle) {
     const battleback1Path = battle.battleback1 ? `Graphics/Battlebacks1/${battle.battleback1}.png` : null;
     const battleback2Path = battle.battleback2 ? `Graphics/Battlebacks2/${battle.battleback2}.png` : null;
-    const [battleback1, battleback2] = await Promise.all([
+    const [battleback1, battleback2, mist] = await Promise.all([
       battleback1Path ? this.loader.image(battleback1Path, { optional: true }) : null,
       battleback2Path ? this.loader.image(battleback2Path, { optional: true }) : null,
+      battle.mistEnabled ? this.loader.image('Graphics/System/mist.png', { optional: true }) : null,
     ]);
     const enemies = new Map();
     await Promise.all([...new Set(battle.enemies.map((enemy) => enemy.battlerName).filter(Boolean))].map(async (name) => {
       const image = await this.loader.image(`Graphics/Battlers/${name}.png`);
       enemies.set(name, image);
     }));
-    this.battleGraphics = { battleback1, battleback2, battleback1Path, battleback2Path, enemies };
+    await Promise.all([...new Set(battle.actors.map((actor) => actor.faceName).filter(Boolean))].map((name) => this.prepareFace(name)));
+    this.battleGraphics = { battleback1, battleback2, battleback1Path, battleback2Path, enemies, mist };
   }
 
   clearBattle() { this.battleGraphics = null; }
@@ -181,12 +183,14 @@ export class CanvasRenderer {
     this.camera = { x: cameraX, y: cameraY, logicalX: window.logicalX, logicalY: window.logicalY, pixelX: window.pixelX, pixelY: window.pixelY };
     if (this.activeFrame) { this.activeFrame.camera = { ...this.camera }; this.activeFrame.visibleRange = { startX: window.startX, endX: window.endX, startY: window.startY, endY: window.endY, marginTiles: window.margin }; }
     const upper = [];
-    for (let z = 0; z < 3; z += 1) for (let mapY = window.startY; mapY <= window.endY; mapY += 1) for (let mapX = window.startX; mapX <= window.endX; mapX += 1) {
-      const dx = mapX * this.tileSize - window.pixelX; const dy = mapY * this.tileSize - window.pixelY;
-      const tileId = this.tileAt(mapX, mapY, z); const args = [tileId, dx, dy];
-      if (this.isUpper(tileId)) upper.push(args); else this.drawTile(...args);
-    }
+    // VX Ace composes ground layers 0/1 first, then the z=3 shadow bits and
+    // table edges, and finally the ordinary z=2 tiles. Star-priority tiles
+    // from every map layer are deferred until after normal-priority sprites.
+    this.drawMapLayer(0, window, upper);
+    this.drawMapLayer(1, window, upper);
     this.drawShadows(window);
+    this.drawTableEdges(window);
+    this.drawMapLayer(2, window, upper);
     const sprites = events.map((event) => ({ ...event, priority: event.priority ?? 1, type: 'event' }));
     if (!state.transparent) sprites.push({ x: playerX, y: playerY, direction: state.direction, pattern: state.pattern ?? 1, opacity: state.opacity ?? 255, priority: 1, graphic: this.playerGraphic, type: 'player' });
     sprites.sort((a, b) => a.priority - b.priority || a.y - b.y || (a.type === 'event' ? -1 : 1));
@@ -381,27 +385,46 @@ export class CanvasRenderer {
     const c = this.context; c.fillStyle = '#100d12'; c.fillRect(0, 0, this.width, this.height);
     if (this.battleGraphics?.battleback1) c.drawImage(this.battleGraphics.battleback1, 0, 0, this.width, this.height);
     if (this.battleGraphics?.battleback2) c.drawImage(this.battleGraphics.battleback2, 0, 0, this.width, this.height);
+    if (battle?.mistEnabled && this.battleGraphics?.mist) this.drawBattleMist(battle, this.battleGraphics.mist);
     for (const enemy of battle?.enemies ?? []) {
       if (enemy.hp <= 0) continue; const image = this.battleGraphics?.enemies?.get(enemy.battlerName); if (!image) continue;
-      const scale = Math.min(1, 260 / Math.max(image.width, image.height)); const width = image.width * scale; const height = image.height * scale;
-      c.drawImage(image, enemy.x - width / 2, enemy.y - height, width, height);
-      c.fillStyle = '#17080a'; c.fillRect(enemy.x - 55, enemy.y + 4, 110, 7); c.fillStyle = '#8d1f29'; c.fillRect(enemy.x - 55, enemy.y + 4, 110 * enemy.hp / Math.max(1, enemy.parameters.mhp), 7);
+      const baseScale = Math.min(1, 260 / Math.max(image.width, image.height)); const breath = 1 + Math.sin(Math.PI * 2 * (battle.frames + enemy.breathOffset) / Math.max(1, enemy.breathPeriod)) * 0.0075 + 0.0075;
+      const perspective = Math.max(0.25, Number(enemy.perspectiveScale) || 1); const width = image.width * baseScale * perspective; const height = image.height * baseScale * perspective * breath;
+      c.save(); c.translate(enemy.x, enemy.y); c.scale(enemy.mirror ? -1 : 1, 1); c.drawImage(image, -width / 2, -height, width, height); c.restore();
+      c.fillStyle = '#17080a'; c.fillRect(enemy.x - 40, Math.min(320, enemy.y - height + 15), 80, 4); c.fillStyle = '#d0a055'; c.fillRect(enemy.x - 40, Math.min(320, enemy.y - height + 15), 80 * enemy.hp / Math.max(1, enemy.parameters.mhp), 4);
+      const enemyAp = enemy.chant ? enemy.chant.elapsed / Math.max(1, enemy.chant.total) : enemy.ap / 4000;
+      c.globalAlpha = 0.5; c.fillStyle = '#202040'; c.fillRect(enemy.x - 50, enemy.y - 10, 100, 6); c.fillStyle = enemy.chant ? '#be78d0' : '#7e9fe8'; c.fillRect(enemy.x - 50, enemy.y - 10, 100 * Math.min(1, enemyAp), 6); c.globalAlpha = 1;
       c.fillStyle = '#eee'; c.font = font(13); c.textAlign = 'center'; c.fillText(displayText(enemy.name), enemy.x, enemy.y + 28); c.textAlign = 'left';
     }
-    this.drawWindow(0, 360, 128, 120); this.drawWindow(128, 360, 512, 120); c.font = font(17); c.fillStyle = '#f4f4f4';
-    const actor = battle?.actors?.[0];
+    const commandRows = Math.max(4, Math.min(8, battle?.commands?.length ?? 4)); const commandHeight = 24 + commandRows * 24; const commandY = 480 - commandHeight;
+    this.drawWindow(0, commandY, 128, commandHeight); this.drawWindow(128, 360, 512, 120); c.font = font(17); c.fillStyle = '#f4f4f4';
+    const actor = battle?.actors?.[battle?.activeActor ?? 0] ?? battle?.actors?.[0];
     if (actor) {
+      const face = this.faceImages.get(actor.faceName); if (face) c.drawImage(face, (actor.faceIndex % 4) * 96, Math.floor(actor.faceIndex / 4) * 96 + 38, 96, 24, 142, 365, 96, 24);
       c.fillText(displayText(actor.name), 142, 387);
       this.drawGauge(330, 375, 120, 8, actor.hp, actor.parameters.mhp, '#dc5b60', '#79202d');
       this.drawGauge(468, 375, 80, 8, actor.mp, actor.parameters.mmp, '#5c87d9', '#253e7c');
       c.fillText(`HP ${actor.hp}/${actor.parameters.mhp}`, 320, 408); c.fillText(`MP ${actor.mp}/${actor.parameters.mmp}`, 466, 408);
-      c.fillText(`AP ${Math.floor(actor.ap)}/4000`, 320, 437);
+      const actorAp = actor.chant ? actor.chant.elapsed / Math.max(1, actor.chant.total) : actor.ap / 4000;
+      this.drawGauge(320, 419, 230, 8, actorAp, 1, actor.chant ? '#bd74cb' : '#7e9fe8', actor.chant ? '#6b3573' : '#334c89');
+      c.fillText(`AP ${Math.floor(Math.min(1, actorAp) * 100)}%`, 320, 449);
     }
-    if (battle?.phase === 'actor-command') (battle.commands ?? []).slice(0, 4).forEach((command, index) => {
-      const y = 372 + index * 24; if (index === battle.selectedCommand) this.drawCursor(12, y, 104, 24);
+    if (battle?.phase === 'actor-command') (battle.commands ?? []).slice(0, 8).forEach((command, index) => {
+      const y = commandY + 12 + index * 24; if (index === battle.selectedCommand) this.drawCursor(12, y, 104, 24);
       c.fillStyle = '#f4f4f4'; c.fillText(displayText(command), 16, y + 19);
     });
     else { c.fillStyle = '#c9c2ba'; c.fillText(displayText(battle?.log?.at(-1) ?? ''), 146, 462); }
+  }
+
+  drawBattleMist(battle, image) {
+    const c = this.context; c.save(); c.globalCompositeOperation = 'lighter';
+    for (let index = 0; index < 10; index += 1) {
+      const z = 20 + ((battle.frames + index * 57) % 580); const baseX = 160 + ((index * 131 + battle.troopId * 17) % 320);
+      const x = (baseX - 320) * z / 128 + baseX; const y = z / 4 + 160; const scale = z * 0.003 + 0.25;
+      c.globalAlpha = Math.max(0, Math.min(1, (z >= 536 ? (600 - z) * 4 : z) / 255));
+      const width = image.width * scale; const height = image.height * scale; c.drawImage(image, x - width / 2, y - height / 2, width, height);
+    }
+    c.restore();
   }
 
   async showPicture(id, name, parameters = {}) {
@@ -523,35 +546,57 @@ export class CanvasRenderer {
       return 0;
     }
     if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) return 0;
-    const value = this.map.data.data[x + y * this.map.width + z * this.map.width * this.map.height];
+    const value = this.map.data.data[vxAceTileDataIndex(this.map.width, this.map.height, x, y, z)];
     if (value == null && this.activeFrame) this.activeFrame.missingTileSamples += 1;
     return value ?? 0;
   }
+  drawMapLayer(z, window, upper) {
+    for (let mapY = window.startY; mapY <= window.endY; mapY += 1) for (let mapX = window.startX; mapX <= window.endX; mapX += 1) {
+      const dx = mapX * this.tileSize - window.pixelX; const dy = mapY * this.tileSize - window.pixelY;
+      const tileId = this.tileAt(mapX, mapY, z); const args = [tileId, dx, dy, { x: mapX, y: mapY, z }];
+      if (this.isUpper(tileId)) upper.push(args); else this.drawTile(...args);
+    }
+  }
   isUpper(tileId) { return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 0x10); }
-  drawTile(tileId, dx, dy) { if (tileId <= 0) return; if (this.activeFrame) { this.activeFrame.tileDraws += 1; this.activeFrame.drawCalls += 1; } if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy); if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5); this.drawAutotile(tileId, dx, dy); }
+  drawTile(tileId, dx, dy, mapPosition = null) {
+    if (tileId <= 0) return;
+    if (this.activeFrame) {
+      this.activeFrame.tileDraws += 1; this.activeFrame.drawCalls += 1;
+      const inspector = this.activeFrame.tileInspector ??= [];
+      if (inspector.length < 96 && !inspector.some((entry) => entry.tileId === tileId)) {
+        inspector.push({ ...mapPosition, ...resolveVxAceTile(tileId, Math.floor(performance.now() / 400)), flags: tilesetFlagTraits(this.tileset?.flags?.data?.[tileId] ?? 0) });
+      }
+    }
+    if (tileId < TILE_ID.A5) return this.drawNormalTile(tileId, dx, dy);
+    if (tileId < TILE_ID.A1) return this.drawNormalTile(tileId, dx, dy, 4, TILE_ID.A5);
+    this.drawAutotile(tileId, dx, dy);
+  }
   drawNormalTile(tileId, dx, dy, forcedSheet, base = 0) {
     const sheetIndex = forcedSheet ?? (5 + Math.floor(tileId / 256)); const localId = forcedSheet == null ? tileId % 256 : tileId - base; const sheet = this.sheets[sheetIndex]; if (!sheet) return;
     this.context.drawImage(sheet, (localId % 8) * 32, Math.floor(localId / 8) * 32, 32, 32, dx, dy, 32, 32);
   }
 
   drawAutotile(tileId, dx, dy) {
-    const kind = Math.floor((tileId - TILE_ID.A1) / 48); const shape = (tileId - TILE_ID.A1) % 48; const tx = kind % 8; const ty = Math.floor(kind / 8);
-    let sheetIndex = 0; let bx = 0; let by = 0; let table = FLOOR_AUTOTILE_TABLE; const animationFrame = Math.floor(performance.now() / 400) % 4;
-    if (tileId >= TILE_ID.A4) { sheetIndex = 3; bx = tx * 2; by = Math.floor((ty - 10) * 2.5 + (ty % 2 === 1 ? 0.5 : 0)); if (ty % 2 === 1) table = WALL_AUTOTILE_TABLE; }
-    else if (tileId >= TILE_ID.A3) { sheetIndex = 2; bx = tx * 2; by = (ty - 6) * 2; table = WALL_AUTOTILE_TABLE; }
-    else if (tileId >= TILE_ID.A2) { sheetIndex = 1; bx = tx * 2; by = (ty - 2) * 3; }
-    else {
-      const waterFrame = [0, 1, 2, 1][animationFrame];
-      if (kind === 0) { bx = waterFrame * 2; by = 0; } else if (kind === 1) { bx = waterFrame * 2; by = 3; } else if (kind === 2) { bx = 6; by = 0; } else if (kind === 3) { bx = 6; by = 3; }
-      else { bx = Math.floor(tx / 4) * 8; by = ty * 6 + (Math.floor(tx / 2) % 2) * 3; if (kind % 2 === 0) bx += waterFrame * 2; else { bx += 6; by += animationFrame % 3; table = WATERFALL_AUTOTILE_TABLE; } }
-    }
-    const sheet = this.sheets[sheetIndex]; if (!sheet) return; const quarters = table[shape % table.length];
-    for (let index = 0; index < 4; index += 1) { const [qsx, qsy] = quarters[index]; this.context.drawImage(sheet, (bx + qsx) * 16, (by + qsy) * 16, 16, 16, dx + (index % 2) * 16, dy + Math.floor(index / 2) * 16, 16, 16); }
+    const resolved = resolveVxAceTile(tileId, Math.floor(performance.now() / 400));
+    const sheet = this.sheets[resolved.sheetIndex]; if (!sheet) return;
+    for (const quarter of resolved.quarters) this.context.drawImage(sheet, quarter.sx, quarter.sy, 16, 16, dx + quarter.dx, dy + quarter.dy, 16, 16);
   }
 
   drawShadows(window) {
     const offset = this.map.width * this.map.height * 3; this.context.fillStyle = 'rgba(0,0,0,.42)';
     for (let my = window.startY; my <= window.endY; my += 1) for (let mx = window.startX; mx <= window.endX; mx += 1) { const bits = (this.map.data.data[mx + my * this.map.width + offset] ?? 0) & 0x0f; const dx = mx * this.tileSize - window.pixelX; const dy = my * this.tileSize - window.pixelY; for (let q = 0; q < 4; q += 1) if (bits & (1 << q)) this.context.fillRect(dx + (q % 2) * 16, dy + Math.floor(q / 2) * 16, 16, 16); }
+  }
+
+  drawTableEdges(window) {
+    for (let mapY = window.startY; mapY <= window.endY; mapY += 1) for (let mapX = window.startX; mapX <= window.endX; mapX += 1) {
+      const upperTileId = this.tileAt(mapX, mapY - 1, 1); const tileId = this.tileAt(mapX, mapY, 1);
+      if (!this.isTable(upperTileId) || this.isTable(tileId)) continue;
+      const resolved = resolveVxAceTile(upperTileId, Math.floor(performance.now() / 400));
+      if (resolved.family !== 'A2') continue;
+      const sheet = this.sheets[resolved.sheetIndex]; if (!sheet) continue;
+      const dx = mapX * this.tileSize - window.pixelX; const dy = mapY * this.tileSize - window.pixelY;
+      for (const quarter of resolved.quarters.slice(2)) this.context.drawImage(sheet, quarter.sx, quarter.sy + 8, 16, 8, dx + quarter.dx, dy, 16, 8);
+    }
   }
 
   drawCharacter(sprite, cameraX, cameraY) {
@@ -570,6 +615,7 @@ export class CanvasRenderer {
   }
 
   isBush(x, y) { for (let z = 2; z >= 0; z -= 1) if ((this.tileset?.flags?.data?.[this.tileAt(x, y, z)] ?? 0) & 0x40) return true; return false; }
+  isTable(tileId) { return Boolean((this.tileset?.flags?.data?.[tileId] ?? 0) & 0x80); }
 
   drawFog() {
     if (!this.fog) return; const { image, x, y, zoom, opacity, blend } = this.fog; const scale = zoom > 10 ? zoom / 100 : 1; const width = image.width * scale; const height = image.height * scale;
@@ -693,6 +739,53 @@ export function computeTileWindow({ displayX, displayY, playerX = 0, playerY = 0
     startY: Math.max(0, Math.floor(pixelY / tileSize) - margin),
     endY: Math.min(mapHeight - 1, Math.ceil((pixelY + height) / tileSize) + margin),
   };
+}
+
+export function vxAceTileDataIndex(width, height, x, y, z) { return x + y * width + z * width * height; }
+
+export function tilesetFlagTraits(flag = 0) {
+  return {
+    raw: Number(flag) || 0,
+    passage: Number(flag) & 0x0f,
+    star: Boolean(Number(flag) & 0x10),
+    ladder: Boolean(Number(flag) & 0x20),
+    bush: Boolean(Number(flag) & 0x40),
+    counter: Boolean(Number(flag) & 0x80),
+    damageFloor: Boolean(Number(flag) & 0x100),
+    terrainTag: (Number(flag) >> 12) & 0x0f,
+  };
+}
+
+export function resolveVxAceTile(tileId, animationTick = 0) {
+  tileId = Number(tileId) || 0;
+  if (tileId <= 0) return { tileId, family: 'EMPTY', sheetIndex: null, source: null, quarters: [] };
+  if (tileId < TILE_ID.A5) {
+    const sheetIndex = 5 + Math.floor(tileId / 256); const localId = tileId % 256;
+    return { tileId, family: ['B', 'C', 'D', 'E'][Math.floor(tileId / 256)] ?? 'UNUSED', sheetIndex, localId, source: { x: (localId % 8) * 32, y: Math.floor(localId / 8) * 32, width: 32, height: 32 }, quarters: [] };
+  }
+  if (tileId < TILE_ID.A1) {
+    const localId = tileId - TILE_ID.A5;
+    return { tileId, family: 'A5', sheetIndex: 4, localId, source: { x: (localId % 8) * 32, y: Math.floor(localId / 8) * 32, width: 32, height: 32 }, quarters: [] };
+  }
+  const kind = Math.floor((tileId - TILE_ID.A1) / 48); const shape = (tileId - TILE_ID.A1) % 48; const tx = kind % 8; const ty = Math.floor(kind / 8);
+  let family = 'A1'; let sheetIndex = 0; let bx = 0; let by = 0; let table = FLOOR_AUTOTILE_TABLE; let tableName = 'floor';
+  const surfaceFrame = [0, 1, 2, 1][Math.abs(Math.floor(animationTick)) % 4]; const waterfallFrame = Math.abs(Math.floor(animationTick)) % 3;
+  if (tileId >= TILE_ID.A4) { family = 'A4'; sheetIndex = 3; bx = tx * 2; by = Math.floor((ty - 10) * 2.5 + (ty % 2 === 1 ? 0.5 : 0)); if (ty % 2 === 1) { table = WALL_AUTOTILE_TABLE; tableName = 'wall'; } }
+  else if (tileId >= TILE_ID.A3) { family = 'A3'; sheetIndex = 2; bx = tx * 2; by = (ty - 6) * 2; table = WALL_AUTOTILE_TABLE; tableName = 'wall'; }
+  else if (tileId >= TILE_ID.A2) { family = 'A2'; sheetIndex = 1; bx = tx * 2; by = (ty - 2) * 3; }
+  else if (kind === 0) { bx = surfaceFrame * 2; by = 0; }
+  else if (kind === 1) { bx = surfaceFrame * 2; by = 3; }
+  else if (kind === 2) { bx = 6; by = 0; }
+  else if (kind === 3) { bx = 6; by = 3; }
+  else {
+    bx = Math.floor(tx / 4) * 8; by = ty * 6 + (Math.floor(tx / 2) % 2) * 3;
+    if (kind % 2 === 0) bx += surfaceFrame * 2;
+    else { bx += 6; by += waterfallFrame; table = WATERFALL_AUTOTILE_TABLE; tableName = 'waterfall'; }
+  }
+  const tableShape = table[shape];
+  if (!tableShape) return { tileId, family, sheetIndex, kind, shape, table: tableName, base: { x: bx, y: by }, source: null, quarters: [], invalidShape: true };
+  const quarters = tableShape.map(([qsx, qsy], index) => ({ sx: (bx + qsx) * 16, sy: (by + qsy) * 16, dx: (index % 2) * 16, dy: Math.floor(index / 2) * 16 }));
+  return { tileId, family, sheetIndex, kind, shape, table: tableName, animation: { tick: animationTick, surfaceFrame, waterfallFrame }, base: { x: bx, y: by }, source: null, quarters };
 }
 
 export function characterFrame(image, name, index, direction, pattern) {

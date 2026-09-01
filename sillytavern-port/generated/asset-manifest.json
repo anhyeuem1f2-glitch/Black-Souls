@@ -14929,6 +14929,13 @@
       ]
     },
     {
+      "basePath": "Graphics/System/mist",
+      "present": true,
+      "sources": [
+        "script:153:battle-mist"
+      ]
+    },
+    {
       "basePath": "Graphics/Tilesets/cleaverA2",
       "present": true,
       "sources": [

@@ -7,4 +7,4 @@
 - Cache API may be unavailable in an opaque/restricted iframe. The runtime falls back to memory; IndexedDB save storage separately falls back to session memory when unavailable.
 - Full Ruby-plugin parity is not claimed for troop event pages, every conditional operand, vehicles, movies, scrolling, all smart-target features, every element/feature/buff rule, or arbitrary Ruby inside move-route script commands. Script 145 symbol behavior used by ordinary current-map enemies is implemented; exotic project-specific Ruby remains catalogued.
 - Some VX Ace rendering edge cases—table terrain, complete tone math, viewport waves, and third-party custom window effects—remain approximate. The requested title/menu/status/item/equip/save/load/battle window geometry and skinning are implemented from the original scripts/assets.
-- Final import must use the new 0.8.0 card. Re-import is required because existing SillyTavern cards retain their older embedded loader script and immutable runtime ref.
+- Final import must use the new 0.9.0 card. Re-import is required because existing SillyTavern cards retain their older embedded loader script and immutable runtime ref.
